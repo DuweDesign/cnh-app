@@ -20,7 +20,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           debug: true
           script: |
-            cd /var/www/cnh/dev
+            cd /var/www/cnh/dev/cnh-app
             git pull origin main
             cd cnh-app
             npm install
