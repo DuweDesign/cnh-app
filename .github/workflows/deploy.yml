@@ -22,7 +22,6 @@ jobs:
           script: |
             cd /var/www/cnh/dev/cnh-app
             git pull origin main
-            cd cnh-app
             npm install
             ng build --configuration=production
             sudo systemctl restart nginx
