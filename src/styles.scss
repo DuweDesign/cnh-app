@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'fonts' as *;
+
+body {
+    font-family: 'Raleway', sans-serif;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}

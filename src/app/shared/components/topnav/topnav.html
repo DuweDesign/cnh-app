@@ -1,0 +1,32 @@
+<header class="topnav" [class.topnav--authenticated]="isLoggedIn">
+  <div class="topnav__inner">
+    <a class="topnav__brand" [routerLink]="isLoggedIn ? '/home' : '/login'">
+      <img src="/images/cnh-logo.png" alt="CNH Logo" />
+    </a>
+
+    @if (!isLoggedIn) {
+      <nav class="topnav__right">
+        <div class="topnav__brands">
+          <span><img src="/images/case_logo.png" alt="CASE"></span>
+          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+          <span style="margin-top: 3px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
+        </div>
+      </nav>
+    }
+
+    @if (isLoggedIn) {
+      <div class="topnav__auth-area">
+        <nav class="main-nav">
+          <a routerLink="/home" routerLinkActive="active">Home</a>
+          <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          <a routerLink="/aktionen" routerLinkActive="active">Aktionen</a>
+          <a routerLink="/news" routerLinkActive="active">News</a>
+        </nav>
+
+        <a class="profile-icon" routerLink="/profil" aria-label="Profil">
+          <span>👤</span>
+        </a>
+      </div>
+    }
+  </div>
+</header>

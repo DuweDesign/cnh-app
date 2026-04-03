@@ -1,0 +1,14 @@
+<footer class="footer" [class.footer--authenticated]="isLoggedIn">
+  <div class="footer__inner">
+    <div class="logo">
+      <a class="footer__brand" [routerLink]="isLoggedIn ? '/home' : '/login'">
+        <img src="/images/cnh-logo.png" alt="CNH Logo" />
+      </a>
+    </div>
+    <div class="links">
+      <a routerLink="/impressum">Impressum</a>
+      <a routerLink="/datenschutz">Datenschutz</a>
+      <a routerLink="/kontakt">Kontakt</a>
+    </div>
+  </div>
+</footer>
