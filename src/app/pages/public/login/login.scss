@@ -154,7 +154,7 @@
   display: flex;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .login-content {
     padding: 20px;
   }
@@ -181,7 +181,7 @@
   }
 
   .mobile-only img {
-    max-width: 280px;
+    max-width: 220px;
   }
 
   .login-form-wrapper h1 {
