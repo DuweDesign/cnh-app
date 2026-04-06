@@ -12,6 +12,10 @@
   &.footer--authenticated {
     position: relative;
   }
+
+  @media (max-width: 768px) {
+    position: relative;
+  }
 }
 
 .footer__brand {

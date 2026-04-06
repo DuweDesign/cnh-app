@@ -16,6 +16,10 @@
   &.topnav--authenticated {
     position: relative;
   }
+
+  @media (max-width: 768px) {
+    position: relative;
+  }
 }
 
 .topnav__inner {
