@@ -23,7 +23,8 @@ export class Login {
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    dealernumber: ['', [Validators.required, Validators.minLength(4)]]
   });
 
   async login(): Promise<void> {
@@ -37,9 +38,9 @@ export class Login {
     this.isSubmitting = true;
 
     try {
-      const { email, password } = this.loginForm.getRawValue();
+      const { email, password, dealernumber } = this.loginForm.getRawValue();
 
-      console.log('Login Daten:', { email, password });
+      console.log('Login Daten:', { email, password, dealernumber });
 
       // TODO:
       // Hier später AuthService anbinden, z. B.:
