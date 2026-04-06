@@ -88,17 +88,22 @@
 .form-group input {
   height: 52px;
   padding: 0 16px;
-  border: 1px solid #d7d7d7;
+  border: 1px solid white;
   border-radius: 12px;
   font-size: 1rem;
   outline: none;
-  background: #fff;
+  background: transparent;
+  color: white;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.form-group input::placeholder {
+  color: white;
+}
+
 .form-group input:focus {
-  border-color: #111;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+  border-color: white;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.609);
 }
 
 .login-btn {
