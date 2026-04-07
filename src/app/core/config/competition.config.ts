@@ -20,7 +20,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.CASE_STEYR,
         label: 'CASE / STEYR',
         home: {
-            backgroundImage: '/images/backgrounds/home-bg.jpg',
+            backgroundImage: '/images/backgrounds/home-bg.png',
             title: 'Saisonübersicht'
         },
         ranking: {
@@ -28,7 +28,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Ranking CASE / STEYR'
         },
         score: {
-            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            backgroundImage: '/images/backgrounds/score-bg.png',
             title: 'Punktestand CASE / STEYR'
         },
         rules: {
@@ -44,7 +44,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.NEW_HOLLAND,
         label: 'NEW HOLLAND',
         home: {
-            backgroundImage: '/images/backgrounds/home-bg.jpg',
+            backgroundImage: '/images/backgrounds/home-bg.png',
             title: 'Saisonübersicht'
         },
         ranking: {
@@ -52,7 +52,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Ranking NEW HOLLAND'
         },
         score: {
-            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            backgroundImage: '/images/backgrounds/score-bg.png',
             title: 'Punktestand NEW HOLLAND'
         },
         rules: {

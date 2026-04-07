@@ -103,7 +103,7 @@ export class AuthService {
   isAdmin(): boolean {
     const userRole = this._user()?.role ?? null;
 
-    if ((userRole && userRole === 'sysadmin') || (userRole && userRole === 'vipp-admin')) {
+    if ((userRole && userRole === 'sysadmin') || (userRole && userRole === 'vipp-admin') || (userRole && userRole === 'cnh-admin')) {
       return true;
     }
 

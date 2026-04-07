@@ -3,7 +3,7 @@ import { Component, computed, HostListener, inject, Input, ElementRef } from '@a
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
-import { COMPETITIONS } from '../../../core/models/auth.model';
+import { COMPETITIONS, USER_ROLES } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'cnh-topnav',
@@ -27,6 +27,11 @@ export class Topnav {
 
   readonly isNewHolland = computed(() =>
     this.competitionService.activeCompetition() === COMPETITIONS.NEW_HOLLAND
+  );
+
+  
+  readonly isSaleUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
   constructor(private elRef: ElementRef) {}

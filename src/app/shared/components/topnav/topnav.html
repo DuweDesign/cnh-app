@@ -19,8 +19,14 @@
       <nav>
         <div class="main-nav">
           <a routerLink="/home" routerLinkActive="active">News</a>
-          <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
-          <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+          @if (isSaleUser()) {
+            <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+          } @else if (authService.isAdmin()) {
+            <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+            <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          } @else {
+            <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          }
           <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
           <a routerLink="/preise" routerLinkActive="active">Reise</a>
         </div>
@@ -30,7 +36,7 @@
             <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
           } @else {
             <span><img src="/images/case_logo.png" alt="CASE"></span>
-            <span style="margin-top: 3px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
+            <span style="margin-top: 8px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
           }
         </div>
       </nav>
