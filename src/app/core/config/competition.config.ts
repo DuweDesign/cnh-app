@@ -25,11 +25,11 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         ranking: {
             backgroundImage: '/images/backgrounds/ranking-bg.png',
-            title: 'Ranking CASE / STEYR'
+            title: 'Ranking'
         },
         score: {
             backgroundImage: '/images/backgrounds/score-bg.png',
-            title: 'Punktestand CASE / STEYR'
+            title: 'Punktestand'
         },
         rules: {
             backgroundImage: '',
@@ -49,11 +49,11 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         ranking: {
             backgroundImage: '/images/backgrounds/ranking-bg.png',
-            title: 'Ranking NEW HOLLAND'
+            title: 'Ranking'
         },
         score: {
             backgroundImage: '/images/backgrounds/score-bg.png',
-            title: 'Punktestand NEW HOLLAND'
+            title: 'Punktestand'
         },
         rules: {
             backgroundImage: '',
