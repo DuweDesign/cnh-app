@@ -25,7 +25,7 @@ export class CompetitionService {
     }
 
     if (this.authService.canSelectCompetition()) {
-      return this._selectedCompetition();
+      return this._selectedCompetition() ?? 'case-steyr';
     }
 
     return null;
@@ -82,6 +82,6 @@ export class CompetitionService {
       return value;
     }
 
-    return COMPETITIONS.CASE_STEYR;
+    return null;
   }
 }
