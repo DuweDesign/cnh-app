@@ -177,11 +177,21 @@ nav {
   border-radius: 10px;
   text-decoration: none;
   color: inherit;
+  font-weight: 500;
+
+  &.logout {
+    color: rgb(140, 7, 7);
+    font-weight: 600;
+  }
 }
 
 .profile-dropdown a:hover,
 .profile-dropdown button:hover {
   background: #f3f4f6;
+
+  &.logout {
+    background: #fce8e8
+  }
 }
 
 .menu-backdrop {
