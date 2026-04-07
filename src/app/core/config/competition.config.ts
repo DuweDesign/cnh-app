@@ -29,7 +29,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         score: {
             backgroundImage: '/images/backgrounds/score-bg.png',
-            title: 'Punktestand'
+            title: 'Mein Fortschritt'
         },
         rules: {
             backgroundImage: '',
@@ -53,7 +53,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         score: {
             backgroundImage: '/images/backgrounds/score-bg.png',
-            title: 'Punktestand'
+            title: 'Mein Fortschritt'
         },
         rules: {
             backgroundImage: '',
