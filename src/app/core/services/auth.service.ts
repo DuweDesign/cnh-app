@@ -11,6 +11,8 @@ import {
   UserRole
 } from '../models/auth.model';
 
+import { MOCK_USERS } from '../mock/users.mock';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,16 +30,48 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.getToken());
 
   login(payload: LoginPayload): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload).pipe(
-      tap((response) => {
-        this.setToken(response.token);
-        this._user.set(response.user);
-      })
+
+    const { dealernumber, email, password } = payload;
+
+    const user = MOCK_USERS.find(
+      u => u.dealernumber === dealernumber && u.email === email && u.password === password
     );
+
+    if (!user) {
+      return of({
+        success: false,
+        message: 'Ungültige Zugangsdaten',
+        token: '',
+        user: null as any
+      });
+    }
+
+    const mockToken = 'mock-jwt-token';
+
+    const response: LoginResponse = {
+      success: true,
+      message: 'Login erfolgreich',
+      token: mockToken,
+      user
+    };
+
+    this.setToken(mockToken);
+    localStorage.setItem('user', JSON.stringify(user));
+    this._user.set(user);
+
+    return of(response);
+
+    // return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload).pipe(
+    //   tap((response) => {
+    //     this.setToken(response.token);
+    //     this._user.set(response.user);
+    //   })
+    // );
   }
 
   logout(): void {
     this.removeToken();
+    localStorage.removeItem('user');
     this._user.set(null);
   }
 
@@ -66,15 +100,52 @@ export class AuthService {
     return !!userRole && roles.includes(userRole);
   }
 
+  isAdmin(): boolean {
+    const userRole = this._user()?.role ?? null;
+
+    if (userRole && userRole === 'sysadmin') {
+      return true;
+    }
+
+    return false;
+  }
+
+  canSelectCompetition(): boolean {
+    const user = this._user();
+    return !!user && this.isAdmin() && user.competition === null;
+  }
+
   initializeAuth(): Observable<AuthUser | null> {
     const token = this.getToken();
+    const storedUser = localStorage.getItem('user');
 
-    if (!token) {
+    // Kein Token oder kein User → ausgeloggt
+    if (!token || !storedUser) {
       this._user.set(null);
       this._initialized.set(true);
       return of(null);
     }
 
+    try {
+      const user: AuthUser = JSON.parse(storedUser);
+
+      this._user.set(user);
+      this._initialized.set(true);
+
+      return of(user);
+    } catch (error) {
+      // Falls JSON kaputt ist → cleanup
+      this.removeToken();
+      localStorage.removeItem('user');
+
+      this._user.set(null);
+      this._initialized.set(true);
+
+      return of(null);
+    }
+
+    // 🔁 SPÄTER: API-Version
+    /*
     return this.http.get<AuthUser>(`${this.apiUrl}/me`).pipe(
       tap((user) => {
         this._user.set(user);
@@ -82,11 +153,15 @@ export class AuthService {
       }),
       catchError(() => {
         this.removeToken();
+        localStorage.removeItem('user');
+  
         this._user.set(null);
         this._initialized.set(true);
+  
         return of(null);
       })
     );
+    */
   }
 
   requestRegistration(payload: RegisterRequestPayload): Observable<{ message: string }> {

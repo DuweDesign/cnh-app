@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { LoginPayload } from '../../../core/models/auth.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,11 +24,15 @@ export class Login {
   isSubmitting = false;
   errorMessage = '';
 
-  loginForm = this.fb.group({
+  loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(4)]],
     dealernumber: ['', [Validators.required, Validators.minLength(4)]]
   });
+
+  constructor(
+    private authService: AuthService
+  ) { }
 
   async login(): Promise<void> {
     this.errorMessage = '';
@@ -40,13 +47,15 @@ export class Login {
     try {
       const { email, password, dealernumber } = this.loginForm.getRawValue();
 
-      console.log('Login Daten:', { email, password, dealernumber });
+      const response = await firstValueFrom(
+        this.authService.login({ email, password, dealernumber })
+      );
 
-      // TODO:
-      // Hier später AuthService anbinden, z. B.:
-      // await this.authService.login(email!, password!);
-
-      this.router.navigateByUrl('/home');
+      if (response.success) {
+        await this.router.navigateByUrl('/home');
+      } else {
+        this.errorMessage = response.message || 'Anmeldung fehlgeschlagen.';
+      }
     } catch (error) {
       console.error('Login fehlgeschlagen:', error);
       this.errorMessage = 'Anmeldung fehlgeschlagen. Bitte prüfe deine Eingaben.';

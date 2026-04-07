@@ -87,6 +87,12 @@
   gap: 28px;
 }
 
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 .main-nav {
   display: flex;
   align-items: center;
@@ -94,9 +100,9 @@
 }
 
 .main-nav a {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #222;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #616161;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -104,23 +110,85 @@
 .main-nav a:hover,
 .main-nav a.active {
   text-decoration: underline;
+  color: #343434;
+  text-shadow: 0 0 0.6px #555;
+}
+
+.topnav {
+  position: relative;
+  z-index: 20;
+}
+
+.profile-menu-wrapper {
+  position: relative;
+  z-index: 30;
 }
 
 .profile-icon {
   width: 42px;
   height: 42px;
+  border: none;
   border-radius: 50%;
-  background: #f3f3f3;
+  background: #fff;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  font-size: 1.2rem;
-  transition: background 0.2s ease;
+  font-size: 20px;
+
+  span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 25px;
+      height: 25px;
+      object-fit: contain;
+    }
+  }
 }
 
-.profile-icon:hover {
-  background: #e8e8e8;
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 25;
 }
 
 @media (max-width: 900px) {
@@ -168,5 +236,46 @@
   .main-nav {
     width: 100%;
     justify-content: flex-start;
+  }
+}
+
+.competition-toggle {
+  position: relative;
+  width: 220px;
+  height: 40px;
+  border-radius: 20px;
+  background: #e5e5e5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  box-sizing: border-box;
+  user-select: none;
+
+  .label {
+    width: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+    color: #434343;
+  }
+
+  .slider {
+    position: absolute;
+    top: 3px;
+    width: 50%;
+    height: calc(100% - 6px);
+    border-radius: 16px;
+    background: rgb(252, 177, 142);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transform: translateX(0);
+    transition: transform 0.28s ease;
+    will-change: transform;
+
+    &.right {
+      transform: translateX(90%);
+    }
   }
 }

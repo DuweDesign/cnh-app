@@ -1,1 +1,11 @@
-<p>score works!</p>
+@if (competitionConfig(); as config) {
+    <div class="page score" [ngStyle]="{'background-image': `url(${config.score.backgroundImage})`}">
+        <div class="page__content">
+
+            <div class="page__title">
+                <h1>{{ config.score.title }}</h1>
+            </div>
+            
+        </div>
+    </div>
+}

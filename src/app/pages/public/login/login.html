@@ -11,27 +11,31 @@
         <div class="login-form-wrapper">
           <h1>Herzlich Willkommen zum Verkaufswettbewerb</h1>
 
-          <form class="login-form">
+          <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="form-group">
               <!-- <label for="dealernumber">Händlernummer</label> -->
-              <input id="dealernumber" type="text" placeholder="Händelernummer" />
+              <input id="dealernumber" type="text" formControlName="dealernumber" placeholder="Händlernummer" />
             </div>
             
             <div class="form-group">
               <!-- <label for="email">E-Mail</label> -->
-              <input id="email" type="email" placeholder="E-Mail" />
+              <input id="email" type="email" formControlName="email" placeholder="E-Mail" />
             </div>
 
             <div class="form-group">
               <!-- <label for="password">Passwort</label> -->
-              <input id="password" type="password" placeholder="Passwort" />
+              <input id="password" type="password" formControlName="password" placeholder="Passwort" />
             </div>
 
-            <button type="submit" class="login-btn">Anmelden</button>
+            <button type="submit" class="login-btn" [disabled]="isSubmitting">{{ isSubmitting ? 'Anmelden...' : 'Anmelden' }}</button>
 
             <a routerLink="/passwort-vergessen" class="forgot-password">
               Passwort vergessen
             </a>
+
+            @if (errorMessage) {
+              <p class="error-message">{{ errorMessage }}</p>
+            }
           </form>
         </div>
       </div>

@@ -1,1 +1,11 @@
-<p>prizes works!</p>
+@if (competitionConfig(); as config) {
+    <div class="page home" [ngStyle]="{'background-image': `url(${config.prizes.backgroundImage})`}">
+        <div class="page__content">
+
+            <div class="page__title">
+                <h1>{{ config.prizes.title }}</h1>
+            </div>
+            
+        </div>
+    </div>
+}

@@ -1,1 +1,11 @@
-<p>rules works!</p>
+@if (competitionConfig(); as config) {
+    <div class="page rules" [ngStyle]="{'background-image': `url(${config.rules.backgroundImage})`}">
+        <div class="page__content">
+
+            <div class="page__title">
+                <h1>{{ config.rules.title }}</h1>
+            </div>
+            
+        </div>
+    </div>
+}

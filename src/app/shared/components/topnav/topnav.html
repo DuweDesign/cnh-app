@@ -5,28 +5,64 @@
     </a>
 
     @if (!isLoggedIn) {
-      <nav class="topnav__right">
-        <div class="topnav__brands">
-          <span><img src="/images/case_logo.png" alt="CASE"></span>
-          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-          <span style="margin-top: 3px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
-        </div>
-      </nav>
+    <nav class="topnav__right">
+      <div class="topnav__brands">
+        <span><img src="/images/case_logo.png" alt="CASE"></span>
+        <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+        <span style="margin-top: 3px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
+      </div>
+    </nav>
     }
 
     @if (isLoggedIn) {
-      <div class="topnav__auth-area">
-        <nav class="main-nav">
-          <a routerLink="/home" routerLinkActive="active">Home</a>
+    <div class="topnav__auth-area">
+      <nav>
+        <div class="main-nav">
+          <a routerLink="/home" routerLinkActive="active">News</a>
           <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
-          <a routerLink="/aktionen" routerLinkActive="active">Aktionen</a>
-          <a routerLink="/news" routerLinkActive="active">News</a>
-        </nav>
+          <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+          <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
+          <a routerLink="/preise" routerLinkActive="active">Reise</a>
+        </div>
 
-        <a class="profile-icon" routerLink="/profil" aria-label="Profil">
-          <span>👤</span>
-        </a>
+        <div class="topnav__brands">
+          @if (isNewHolland()) {
+            <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+          } @else {
+            <span><img src="/images/case_logo.png" alt="CASE"></span>
+            <span style="margin-top: 3px;"><img src="/images/steyr_logo.png" alt="STEYR"></span>
+          }
+        </div>
+      </nav>
+
+
+
+      <div class="profile-menu-wrapper">
+        <button class="profile-icon" type="button" aria-label="Profil" (click)="toggleProfileMenu($event)">
+          <span><img src="/images/icons/profile.png" alt="Profil"></span>
+        </button>
+
+        @if (isProfileMenuOpen) {
+        <div class="profile-dropdown">
+          @if (showCompetitionToggle()) {
+          <div class="competition-toggle" (click)="toggleCompetition()">
+            <span class="label left">CASE / STEYR</span>
+            <span class="label right">NEW HOLLAND</span>
+            <div class="slider" [class.right]="isNewHolland()"></div>
+          </div>
+          }
+
+          <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
+            Profil
+          </a>
+
+          <button type="button" (click)="logout()">
+            Logout
+          </button>
+        </div>
+        }
       </div>
+    </div>
     }
   </div>
 </header>

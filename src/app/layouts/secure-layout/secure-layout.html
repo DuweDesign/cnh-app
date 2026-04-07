@@ -1,9 +1,9 @@
 <div class="secure page-shell">
-  <cnh-topnav [isLoggedIn]="true"></cnh-topnav>
+  <cnh-topnav [isLoggedIn]="authService.isLoggedIn()"></cnh-topnav>
 
   <main class="page-content">
     <router-outlet></router-outlet>
   </main>
 
-  <cnh-footer [isLoggedIn]="true"></cnh-footer>
+  <cnh-footer [isLoggedIn]="authService.isLoggedIn()"></cnh-footer>
 </div>

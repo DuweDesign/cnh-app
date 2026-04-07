@@ -1,0 +1,67 @@
+import { COMPETITIONS, CompetitionType } from '../models/auth.model';
+
+export interface CompetitionConfig {
+    key: CompetitionType;
+    label: string;
+    home: Site;
+    ranking: Site;
+    score: Site;
+    rules: Site;
+    prizes: Site;
+}
+
+interface Site {
+    backgroundImage: string;
+    title: string;
+}
+
+export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
+    [COMPETITIONS.CASE_STEYR]: {
+        key: COMPETITIONS.CASE_STEYR,
+        label: 'CASE / STEYR',
+        home: {
+            backgroundImage: '/images/backgrounds/home-bg.jpg',
+            title: 'Saisonübersicht'
+        },
+        ranking: {
+            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            title: 'Ranking CASE / STEYR'
+        },
+        score: {
+            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            title: 'Punktestand CASE / STEYR'
+        },
+        rules: {
+            backgroundImage: '',
+            title: 'Die Regeln'
+        },
+        prizes: {
+            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            title: 'Die Reise'
+        }
+    },
+    [COMPETITIONS.NEW_HOLLAND]: {
+        key: COMPETITIONS.NEW_HOLLAND,
+        label: 'NEW HOLLAND',
+        home: {
+            backgroundImage: '/images/backgrounds/home-bg.jpg',
+            title: 'Saisonübersicht'
+        },
+        ranking: {
+            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            title: 'Ranking NEW HOLLAND'
+        },
+        score: {
+            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            title: 'Punktestand NEW HOLLAND'
+        },
+        rules: {
+            backgroundImage: '',
+            title: 'Die Regeln'
+        },
+        prizes: {
+            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            title: 'Die Reise'
+        }
+    }
+};
