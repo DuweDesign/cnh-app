@@ -82,6 +82,6 @@ export class CompetitionService {
       return value;
     }
 
-    return null;
+    return COMPETITIONS.CASE_STEYR;
   }
 }
