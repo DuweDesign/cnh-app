@@ -39,6 +39,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   border: 2px solid white;
   border-radius: 10px;
   width: 150px;
@@ -80,8 +81,78 @@
   }
 }
 
-@media (max-width: 992px) {
+.page__bottom {
+  width: 100%;
+  padding: 40px 30px 60px;
+}
 
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.bottom__badge {
+  position: relative;
+  background: rgb(29, 29, 29);
+  color: #fff;
+  padding: 18px 40px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  overflow: visible;
+  z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 140%;
+    height: 150px;
+    z-index: -1;
+    background: rgb(29, 29, 29);
+    clip-path: polygon(28% 0, 100% 38%, 70% 100%, 0% 100%);
+  }
+}
+
+.bottom__cta {
+  display: flex;
+  justify-content: flex-end;
+  width: 60%;
+}
+
+.bottom__cta-inner {
+  border-left: 2px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  padding: 20px 25px;
+  color: #fff;
+  max-width: 500px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 80px;
+    width: 2px;
+    background-color: #fff;
+    right: 0;
+    bottom: -81px;
+  }
+
+  strong {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
   .page__center {
     display: flex;
     flex-direction: column;
@@ -92,8 +163,8 @@
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-areas:
-      "number label"
-      "info   info";
+      'number label'
+      'info   info';
     column-gap: 15px;
     row-gap: 10px;
     align-items: center;
@@ -126,5 +197,47 @@
   // Logo ausblenden
   .page__logo {
     display: none;
+  }
+
+  .bottom {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+
+  .bottom__cta {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .bottom__cta-inner {
+    max-width: 100%;
+    border-left: none;
+    border-bottom: none;
+    border-right: 2px solid rgba(255, 255, 255, 0.8);
+    padding: 20px 20px 20px 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      height: 2px;
+      width: 120%;
+      background-color: #fff;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .bottom__badge {
+    align-self: flex-end;
+    &::before {
+      left: 0;
+      width: 140%;
+      clip-path: polygon(
+        0% 28%, 
+        71% 0, 
+        100% 100%, 
+        22% 100%
+    );
+    }
   }
 }
