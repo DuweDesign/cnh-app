@@ -1,1 +1,130 @@
 @use 'page' as *;
+
+.page__center {
+  display: grid;
+  grid-template-columns: 150px 180px 1fr 1fr;
+  column-gap: 40px;
+  row-gap: 40px;
+  align-items: center;
+}
+
+.user {
+  display: contents;
+  grid-template-columns: 260px 180px minmax(300px, 1fr);
+  align-items: center;
+  column-gap: 40px;
+  width: 100%;
+}
+
+.user__label {
+  grid-column: 1;
+  color: #fff;
+  font-weight: 700;
+  align-self: flex-end;
+  span {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+}
+
+.user__number {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 150px;
+  height: 150px;
+  font-size: 5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.user__info {
+  grid-column: 3;
+  color: #fff;
+  font-weight: 500;
+  max-width: 700px;
+  align-self: flex-start;
+
+  p {
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  p + p {
+    margin-top: 10px;
+  }
+}
+
+.page__logo {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
+  img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+}
+
+@media (max-width: 992px) {
+
+  .page__center {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .user {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "number label"
+      "info   info";
+    column-gap: 15px;
+    row-gap: 10px;
+    align-items: center;
+  }
+
+  .user__number {
+    grid-area: number;
+  }
+
+  .user__label {
+    grid-area: label;
+
+    span {
+      font-size: 1.8rem;
+      line-height: 1.1;
+    }
+  }
+
+  .user__info {
+    grid-area: info;
+    max-width: 100%;
+  }
+
+  .number {
+    width: 120px;
+    height: 120px;
+    font-size: 4rem;
+  }
+
+  // Logo ausblenden
+  .page__logo {
+    display: none;
+  }
+}

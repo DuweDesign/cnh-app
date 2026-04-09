@@ -20,7 +20,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.CASE_STEYR,
         label: 'CASE / STEYR',
         home: {
-            backgroundImage: '/images/backgrounds/home-bg.png',
+            backgroundImage: '/images/backgrounds/ranking-bg.png',
             title: 'Saisonübersicht'
         },
         ranking: {
@@ -28,7 +28,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/score-bg.png',
+            backgroundImage: '/images/backgrounds/ranking-bg.png',
             title: 'Mein Fortschritt'
         },
         rules: {
@@ -48,11 +48,11 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Saisonübersicht'
         },
         ranking: {
-            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            backgroundImage: '/images/backgrounds/home-bg.png',
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/score-bg.png',
+            backgroundImage: '/images/backgrounds/home-bg.png',
             title: 'Mein Fortschritt'
         },
         rules: {

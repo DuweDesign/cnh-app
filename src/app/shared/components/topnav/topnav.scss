@@ -14,11 +14,15 @@
   left: 0;
 
   &.topnav--authenticated {
-    position: relative;
+    position: absolute;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     position: relative;
+
+    &.topnav--authenticated {
+      position: relative;
+    }
   }
 }
 
