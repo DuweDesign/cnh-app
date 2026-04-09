@@ -16,6 +16,7 @@ export class Topnav {
   @Input() isLoggedIn = false;
 
   isProfileMenuOpen = false;
+  isMobileMenuOpen = false;
 
   readonly authService = inject(AuthService);
   readonly competitionService = inject(CompetitionService);
@@ -29,16 +30,17 @@ export class Topnav {
     this.competitionService.activeCompetition() === COMPETITIONS.NEW_HOLLAND
   );
 
-  
+
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
-  constructor(private elRef: ElementRef) {}
+  constructor(private elRef: ElementRef) { }
 
 
   toggleProfileMenu(event: MouseEvent): void {
     event.stopPropagation();
+    this.isMobileMenuOpen = false;
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 
@@ -48,6 +50,16 @@ export class Topnav {
 
   toggleCompetition(): void {
     this.competitionService.toggleCompetition();
+  }
+
+
+  toggleMobileMenu(): void {
+    this.isProfileMenuOpen = false;
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
   }
 
   @HostListener('document:keydown.escape')
