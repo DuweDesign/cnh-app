@@ -20,15 +20,15 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.CASE_STEYR,
         label: 'CASE / STEYR',
         home: {
-            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
             title: 'Saisonübersicht'
         },
         ranking: {
-            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/ranking-bg.png',
+            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
             title: 'Mein Fortschritt'
         },
         rules: {
@@ -36,7 +36,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Die Regeln'
         },
         prizes: {
-            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
             title: 'Die Reise'
         }
     },
@@ -44,15 +44,15 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.NEW_HOLLAND,
         label: 'NEW HOLLAND',
         home: {
-            backgroundImage: '/images/backgrounds/home-bg.png',
+            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
             title: 'Saisonübersicht'
         },
         ranking: {
-            backgroundImage: '/images/backgrounds/home-bg.png',
+            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/home-bg.png',
+            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
             title: 'Mein Fortschritt'
         },
         rules: {
@@ -60,7 +60,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Die Regeln'
         },
         prizes: {
-            backgroundImage: '/images/backgrounds/case-steyr.jpg',
+            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
             title: 'Die Reise'
         }
     }
