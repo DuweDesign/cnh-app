@@ -6,6 +6,7 @@
   gap: 40px;
   flex-direction: row;
   padding-top: 20px;
+  justify-content: space-between;
 
   .current-month {
     width: 100%;
@@ -15,18 +16,6 @@
 
     h2 {
       font-size: 1.8rem;
-    }
-  }
-
-  .page__logo {
-    width: 100%;
-    text-align: right;
-    align-self: center;
-
-    img {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
     }
   }
 }
@@ -135,10 +124,6 @@
     .current-month {
       max-width: 100%;
     }
-  }
-
-  .page__logo {
-    display: none;
   }
 }
 

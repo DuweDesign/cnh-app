@@ -39,8 +39,7 @@
 
         <nav class="topnav__desktop-nav">
           <div class="main-nav">
-            <a routerLink="/home" routerLinkActive="active">News</a>
-
+            
             @if (isSaleUser()) {
               <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
             } @else if (authService.isAdmin()) {
@@ -49,9 +48,10 @@
             } @else {
               <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
             }
-
-            <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
+            
+            <a routerLink="/home" routerLinkActive="active">News</a>
             <a routerLink="/preise" routerLinkActive="active">Reise</a>
+            <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
           </div>
 
           <div class="topnav__brands topnav__brands--desktop">

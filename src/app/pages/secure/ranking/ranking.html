@@ -1,11 +1,56 @@
 @if (competitionConfig(); as config) {
-    <div class="page ranking" [ngStyle]="{'background-image': `url(${config.ranking.backgroundImage})`}">
-        <div class="page__content">
-
-            <div class="page__title">
-                <h1>{{ config.ranking.title }}</h1>
-            </div>
-            
+<div class="page ranking" [ngStyle]="{'background-image': `url(${config.ranking.backgroundImage})`}">
+    <div class="page__content">
+        <div class="page__title">
+            <h1>Ranking</h1>
+            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
         </div>
+
+        <div class="page__center">
+            <div class="ranking-table-wrapper">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Platz</th>
+                            <th>Händlernr.</th>
+                            <th>Name</th>
+                            <th>Unternehmen</th>
+                            <th>Punkte im Mai</th>
+                            <th>Gesamtpunkte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (participant of sortedParticipants(); track participant.id; let i = $index) {
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ participant.dealerNumber }}</td>
+                            <td>{{ participant.name }}</td>
+                            <td>{{ participant.company }}</td>
+                            <td>{{ participant.points }}</td>
+                            <td class="points">{{ participant.points }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="page__logo">
+                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+            </div>
+        </div>
+
+        <div class="page__bottom">
+
+            <div class="bottom">
+
+                <div class="bottom__badge">
+                    Was Sie gewinnen können
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+</div>
 }

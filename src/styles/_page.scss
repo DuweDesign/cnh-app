@@ -47,6 +47,10 @@
       font-weight: 500;
     }
 
+    p {
+      color: #fff;
+    }
+
     .title-logo {
       display: none;
       height: 100px;
@@ -60,6 +64,19 @@
     padding: 60px 30px;
     display: flex;
     flex-direction: column;
+    
+    .page__logo {
+      width: 100%;
+      max-width: 300px;
+      text-align: right;
+      align-self: center;
+
+      img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+      }
+    }
   }
 
   &__bottom {
@@ -82,6 +99,10 @@
       .title-logo {
         display: block;
       }
+    }
+
+    .page__logo {
+      display: none;
     }
   }
 
