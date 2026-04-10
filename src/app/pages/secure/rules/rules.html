@@ -1,11 +1,218 @@
 @if (competitionConfig(); as config) {
-    <div class="page rules" [ngStyle]="{'background-image': `url(${config.rules.backgroundImage})`}">
-        <div class="page__content">
+<div class="page rules" [ngStyle]="{'background-image': `url(${config.rules.backgroundImage})`}">
+    <div class="page__content">
 
-            <div class="page__title">
-                <h1>{{ config.rules.title }}</h1>
+        <div class="page__title">
+            <h1>{{ config.rules.title }}</h1>
+            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+        </div>
+
+        <div class="page__center">
+            @if (rulesConfig(); as rules) {
+            <section class="rules-page" [ngClass]="'rules-page--' + rules.theme">
+                <div class="rules-page__inner">
+
+                    <header class="rules-hero">
+                        <p class="rules-hero__eyebrow">{{ rules.eyebrow }}</p>
+                        <p class="rules-hero__title">{{ rules.title }}</p>
+                        <p class="rules-hero__intro">{{ rules.intro }}</p>
+                    </header>
+
+                    <section class="rules-section">
+                        <h2>So funktioniert die Verkaufs-Offensive</h2>
+                        <p>{{ rules.howItWorks.text1 }}</p>
+                        <p>{{ rules.howItWorks.text2 }}</p>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Mission 15</h2>
+                        <p class="rules-highlight">{{ rules.mission15.subtitle }}</p>
+                        <p>{{ rules.mission15.text1 }}</p>
+                        <p>{{ rules.mission15.text2 }}</p>
+                        <p>{{ rules.mission15.text3 }}</p>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Monatliche Prämierung</h2>
+                        <p>{{ rules.monthlyReward.text1 }}</p>
+
+                        <div class="rules-card">
+                            <h3>Top Ten des Monats</h3>
+                            <p [innerHTML]="rules.monthlyReward.cardText1"></p>
+                            <p>{{ rules.monthlyReward.cardText2 }}</p>
+                            <p class="rules-note">{{ rules.monthlyReward.cardNote }}</p>
+                        </div>
+
+                        <p>{{ rules.monthlyReward.text2 }}</p>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Wertungstabelle</h2>
+
+                        <div class="rules-table-wrap">
+                            <table class="rules-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produktgruppe</th>
+                                        <th>{{ rules.mainTable.pointsLabel }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (item of rules.mainTable.rows; track item.label) {
+                                    <tr>
+                                        <td>{{ item.label }}</td>
+                                        <td>{{ item.points }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Saisonaler Push</h2>
+
+                        <div class="rules-table-wrap">
+                            <table class="rules-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produktgruppe</th>
+                                        <th>Zeitraum</th>
+                                        <th>Punkte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (item of rules.seasonalPush; track item.label) {
+                                    <tr>
+                                        <td>{{ item.label }}</td>
+                                        <td>{{ item.period }}</td>
+                                        <td>{{ item.points }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Mission 15 – EXTRA-Punkte</h2>
+
+                        <div class="rules-table-wrap">
+                            <table class="rules-table">
+                                <thead>
+                                    <tr>
+                                        <th>Aktion</th>
+                                        <th>EXTRA-Punkte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ rules.extraPoints.label }}</td>
+                                        <td>{{ rules.extraPoints.points }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    @if (rules.ceLightTable) {
+                    <section class="rules-section">
+                        <h2>{{ rules.ceLightTable.title }}</h2>
+
+                        <div class="rules-table-wrap">
+                            <table class="rules-table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ rules.ceLightTable.labelColumn }}</th>
+                                        <th>{{ rules.ceLightTable.pointsLabel }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (item of rules.ceLightTable.rows; track item.label) {
+                                    <tr>
+                                        <td>{{ item.label }}</td>
+                                        <td>{{ item.points }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    }
+
+                    <section class="rules-section">
+                        <h2>Beispiele</h2>
+
+                        @for (example of rules.examples; track example.title) {
+                        <div class="rules-example">
+                            <h3>{{ example.title }}</h3>
+                            <p>{{ example.text }}</p>
+                            <p><strong>{{ example.result }}</strong></p>
+                        </div>
+                        }
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Laufzeit</h2>
+                        <p>{{ rules.duration.text1 }}</p>
+                        <p>{{ rules.duration.text2 }}</p>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Teilnahmebedingungen</h2>
+                        <ul class="rules-list">
+                            @for (item of rules.conditions; track item) {
+                            <li>{{ item }}</li>
+                            }
+                        </ul>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Administration</h2>
+                        <p>{{ rules.administration.text1 }}</p>
+                        <p>{{ rules.administration.text2 }}</p>
+                        <p>
+                            Gewünschte Änderungen bitte an
+                            <a [href]="'mailto:' + rules.administration.email">{{ rules.administration.email }}</a>
+                            melden.
+                        </p>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Zusätzliche Bedingungen</h2>
+                        <ul class="rules-list">
+                            @for (item of rules.additionalConditions; track item) {
+                            <li>{{ item }}</li>
+                            }
+                        </ul>
+                    </section>
+
+                    <section class="rules-section">
+                        <h2>Abschluss</h2>
+                        <p>{{ rules.closing.text }}</p>
+                        <p class="rules-highlight">{{ rules.closing.highlight }}</p>
+                    </section>
+
+                </div>
+            </section>
+            }
+
+            <div class="page__logo">
+                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
             </div>
-            
+        </div>
+
+        <div class="page__bottom">
+
+            <div class="bottom">
+
+                <div class="bottom__badge">
+                    Was Sie gewinnen können
+                </div>
+
+            </div>
+
         </div>
     </div>
+</div>
 }
