@@ -134,8 +134,7 @@
   @if (isLoggedIn && isMobileMenuOpen) {
     <div class="mobile-menu">
       <div class="mobile-menu__links">
-        <a routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
-
+        
         @if (isSaleUser()) {
           <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
         } @else if (authService.isAdmin()) {
@@ -144,9 +143,10 @@
         } @else {
           <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
         }
-
-        <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>
+        
+        <a routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
         <a routerLink="/preise" routerLinkActive="active" (click)="closeMobileMenu()">Reise</a>
+        <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>
       </div>
     </div>
   }
