@@ -45,7 +45,8 @@
 
   &__item {
     flex: 1;
-    color: #000;
+    color: #bebebe;
+    text-shadow: 1px 1px 2px #000;
     min-width: 0;
 
     &.active {
