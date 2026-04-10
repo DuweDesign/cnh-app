@@ -65,7 +65,7 @@ export const routes: Routes = [
       import('./layouts/secure-layout/secure-layout').then(m => m.SecureLayout),
     children: [
       {
-        path: 'home',
+        path: 'news',
         loadComponent: () =>
           import('./pages/secure/home/home').then(m => m.Home)
       },
