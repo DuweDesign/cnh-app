@@ -114,15 +114,15 @@
 }
 
 @media (max-width: 1440px) {
-    .page__bottom {
-        padding: 0 30px;
+  .page__bottom {
+    padding: 0 30px;
 
-        .timeline {
-            .timeline__description {
-                max-width: 280px;
-            }
-        }
+    .timeline {
+      .timeline__description {
+        max-width: 280px;
+      }
     }
+  }
 }
 
 @media (max-width: 992px) {
@@ -138,5 +138,20 @@
 
   .page__logo {
     display: none;
+  }
+}
+
+// 📱 Mobile Override
+@media (max-width: 640px) {
+  .timeline--slider {
+    gap: 12px;
+
+    .timeline__item {
+      flex: 0 0 100%;
+
+      .timeline__description {
+        max-width: 100%;
+      }
+    }
   }
 }
