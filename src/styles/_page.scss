@@ -72,4 +72,11 @@
       }
     }
   }
+
+  @media (max-width: 640px) {
+    &__title {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 }
