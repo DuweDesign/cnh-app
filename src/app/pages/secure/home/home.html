@@ -1,11 +1,51 @@
 @if (competitionConfig(); as config) {
-    <div class="page home" [ngStyle]="{'background-image': `url(${config.home.backgroundImage})`}">
-        <div class="page__content">
+<div class="page home" [ngStyle]="{'background-image': `url(${config.home.backgroundImage})`}">
+    <div class="page__content" #pageContent>
 
-            <div class="page__title">
-                <h1>{{ config.home.title }}</h1>
+        <div class="page__title">
+            <h1>{{ config.home.title }}</h1>
+            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+        </div>
+
+        <div class="page__center">
+            <div class="current-month">
+                <h2>APRIL - Der Startschuss</h2>
+                <p>Mit der Aussaat von Mais, Zuckerrüben und Sommergetreide beginnt die neue Saison. Jetzt werden die
+                    Grundlagen für eine erfolgreiche Ernte gelegt – genau wie im Verkaufswettbewerb, bei dem ein starker
+                    Start entscheidend für den Gesamterfolg ist.</p>
             </div>
-            
+
+            <div class="page__logo">
+                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+            </div>
+        </div>
+
+        <div class="page__bottom">
+            @if (isTimelineSlider()) {
+            <div class="timeline-slider-nav">
+                <button type="button" class="timeline-slider-nav__btn" (click)="scrollTimeline('prev')">
+                    ‹
+                </button>
+                <button type="button" class="timeline-slider-nav__btn" (click)="scrollTimeline('next')">
+                    ›
+                </button>
+            </div>
+            }
+            <div #timeline class="timeline" [class.timeline--slider]="isTimelineSlider()">
+                @for (item of data; track $index) {
+                <div class="timeline__item" [ngClass]="{'active': item.active}">
+                    <div class="timeline__title">
+                        <span class="month">{{ item.month }}</span>
+                        <span class="label">{{ item.label }}</span>
+                    </div>
+
+                    <p class="timeline__description">
+                        {{ item.description }}
+                    </p>
+                </div>
+                }
+            </div>
         </div>
     </div>
+</div>
 }
