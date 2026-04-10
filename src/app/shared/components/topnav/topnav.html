@@ -2,152 +2,132 @@
   <div class="topnav__inner">
 
     <div class="topnav__left">
-      <a class="topnav__brand" [routerLink]="isLoggedIn ? isSaleUser() ? '/punktestand' : '/ranking' : '/login'">
+      <a class="topnav__brand" [routerLink]="isLoggedIn ? '/ranking' : '/login'">
         <img src="/images/cnh-logo.png" alt="CNH Logo" />
       </a>
 
       @if (isLoggedIn) {
-        <div class="topnav__brands topnav__brands--mobile">
-          @if (isNewHolland()) {
-            <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-          } @else {
-            <span><img src="/images/case_logo.png" alt="CASE"></span>
-            <span><img style="margin-top: 8px;"  src="/images/steyr_logo.png" alt="STEYR"></span>
-          }
-        </div>
+      <div class="topnav__brands topnav__brands--mobile">
+        @if (isNewHolland()) {
+        <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+        } @else {
+        <span><img src="/images/case_logo.png" alt="CASE"></span>
+        <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+        }
+      </div>
       } @else {
-        <div class="topnav__brands topnav__brands--mobile">
-          <span><img src="/images/case_logo.png" alt="CASE"></span>
-          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-          <span><img style="margin-top: 8px;"  src="/images/steyr_logo.png" alt="STEYR"></span>
-        </div>
+      <div class="topnav__brands topnav__brands--mobile">
+        <span><img src="/images/case_logo.png" alt="CASE"></span>
+        <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+        <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+      </div>
       }
     </div>
 
     @if (!isLoggedIn) {
-      <nav class="topnav__right topnav__right--desktop">
-        <div class="topnav__brands">
-          <span><img src="/images/case_logo.png" alt="CASE"></span>
-          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-          <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
-        </div>
-      </nav>
+    <nav class="topnav__right topnav__right--desktop">
+      <div class="topnav__brands">
+        <span><img src="/images/case_logo.png" alt="CASE"></span>
+        <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+        <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+      </div>
+    </nav>
     }
 
     @if (isLoggedIn) {
-      <div class="topnav__auth-area">
+    <div class="topnav__auth-area">
 
-        <nav class="topnav__desktop-nav">
-          <div class="main-nav">
-            
-            @if (isSaleUser()) {
-              <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
-            } @else if (authService.isAdmin()) {
-              <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
-              <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
-            } @else {
-              <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
-            }
-            
-            <a routerLink="/news" routerLinkActive="active">News</a>
-            <a routerLink="/preise" routerLinkActive="active">Reise</a>
-            <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
-          </div>
+      <nav class="topnav__desktop-nav">
+        <div class="main-nav">
+          <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+          <a routerLink="/news" routerLinkActive="active">News</a>
+          <a routerLink="/preise" routerLinkActive="active">Reise</a>
+          <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
+        </div>
 
-          <div class="topnav__brands topnav__brands--desktop">
-            @if (isNewHolland()) {
-              <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-            } @else {
-              <span><img src="/images/case_logo.png" alt="CASE"></span>
-              <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
-            }
-          </div>
+        <div class="topnav__brands topnav__brands--desktop">
+          @if (isNewHolland()) {
+          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
+          } @else {
+          <span><img src="/images/case_logo.png" alt="CASE"></span>
+          <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+          }
+        </div>
 
-          <div class="profile-menu-wrapper">
-            <button class="profile-icon" type="button" aria-label="Profil" (click)="toggleProfileMenu($event)">
-              <span><img src="/images/icons/profile.png" alt="Profil"></span>
-            </button>
-
-            @if (isProfileMenuOpen) {
-              <div class="profile-dropdown">
-                @if (showCompetitionToggle()) {
-                  <div class="competition-toggle" (click)="toggleCompetition()">
-                    <span class="label left">CASE / STEYR</span>
-                    <span class="label right">NEW HOLLAND</span>
-                    <div class="slider" [class.right]="isNewHolland()"></div>
-                  </div>
-                }
-
-                <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
-                  Profil
-                </a>
-
-                <button type="button" class="logout" (click)="logout()">
-                  Logout
-                </button>
-              </div>
-            }
-          </div>
-        </nav>
-
-        <div class="topnav__mobile-actions">
-          <button
-            class="burger-btn"
-            type="button"
-            aria-label="Menü öffnen"
-            (click)="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="profile-menu-wrapper">
+          <button class="profile-icon" type="button" aria-label="Profil" (click)="toggleProfileMenu($event)">
+            <span><img src="/images/icons/profile.png" alt="Profil"></span>
           </button>
 
-          <div class="profile-menu-wrapper">
-            <button class="profile-icon" type="button" aria-label="Profil" (click)="toggleProfileMenu($event)">
-              <span><img src="/images/icons/profile.png" alt="Profil"></span>
-            </button>
-
-            @if (isProfileMenuOpen) {
-              <div class="profile-dropdown">
-                @if (showCompetitionToggle()) {
-                  <div class="competition-toggle" (click)="toggleCompetition()">
-                    <span class="label left">CASE / STEYR</span>
-                    <span class="label right">NEW HOLLAND</span>
-                    <div class="slider" [class.right]="isNewHolland()"></div>
-                  </div>
-                }
-
-                <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
-                  Profil
-                </a>
-
-                <button type="button" class="logout" (click)="logout()">
-                  Logout
-                </button>
-              </div>
+          @if (isProfileMenuOpen) {
+          <div class="profile-dropdown">
+            @if (showCompetitionToggle()) {
+            <div class="competition-toggle" (click)="toggleCompetition()">
+              <span class="label left">CASE / STEYR</span>
+              <span class="label right">NEW HOLLAND</span>
+              <div class="slider" [class.right]="isNewHolland()"></div>
+            </div>
             }
+
+            <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
+              Profil
+            </a>
+
+            <button type="button" class="logout" (click)="logout()">
+              Logout
+            </button>
           </div>
+          }
+        </div>
+      </nav>
+
+      <div class="topnav__mobile-actions">
+        <button class="burger-btn" type="button" aria-label="Menü öffnen" (click)="toggleMobileMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="profile-menu-wrapper">
+          <button class="profile-icon" type="button" aria-label="Profil" (click)="toggleProfileMenu($event)">
+            <span><img src="/images/icons/profile.png" alt="Profil"></span>
+          </button>
+
+          @if (isProfileMenuOpen) {
+          <div class="profile-dropdown">
+            @if (showCompetitionToggle()) {
+            <div class="competition-toggle" (click)="toggleCompetition()">
+              <span class="label left">CASE / STEYR</span>
+              <span class="label right">NEW HOLLAND</span>
+              <div class="slider" [class.right]="isNewHolland()"></div>
+            </div>
+            }
+
+            <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
+              Profil
+            </a>
+
+            <button type="button" class="logout" (click)="logout()">
+              Logout
+            </button>
+          </div>
+          }
         </div>
       </div>
+    </div>
     }
   </div>
 
   @if (isLoggedIn && isMobileMenuOpen) {
-    <div class="mobile-menu">
-      <div class="mobile-menu__links">
-        
-        @if (isSaleUser()) {
-          <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
-        } @else if (authService.isAdmin()) {
-          <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
-          <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
-        } @else {
-          <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
-        }
-
-        <a routerLink="/news" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
-        <a routerLink="/preise" routerLinkActive="active" (click)="closeMobileMenu()">Reise</a>
-        <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>
-      </div>
+  <div class="mobile-menu">
+    <div class="mobile-menu__links">
+      <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
+      <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
+      <a routerLink="/news" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
+      <a routerLink="/preise" routerLinkActive="active" (click)="closeMobileMenu()">Reise</a>
+      <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>
     </div>
+  </div>
   }
 </header>
