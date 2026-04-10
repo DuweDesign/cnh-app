@@ -374,7 +374,7 @@
     &::before {
       left: 0;
       width: 140%;
-      clip-path: polygon(0% 35%, 71% 0, 100% 100%, 22% 100%);
+      clip-path: polygon(0% 36%, 71% 0, 100% 100%, 22% 100%);
     }
   }
 }
@@ -405,6 +405,16 @@
 
   .page__bottom {
     padding: 28px 14px 50px;
+  }
+
+  .bottom__badge {
+    align-self: flex-end;
+
+    &::before {
+      left: 0;
+      width: 140%;
+      clip-path: polygon(0% 34%, 71% 0, 100% 100%, 22% 100%);
+    }
   }
 }
 
