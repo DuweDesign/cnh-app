@@ -6,20 +6,11 @@
   background-repeat: no-repeat;
   position: relative;
   padding-bottom: 0;
-
-  &::before {
-    display: none;
-  }
+  background-attachment: fixed;
 
   .page__content {
     position: relative;
     z-index: 2;
-  }
-
-  .page__title {
-    h1 {
-      color: #000;
-    }
   }
 }
 
@@ -29,12 +20,11 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 30px;
-  
+
   .page__logo {
     align-self: flex-start;
   }
 }
-
 
 .rules-page {
   width: 100%;

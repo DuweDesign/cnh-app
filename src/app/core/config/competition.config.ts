@@ -32,7 +32,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Mein Fortschritt'
         },
         rules: {
-            backgroundImage: '',
+            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
             title: 'Die Regeln'
         },
         prizes: {
@@ -56,7 +56,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             title: 'Mein Fortschritt'
         },
         rules: {
-            backgroundImage: '',
+            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
             title: 'Die Regeln'
         },
         prizes: {
