@@ -26,5 +26,5 @@ export const roleGuard = (
     return true;
   }
 
-  return router.createUrlTree(['/ranking']);
+  return router.createUrlTree(['/news']);
 };

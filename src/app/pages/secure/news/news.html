@@ -83,6 +83,25 @@
             </div>
         </div>
 
+        @if (newsImages().length) {
+            <div class="page__gallery">
+                <section class="news-gallery">
+                    <div class="news-gallery__header">
+                        <h2>Impressionen</h2>
+                        <p>Ein erster Eindruck davon, worauf Sie hinarbeiten.</p>
+                    </div>
+    
+                    <div class="news-gallery__grid">
+                        @for (image of newsImages(); track image.url) {
+                            <div class="news-gallery__item">
+                                <img [src]="image.url" [alt]="image.name || 'News Bild'" />
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        }
+
          <div class="page__bottom">
 
             <div class="bottom">

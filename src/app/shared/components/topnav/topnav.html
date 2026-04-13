@@ -2,7 +2,7 @@
   <div class="topnav__inner">
 
     <div class="topnav__left">
-      <a class="topnav__brand" [routerLink]="isLoggedIn ? '/ranking' : '/login'">
+      <a class="topnav__brand" [routerLink]="isLoggedIn ? '/news' : '/login'">
         <img src="/images/cnh-logo.png" alt="CNH Logo" />
       </a>
 
@@ -39,9 +39,14 @@
 
       <nav class="topnav__desktop-nav">
         <div class="main-nav">
-          <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
-          <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
           <a routerLink="/news" routerLinkActive="active">News</a>
+          @if (!isSaleUser()) {
+            <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          }
+          @if (isSaleUser() || authService.isAdmin()) {
+            <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+            <a routerLink="/bonus" routerLinkActive="active">Bonus</a>
+          }
           <a routerLink="/preise" routerLinkActive="active">Reise</a>
           <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
         </div>
@@ -122,9 +127,14 @@
   @if (isLoggedIn && isMobileMenuOpen) {
   <div class="mobile-menu">
     <div class="mobile-menu__links">
-      <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
-      <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
       <a routerLink="/news" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
+      @if (!isSaleUser()) {
+        <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
+      }
+      @if (isSaleUser()) {
+        <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
+        <a routerLink="/bonus" routerLinkActive="active" (click)="closeMobileMenu()">Bonus</a>
+      }
       <a routerLink="/preise" routerLinkActive="active" (click)="closeMobileMenu()">Reise</a>
       <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>
     </div>

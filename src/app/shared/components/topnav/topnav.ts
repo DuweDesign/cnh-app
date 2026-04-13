@@ -30,7 +30,6 @@ export class Topnav {
     this.competitionService.activeCompetition() === COMPETITIONS.NEW_HOLLAND
   );
 
-
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );

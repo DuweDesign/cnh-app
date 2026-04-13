@@ -1,0 +1,52 @@
+@if (competitionConfig(); as config) {
+<div class="page bonus" [ngStyle]="{'background-image': `url(${config.bonus.backgroundImage})`}">
+    <div class="page__content">
+        <div class="page__title">
+            <h1>{{ config.bonus.title }}</h1>
+            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+        </div>
+
+        <div class="page__center page__center--sale">
+            <div class="user__info">
+                <p>
+                    Die Top Ten Verkäuferinnen / Verkäufer erhalten pro Monat einen Amazon-Gutschein in Höhe von
+                </p>
+                <span>175,00 €*</span>
+                <p>
+                    Die Gutscheine werden monatlich nach der Auswertung im Folgemonat verschickt.
+                </p>
+                <small>
+                    *Die erforderliche Pauschalversteuerung wird darüber hinaus von uns übernommen.
+                </small>
+            </div>
+
+            <div class="user__image">
+                <img src="/images/amazon.png" alt="Amazon Gutschein" />
+            </div>
+
+            <div class="page__user-logo">
+                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+            </div>
+
+            <div class="user__mission">
+                <div class="user__label">
+                    <span>Bonus</span>
+                    <p>Bis zum Monatsbonus fehlen noch <strong>3</strong> Verkäufe!</p>
+                </div>
+
+                <div class="user__number">
+                    <div class="number">3</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page__bottom">
+            <div class="bottom">
+                <div class="bottom__badge">
+                    <a routerLink="/preise">Was Sie gewinnen können</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

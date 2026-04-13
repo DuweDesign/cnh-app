@@ -110,6 +110,7 @@ export class CompetitionService {
 
           baseConfig.news.backgroundImage = bg;
           baseConfig.ranking.backgroundImage = bg;
+          baseConfig.bonus.backgroundImage = bg;
           baseConfig.score.backgroundImage = bg;
           baseConfig.rules.backgroundImage = bg;
           baseConfig.prizes.backgroundImage = bg;
@@ -122,6 +123,7 @@ export class CompetitionService {
           const fallback = '/images/default-background.jpg';
           baseConfig.news.backgroundImage = fallback;
           baseConfig.ranking.backgroundImage = fallback;
+          baseConfig.bonus.backgroundImage = fallback;
           baseConfig.score.backgroundImage = fallback;
           baseConfig.rules.backgroundImage = fallback;
           baseConfig.prizes.backgroundImage = fallback;

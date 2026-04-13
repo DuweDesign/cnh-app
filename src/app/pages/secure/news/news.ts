@@ -5,6 +5,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { USER_ROLES } from '../../../core/models/auth.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environments';
+
+interface NewsImage {
+  name: string;
+  url: string;
+}
 
 @Component({
   selector: 'cnh-news',
@@ -30,6 +37,26 @@ export class News {
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
+  private http = inject(HttpClient);
+
+  newsImages = signal<NewsImage[]>([]);
+
+  ngOnInit(): void {
+    this.loadNewsImages();
+  }
+
+  loadNewsImages(): void {
+    this.http.get<{ success: boolean; images: NewsImage[] }>(`${environment.apiUrl}/v1/cnh/news/images`)
+      .subscribe({
+        next: (response) => {
+          this.newsImages.set(response.images ?? []);
+        },
+        error: (error) => {
+          console.error('Fehler beim Laden der News-Bilder:', error);
+          this.newsImages.set([]);
+        }
+      });
+  }
 
   // data = [
   //   {

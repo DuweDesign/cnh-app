@@ -5,6 +5,7 @@ export interface CompetitionConfig {
     label: string;
     news: Site;
     ranking: Site;
+    bonus: Site;
     score: Site;
     rules: Site;
     prizes: Site;
@@ -27,9 +28,13 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             backgroundImage: '',
             title: 'Ranking'
         },
+        bonus: {
+            backgroundImage: '',
+            title: 'Preise jeden Monat'
+        },
         score: {
             backgroundImage: '',
-            title: 'Mein Fortschritt'
+            title: 'Mein Reisekonto'
         },
         rules: {
             backgroundImage: '',
@@ -50,6 +55,10 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         ranking: {
             backgroundImage: '',
             title: 'Ranking'
+        },
+        bonus: {
+            backgroundImage: '',
+            title: 'Preise jeden Monat'
         },
         score: {
             backgroundImage: '',

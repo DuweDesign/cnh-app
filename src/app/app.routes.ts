@@ -71,11 +71,29 @@ export const routes: Routes = [
       },
       {
         path: 'punktestand',
+        canActivate: [roleGuard],
+        data: {
+          roles: [
+            USER_ROLES.SYSADMIN,
+            USER_ROLES.VIPP_ADMIN,
+            USER_ROLES.CNH_ADMIN,
+            USER_ROLES.CNH_SALES
+          ]
+        },
         loadComponent: () =>
           import('./pages/secure/score/score').then(m => m.Score)
       },
       {
         path: 'ranking',
+        canActivate: [roleGuard],
+        data: {
+          roles: [
+            USER_ROLES.SYSADMIN,
+            USER_ROLES.VIPP_ADMIN,
+            USER_ROLES.CNH_ADMIN,
+            USER_ROLES.CNH_MANAGEMENT
+          ]
+        },
         loadComponent: () =>
           import('./pages/secure/ranking/ranking').then(m => m.Ranking)
       },
@@ -88,6 +106,20 @@ export const routes: Routes = [
         path: 'preise',
         loadComponent: () =>
           import('./pages/secure/prizes/prizes').then(m => m.Prizes)
+      },
+      {
+        path: 'bonus',
+        canActivate: [roleGuard],
+        data: {
+          roles: [
+            USER_ROLES.SYSADMIN,
+            USER_ROLES.VIPP_ADMIN,
+            USER_ROLES.CNH_ADMIN,
+            USER_ROLES.CNH_SALES
+          ]
+        },
+        loadComponent: () =>
+          import('./pages/secure/bonus/bonus').then(m => m.Bonus)
       },
       {
         path: 'profil',
@@ -112,6 +144,6 @@ export const routes: Routes = [
 
   {
     path: '**',
-    redirectTo: 'ranking'
+    redirectTo: 'news'
   }
 ];

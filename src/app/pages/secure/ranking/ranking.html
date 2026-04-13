@@ -1,56 +1,8 @@
 @if (competitionConfig(); as config) {
 <div class="page ranking" [ngStyle]="{'background-image': `url(${config.ranking.backgroundImage})`}">
     <div class="page__content">
-
-        @if (isSaleUser()) {
         <div class="page__title">
-            <h1>Preise jeden Monat</h1>
-            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
-        </div>
-
-        <div class="page__center page__center--sale">
-            <div class="user__info">
-                <p>
-                    Die Top Ten Verkäuferinnen / Verkäufer erhalten pro Monat einen Amazon-Gutschein in Höhe von
-                </p>
-                <span>175,00 €*</span>
-                <p>
-                    Die Gutscheine werden monatlich nach der Auswertung im Folgemonat verschickt.
-                </p>
-                <small>
-                    *Die erforderliche Pauschalversteuerung wird darüber hinaus von uns übernommen.
-                </small>
-            </div>
-
-            <div class="user__image">
-                <img src="/images/amazon.png" alt="Amazon Gutschein" />
-            </div>
-
-            <div class="page__user-logo">
-                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
-            </div>
-
-            <div class="user__mission">
-                <div class="user__label">
-                    <span>Meine Mission 15<br>Punkte</span>
-                </div>
-
-                <div class="user__number">
-                    <div class="number">6</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="page__bottom">
-            <div class="bottom">
-                <div class="bottom__badge">
-                    <a routerLink="/preise">Was Sie gewinnen können</a>
-                </div>
-            </div>
-        </div>
-        } @else {
-        <div class="page__title">
-            <h1>Ranking</h1>
+            <h1>{{ config.ranking.title }}</h1>
             <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
         </div>
 
@@ -94,7 +46,6 @@
                 </div>
             </div>
         </div>
-        }
 
     </div>
 </div>
