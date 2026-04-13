@@ -52,7 +52,7 @@ export class Login {
       );
 
       if (response.success) {
-        await this.router.navigateByUrl('/home');
+        await this.router.navigateByUrl('/ranking');
       } else {
         this.errorMessage = response.message || 'Anmeldung fehlgeschlagen.';
       }

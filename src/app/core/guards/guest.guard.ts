@@ -7,7 +7,7 @@ export const guestGuard = () => {
   const router = inject(Router);
 
   if (authService.isLoggedIn()) {
-    return router.createUrlTree(['/home']);
+    return router.createUrlTree(['/ranking']);
   }
 
   return true;
