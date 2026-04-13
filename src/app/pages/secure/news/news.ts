@@ -3,6 +3,8 @@ import { CompetitionService } from '../../../core/services/competition.service';
 import { COMPETITION_CONFIG } from '../../../core/config/competition.config';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { USER_ROLES } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'cnh-news',
@@ -19,6 +21,12 @@ export class News {
 
   readonly competition = this.competitionService.activeCompetition;
   readonly isTimelineSlider = signal(false);
+
+  private authService = inject(AuthService);
+
+  readonly isSaleUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_SALES
+  );
 
   readonly competitionConfig = computed(() => {
     const key = this.competition();
