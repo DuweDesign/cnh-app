@@ -20,6 +20,8 @@ export class News {
   @ViewChild('timeline') timelineRef?: ElementRef<HTMLElement>;
 
   readonly competition = this.competitionService.activeCompetition;
+  readonly competitionConfig = this.competitionService.competitionConfig;
+
   readonly isTimelineSlider = signal(false);
 
   private authService = inject(AuthService);
@@ -28,10 +30,6 @@ export class News {
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
-  readonly competitionConfig = computed(() => {
-    const key = this.competition();
-    return key ? COMPETITION_CONFIG[key] : null;
-  });
 
   // data = [
   //   {

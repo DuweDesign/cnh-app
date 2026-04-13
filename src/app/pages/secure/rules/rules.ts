@@ -87,11 +87,7 @@ export class Rules {
   private competitionService = inject(CompetitionService);
 
   readonly competition = this.competitionService.activeCompetition;
-
-  readonly competitionConfig = computed(() => {
-    const key = this.competition();
-    return key ? COMPETITION_CONFIG[key] : null;
-  });
+  readonly competitionConfig = this.competitionService.competitionConfig;
 
   readonly rulesConfig = computed<RulesConfig | null>(() => {
     const competition = this.competition();

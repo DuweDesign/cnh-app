@@ -13,9 +13,6 @@ export class Prizes {
  private competitionService = inject(CompetitionService);
 
   readonly competition = this.competitionService.activeCompetition;
+  readonly competitionConfig = this.competitionService.competitionConfig;
 
-  readonly competitionConfig = computed(() => {
-    const key = this.competition();
-    return key ? COMPETITION_CONFIG[key] : null;
-  });
 }
