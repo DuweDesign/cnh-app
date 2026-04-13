@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { COMPETITION_CONFIG } from '../../../core/config/competition.config';
+import { RouterLink } from '@angular/router';
 
 type RuleRow = {
   label: string;
@@ -78,7 +79,7 @@ type RulesConfig = {
 @Component({
   selector: 'cnh-rules',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './rules.html',
   styleUrl: './rules.scss',
 })

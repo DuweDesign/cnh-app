@@ -1,11 +1,140 @@
 @use 'page' as *;
 
+/* =========================
+   LAYOUT
+========================= */
+
 .page__center {
   height: auto;
   flex-direction: row;
   justify-content: space-between;
   gap: 30px;
 }
+
+/* =========================
+   SALE GRID (3 SPALTEN)
+========================= */
+
+.page__center--sale {
+  display: grid;
+  grid-template-columns: minmax(0, 520px) 260px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 20px;
+  row-gap: 30px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* INFO (oben links) */
+.user__info {
+  grid-column: 1;
+  grid-row: 1;
+  color: #fff;
+  font-weight: 500;
+  max-width: 520px;
+
+  span {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 12px 0;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  p + p {
+    margin-top: 10px;
+  }
+
+  small {
+    display: block;
+    font-style: italic;
+    margin-top: 10px;
+    line-height: 1.35;
+  }
+}
+
+/* AMAZON (oben mitte) */
+.user__image {
+  grid-column: 2;
+  grid-row: 1;
+
+  display: flex;
+  justify-content: flex-start;
+
+  img {
+    width: 100%;
+    max-width: 350px;
+    object-fit: contain;
+  }
+}
+
+/* LOGO (rechts über beide Reihen) */
+.page__user-logo {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+
+  img {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+  }
+}
+
+/* LABEL + PUNKTE (unten links, über 2 Spalten) */
+.user__mission {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+
+  display: grid;
+  grid-template-columns: 260px 180px;
+  column-gap: 40px;
+  align-items: end;
+}
+
+.user__label {
+  color: #fff;
+  font-weight: 700;
+
+  span {
+    display: block;
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+}
+
+.user__number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 150px;
+  height: 150px;
+
+  font-size: 5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* =========================
+   RANKING TABLE
+========================= */
 
 .ranking-table-wrapper {
   width: 100%;
@@ -57,6 +186,10 @@
   }
 }
 
+/* =========================
+   BOTTOM BADGE
+========================= */
+
 .page__bottom {
   width: 100%;
   padding: 40px 30px 60px;
@@ -79,6 +212,11 @@
   overflow: visible;
   z-index: 2;
 
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -92,14 +230,55 @@
   }
 }
 
+/* =========================
+   TABLET
+========================= */
+
 @media (max-width: 992px) {
   .page__center {
-    display: flex;
     flex-direction: column;
+  }
+
+  .page__center--sale {
+    grid-template-columns: 1fr;
+  }
+
+  .user__info,
+  .user__image,
+  .page__user-logo,
+  .user__mission {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .user__image {
+    justify-content: center;
+
+    img {
+      max-width: 220px;
+    }
+  }
+
+  .page__user-logo {
+    justify-content: center;
+
+    img {
+      max-width: 200px;
+    }
+  }
+
+  .user__mission {
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
+
+  .user__number {
+    justify-content: flex-start;
   }
 
   .bottom__badge {
     align-self: flex-end;
+
     &::before {
       left: 0;
       width: 140%;
@@ -108,6 +287,10 @@
   }
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 768px) {
   .page.ranking {
     padding: 24px 12px;
@@ -115,6 +298,14 @@
     .page__title h1 {
       font-size: 1.8rem;
     }
+  }
+
+  .user__image {
+    justify-content: flex-start;
+  }
+
+  .page__user-logo {
+    display: none;
   }
 
   .ranking-table {

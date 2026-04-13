@@ -96,12 +96,16 @@
 .bottom__badge {
   position: relative;
   background: rgb(29, 29, 29);
-  color: #fff;
   padding: 18px 40px;
   font-weight: 600;
   font-size: 1.1rem;
   overflow: visible;
   z-index: 2;
+  
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
 
   &::before {
     content: '';

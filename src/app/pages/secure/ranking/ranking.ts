@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { COMPETITION_CONFIG } from '../../../core/config/competition.config';
+import { RouterLink } from '@angular/router';
+import { USER_ROLES } from '../../../core/models/auth.model';
 
 type RankingParticipant = {
   id: number;
@@ -15,7 +17,7 @@ type RankingParticipant = {
 
 @Component({
   selector: 'cnh-ranking',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './ranking.html',
   styleUrl: './ranking.scss',
 })
@@ -30,6 +32,10 @@ export class Ranking {
   });
 
   private authService = inject(AuthService);
+
+  readonly isSaleUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_SALES
+  );
 
   // Dummy-Daten – später durch API ersetzen
   readonly participants = computed<RankingParticipant[]>(() => [
