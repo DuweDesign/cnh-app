@@ -67,7 +67,7 @@ export const routes: Routes = [
       {
         path: 'news',
         loadComponent: () =>
-          import('./pages/secure/home/home').then(m => m.Home)
+          import('./pages/secure/news/news').then(m => m.News)
       },
       {
         path: 'punktestand',
