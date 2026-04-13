@@ -25,11 +25,7 @@ export class Ranking {
   private competitionService = inject(CompetitionService);
 
   readonly competition = this.competitionService.activeCompetition;
-
-  readonly competitionConfig = computed(() => {
-    const key = this.competition();
-    return key ? COMPETITION_CONFIG[key] : null;
-  });
+  readonly competitionConfig = this.competitionService.competitionConfig;
 
   private authService = inject(AuthService);
 

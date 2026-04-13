@@ -20,23 +20,23 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.CASE_STEYR,
         label: 'CASE / STEYR',
         news: {
-            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
+            backgroundImage: '',
             title: 'News'
         },
         ranking: {
-            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
+            backgroundImage: '',
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
+            backgroundImage: '',
             title: 'Mein Fortschritt'
         },
         rules: {
-            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
+            backgroundImage: '',
             title: 'Die Regeln'
         },
         prizes: {
-            backgroundImage: '/images/backgrounds/case-bg-april.jpg',
+            backgroundImage: '',
             title: 'Die Reise'
         }
     },
@@ -44,23 +44,23 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         key: COMPETITIONS.NEW_HOLLAND,
         label: 'NEW HOLLAND',
         news: {
-            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
+            backgroundImage: '',
             title: 'News'
         },
         ranking: {
-            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
+            backgroundImage: '',
             title: 'Ranking'
         },
         score: {
-            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
+            backgroundImage: '',
             title: 'Mein Fortschritt'
         },
         rules: {
-            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
+            backgroundImage: '',
             title: 'Die Regeln'
         },
         prizes: {
-            backgroundImage: '/images/backgrounds/new-holland-bg-april.jpg',
+            backgroundImage: '',
             title: 'Die Reise'
         }
     }
