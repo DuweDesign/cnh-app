@@ -1,0 +1,249 @@
+@use 'page' as *;
+
+.page.travel {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  padding-bottom: 0;
+
+  .page__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .page__center {
+    padding-bottom: 40px;
+    position: relative;
+    
+    .page__logo {
+      position: absolute;
+      top: 80px;
+      left: 60px;
+      max-width: 240px;
+    
+      img {
+        max-width: 240px;
+      }
+    }
+  }
+}
+
+.travel-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 140px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.travel-info,
+.travel-tile {
+  overflow: hidden;
+}
+
+.travel-info {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100%;
+}
+
+.travel-info__text {
+  padding: 22px 20px;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.95rem;
+  line-height: 1.45;
+
+  p {
+    margin: 0 0 12px;
+  }
+}
+
+.travel-info__headline {
+  font-weight: 700;
+}
+
+.travel-info__cta {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.travel-info__logo {
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  img {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    display: block;
+  }
+}
+
+.travel-tile {
+  background: rgba(255, 255, 255, 0.08);
+  min-height: 100%;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.travel-tile--small {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.travel-tile--wide {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+.travel-tile--tall {
+  grid-column: span 1;
+  grid-row: span 4;
+}
+
+.travel-tile--large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+@media (min-width: 1101px) {
+  .travel-board > :last-child:nth-child(4n + 1) {
+    grid-column: span 4;
+  }
+
+  .travel-board > :last-child:nth-child(4n + 2) {
+    grid-column: span 3;
+  }
+
+  .travel-board > :last-child:nth-child(4n + 3) {
+    grid-column: span 2;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .travel-board {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 130px;
+  }
+
+  .travel-info {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 821px) {
+  .travel-board > :last-child:nth-child(3n + 1) {
+    grid-column: span 3;
+  }
+
+  .travel-board > :last-child:nth-child(3n + 2) {
+    grid-column: span 2;
+  }
+}
+
+/* Kleine Tablets */
+@media (max-width: 820px) {
+  .travel-board {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 130px;
+    gap: 6px;
+  }
+
+  .travel-info {
+    grid-column: span 2;
+    grid-row: span 2;
+    grid-template-columns: 1fr;
+  }
+
+  .travel-info__logo {
+    min-height: 180px;
+
+    img {
+      max-width: 220px;
+    }
+  }
+
+  .travel-tile--wide,
+  .travel-tile--large {
+    grid-column: span 2;
+  }
+
+  .travel-tile--tall {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 820px) {
+  .travel-board > :last-child:nth-child(2n + 1) {
+    grid-column: span 2;
+  }
+
+  .travel-tile--large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .travel-tile--wide,
+  .travel-tile--tall,
+  .travel-tile--small {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+}
+
+/* Mobile */
+@media (max-width: 560px) {
+  .travel-board {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 115px;
+    gap: 4px;
+  }
+
+  .travel-info {
+    grid-column: span 2;
+    grid-row: span 3;
+    display: block;
+  }
+
+  .travel-info__text {
+    padding: 16px;
+    font-size: 0.88rem;
+  }
+
+  .travel-info__logo {
+    padding: 18px;
+    min-height: 140px;
+
+    img {
+      max-width: 180px;
+    }
+  }
+
+  /* Auf Mobile bewusst vereinfachen */
+  .travel-tile--large,
+  .travel-tile--wide,
+  .travel-tile--tall,
+  .travel-tile--small {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+}

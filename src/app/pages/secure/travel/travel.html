@@ -1,0 +1,56 @@
+@if (competitionConfig(); as config) {
+<div class="page travel" [ngStyle]="{ 'background-image': `url(${config.travel.backgroundImage})` }">
+  <div class="page__content">
+    <div class="page__title">
+      <h1>{{ config.travel.title }}</h1>
+      <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+    </div>
+
+    <div class="page__center">
+      <section class="travel-board">
+
+        @for (tile of imageTiles().slice(0, 5); track trackByName($index, tile)) {
+        <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
+          <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
+        </article>
+        }
+
+        <article class="travel-info">
+          <div class="travel-info__text">
+            <p class="travel-info__headline">
+              Ihr Preis: eine Reise, die Sie so noch nicht kennen.
+            </p>
+
+            <p>
+              Sie haben die Chance auf einen außergewöhnlichen Gewinn:
+              eine Reise zu besonderen Orten – mit Erlebnissen, die weit
+              über ein klassisches Reiseprogramm hinausgehen.
+            </p>
+
+            <p>
+              Die Destination ist individuell entwickelt und auf Sie und Ihre
+              Reisegruppe zugeschnitten. Es erwarten Sie besondere Begegnungen,
+              exklusive Einblicke und Momente, die lange in Erinnerung bleiben.
+            </p>
+
+            <p class="travel-info__cta">
+              Nutzen Sie Ihre Chance!
+            </p>
+          </div>
+        </article>
+
+        @for (tile of imageTiles().slice(5); track trackByName($index + 5, tile)) {
+        <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
+          <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
+        </article>
+        }
+
+      </section>
+
+      <div class="page__logo">
+        <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+      </div>
+    </div>
+  </div>
+</div>
+}

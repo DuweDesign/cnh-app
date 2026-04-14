@@ -8,7 +8,7 @@ export interface CompetitionConfig {
     bonus: Site;
     score: Site;
     rules: Site;
-    prizes: Site;
+    travel: Site;
 }
 
 interface Site {
@@ -40,7 +40,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             backgroundImage: '',
             title: 'Die Regeln'
         },
-        prizes: {
+        travel: {
             backgroundImage: '',
             title: 'Die Reise'
         }
@@ -68,7 +68,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             backgroundImage: '',
             title: 'Die Regeln'
         },
-        prizes: {
+        travel: {
             backgroundImage: '',
             title: 'Die Reise'
         }

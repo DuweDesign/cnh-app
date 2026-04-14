@@ -113,7 +113,7 @@ export class CompetitionService {
           baseConfig.bonus.backgroundImage = bg;
           baseConfig.score.backgroundImage = bg;
           baseConfig.rules.backgroundImage = bg;
-          baseConfig.prizes.backgroundImage = bg;
+          baseConfig.travel.backgroundImage = bg;
 
           this._competitionConfig.set(baseConfig);
         },
@@ -126,7 +126,7 @@ export class CompetitionService {
           baseConfig.bonus.backgroundImage = fallback;
           baseConfig.score.backgroundImage = fallback;
           baseConfig.rules.backgroundImage = fallback;
-          baseConfig.prizes.backgroundImage = fallback;
+          baseConfig.travel.backgroundImage = fallback;
 
           this._competitionConfig.set(baseConfig);
         }

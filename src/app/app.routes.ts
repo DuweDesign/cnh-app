@@ -103,9 +103,9 @@ export const routes: Routes = [
           import('./pages/secure/rules/rules').then(m => m.Rules)
       },
       {
-        path: 'preise',
+        path: 'reise',
         loadComponent: () =>
-          import('./pages/secure/prizes/prizes').then(m => m.Prizes)
+          import('./pages/secure/travel/travel').then(m => m.Travel)
       },
       {
         path: 'bonus',
