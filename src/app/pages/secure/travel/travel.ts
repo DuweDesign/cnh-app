@@ -1,10 +1,17 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { environment } from '../../../../environments/environments';
 
 type TravelTileType = 'small' | 'wide' | 'tall' | 'large';
+type TravelLayoutMode = 'desktop' | 'tablet' | 'mobile';
 
 interface TravelImage {
   name: string;
@@ -12,6 +19,7 @@ interface TravelImage {
 }
 
 interface TravelTile extends TravelImage {
+  id: string;
   type: TravelTileType;
 }
 
@@ -30,34 +38,85 @@ export class Travel {
   readonly competitionConfig = this.competitionService.competitionConfig;
 
   readonly images = signal<TravelImage[]>([]);
+  readonly viewportWidth = signal(window.innerWidth);
 
-  /**
-   * Wiederholendes, lockeres Muster.
-   * So funktioniert die Seite mit beliebig vielen Bildern.
-   */
-  private readonly tilePattern: TravelTileType[] = [
+  private readonly desktopPattern: TravelTileType[] = [
     'large',
     'small',
-    'tall',
-    'large',
     'small',
-    'large',
-    'large',
     'small',
-    'tall',
-    'large',
     'small',
+    'large'
   ];
 
+  private readonly tabletPattern: TravelTileType[] = [
+    'large',
+    'small',
+    'small',
+    'large'
+  ];
+
+  private readonly mobilePattern: TravelTileType[] = [
+    'large',
+    'small',
+    'small',
+    'large',
+    'small',
+    'small'
+  ];
+
+  readonly layoutMode = computed<TravelLayoutMode>(() => {
+    const width = this.viewportWidth();
+
+    if (width <= 560) {
+      return 'mobile';
+    }
+
+    if (width <= 1100) {
+      return 'tablet';
+    }
+
+    return 'desktop';
+  });
+
+  readonly activePattern = computed<TravelTileType[]>(() => {
+    switch (this.layoutMode()) {
+      case 'mobile':
+        return this.mobilePattern;
+      case 'tablet':
+        return this.tabletPattern;
+      default:
+        return this.desktopPattern;
+    }
+  });
+
   readonly imageTiles = computed<TravelTile[]>(() => {
+    const pattern = this.activePattern();
+
     return this.images().map((image, index) => ({
       ...image,
-      type: this.tilePattern[index % this.tilePattern.length],
+      id: `${index}-${image.url}`,
+      type: pattern[index % pattern.length],
     }));
+  });
+
+  readonly firstTiles = computed(() => {
+    const splitIndex = this.layoutMode() === 'mobile' ? 4 : 3;
+    return this.imageTiles().slice(0, splitIndex);
+  });
+
+  readonly remainingTiles = computed(() => {
+    const splitIndex = this.layoutMode() === 'mobile' ? 4 : 3;
+    return this.imageTiles().slice(splitIndex);
   });
 
   ngOnInit(): void {
     this.loadTravelImages();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.viewportWidth.set(window.innerWidth);
   }
 
   loadTravelImages(): void {
@@ -76,7 +135,7 @@ export class Travel {
       });
   }
 
-  trackByName(_: number, item: TravelTile): string {
-    return item.name;
+  trackByTile(_: number, item: TravelTile): string {
+    return item.id;
   }
 }

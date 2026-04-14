@@ -9,7 +9,7 @@
     <div class="page__center">
       <section class="travel-board">
 
-        @for (tile of imageTiles().slice(0, 5); track trackByName($index, tile)) {
+        @for (tile of firstTiles(); track trackByTile($index, tile)) {
         <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
           <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
         </article>
@@ -39,7 +39,7 @@
           </div>
         </article>
 
-        @for (tile of imageTiles().slice(5); track trackByName($index + 5, tile)) {
+        @for (tile of remainingTiles(); track trackByTile($index, tile)) {
         <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
           <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
         </article>
