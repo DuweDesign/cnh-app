@@ -101,12 +101,12 @@ export class Travel {
   });
 
   readonly firstTiles = computed(() => {
-    const splitIndex = this.layoutMode() === 'mobile' ? 4 : 3;
+    const splitIndex = this.layoutMode() === 'tablet' ? 4 : this.layoutMode() === 'mobile' ? 3 : 3;
     return this.imageTiles().slice(0, splitIndex);
   });
 
   readonly remainingTiles = computed(() => {
-    const splitIndex = this.layoutMode() === 'mobile' ? 4 : 3;
+    const splitIndex = this.layoutMode() === 'tablet' ? 4 : this.layoutMode() === 'mobile' ? 3 : 3
     return this.imageTiles().slice(splitIndex);
   });
 
