@@ -131,7 +131,7 @@
       @if (!isSaleUser()) {
         <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
       }
-      @if (isSaleUser()) {
+      @if (isSaleUser() || authService.isAdmin()) {
         <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
         <a routerLink="/bonus" routerLinkActive="active" (click)="closeMobileMenu()">Bonus</a>
       }
