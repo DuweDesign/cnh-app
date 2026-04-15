@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -34,6 +34,7 @@ export class SetPassword implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   isSubmitting = false;
   isValidatingToken = true;
@@ -63,6 +64,7 @@ export class SetPassword implements OnInit {
         this.isValidatingToken = false;
         this.isTokenValid = response.valid;
         this.errorMessage = response.valid ? '' : response.message;
+        this.cdr.detectChanges();
       },
       error: (error: HttpErrorResponse) => {
         this.isValidatingToken = false;
@@ -70,6 +72,7 @@ export class SetPassword implements OnInit {
         this.errorMessage =
           error?.error?.message ||
           'Der Link konnte nicht geprüft werden.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -81,6 +84,7 @@ export class SetPassword implements OnInit {
 
     if (this.form.invalid || this.isSubmitting) {
       this.form.markAllAsTouched();
+      this.cdr.detectChanges();
       return;
     }
 
@@ -97,9 +101,10 @@ export class SetPassword implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage =
-          error?.error?.message ||
-          'Das Passwort konnte nicht gesetzt werden.';
+        error?.error?.message ||
+        'Das Passwort konnte nicht gesetzt werden.';
         this.isSubmitting = false;
+        this.cdr.detectChanges();
       }
     });
   }
