@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -25,17 +25,19 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 @Component({
   selector: 'cnh-set-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], 
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './set-password.html',
   styleUrl: './set-password.scss',
 })
-export class SetPassword {
+export class SetPassword implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   isSubmitting = false;
+  isValidatingToken = true;
+  isTokenValid = false;
   errorMessage = '';
 
   readonly token = this.route.snapshot.queryParamMap.get('token') ?? '';
@@ -48,9 +50,32 @@ export class SetPassword {
     { validators: passwordMatchValidator }
   );
 
-  onSubmit(): void {
+  ngOnInit(): void {
     if (!this.token) {
+      this.isValidatingToken = false;
+      this.isTokenValid = false;
       this.errorMessage = 'Der Link ist ungültig oder unvollständig.';
+      return;
+    }
+
+    this.authService.validateRegistrationToken(this.token).subscribe({
+      next: (response) => {
+        this.isValidatingToken = false;
+        this.isTokenValid = response.valid;
+        this.errorMessage = response.valid ? '' : response.message;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isValidatingToken = false;
+        this.isTokenValid = false;
+        this.errorMessage =
+          error?.error?.message ||
+          'Der Link konnte nicht geprüft werden.';
+      }
+    });
+  }
+
+  onSubmit(): void {
+    if (!this.token || !this.isTokenValid) {
       return;
     }
 
