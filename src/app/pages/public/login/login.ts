@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+
 import { AuthService } from '../../../core/services/auth.service';
-import { LoginPayload } from '../../../core/models/auth.model';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +20,7 @@ import { firstValueFrom } from 'rxjs';
 export class Login {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   isSubmitting = false;
   errorMessage = '';
@@ -32,36 +33,36 @@ export class Login {
 
   constructor(
     private authService: AuthService
-  ) { }
+  ) {}
 
-  async login(): Promise<void> {
+  login(): void {
     this.errorMessage = '';
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
+      this.cdr.detectChanges();
       return;
     }
 
     this.isSubmitting = true;
+    this.cdr.detectChanges();
 
-    try {
-      const { email, password, dealernumber } = this.loginForm.getRawValue();
-
-      const response = await firstValueFrom(
-        this.authService.login({ email, password, dealernumber })
-      );
-
-      if (response.success) {
-        await this.router.navigateByUrl('/news');
-      } else {
-        this.errorMessage = response.message || 'Anmeldung fehlgeschlagen.';
-      }
-    } catch (error) {
-      console.error('Login fehlgeschlagen:', error);
-      this.errorMessage = 'Anmeldung fehlgeschlagen. Bitte prüfe deine Eingaben.';
-    } finally {
-      this.isSubmitting = false;
-    }
+    this.authService.login(this.loginForm.getRawValue())
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/news']);
+        },
+        error: (error) => {
+          this.errorMessage = error?.error?.message || 'Anmeldung fehlgeschlagen.';
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   get email() {
@@ -70,5 +71,9 @@ export class Login {
 
   get password() {
     return this.loginForm.controls.password;
+  }
+
+  get dealernumber() {
+    return this.loginForm.controls.dealernumber;
   }
 }

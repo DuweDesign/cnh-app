@@ -1,6 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable, tap, catchError, of, throwError, map } from 'rxjs';
+
 import {
   AuthUser,
   LoginPayload,
@@ -8,18 +10,19 @@ import {
   ForgotPasswordPayload,
   RegisterRequestPayload,
   SetPasswordPayload,
-  UserRole
+  UserRole,
 } from '../models/auth.model';
 
-import { MOCK_USERS } from '../mock/users.mock';
+import { environment } from '../../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
 
-  private readonly apiUrl = 'https://api.deinedomain.de/api/auth';
+  private readonly apiUrl = `${environment.apiUrl}/v1/cnh`;
   private readonly tokenKey = 'cnh_token';
 
   private readonly _user = signal<AuthUser | null>(null);
@@ -27,56 +30,41 @@ export class AuthService {
 
   readonly user = this._user.asReadonly();
   readonly initialized = this._initialized.asReadonly();
-  readonly isAuthenticated = computed(() => !!this.getToken());
+  readonly isAuthenticated = computed(() => !!this._user());
 
-  login(payload: LoginPayload): Observable<LoginResponse> {
-
-    const { dealernumber, email, password } = payload;
-
-    const user = MOCK_USERS.find(
-      u => u.dealernumber === dealernumber && u.email === email && u.password === password
-    );
-
-    if (!user) {
-      return of({
-        success: false,
-        message: 'Ungültige Zugangsdaten',
-        token: '',
-        user: null as any
-      });
-    }
-
-    const mockToken = 'mock-jwt-token';
-
-    const response: LoginResponse = {
-      success: true,
-      message: 'Login erfolgreich',
-      token: mockToken,
-      user
-    };
-
-    this.setToken(mockToken);
-    localStorage.setItem('user', JSON.stringify(user));
-    this._user.set(user);
-
-    return of(response);
-
-    // return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload).pipe(
-    //   tap((response) => {
-    //     this.setToken(response.token);
-    //     this._user.set(response.user);
-    //   })
-    // );
+  constructor() {
+    this.initializeAuth().subscribe();
   }
 
-  logout(): void {
+  login(payload: LoginPayload): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, payload).pipe(
+      tap((response) => {
+
+        if (response.token) {
+          this.setToken(response.token);
+        }
+
+        if (response.user) {
+          this._user.set(response.user);
+        }
+      }),
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  logout(redirect = true): void {
     this.removeToken();
-    localStorage.removeItem('user');
     this._user.set(null);
+
+    if (redirect) {
+      this.router.navigate(['/login']);
+    }
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this._user() || !!this.getToken();
   }
 
   getToken(): string | null {
@@ -102,12 +90,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const userRole = this._user()?.role ?? null;
-
-    if ((userRole && userRole === 'sysadmin') || (userRole && userRole === 'vipp-admin') || (userRole && userRole === 'cnh-admin')) {
-      return true;
-    }
-
-    return false;
+    return userRole === 'sysadmin' || userRole === 'vipp-admin' || userRole === 'cnh-admin';
   }
 
   canSelectCompetition(): boolean {
@@ -117,67 +100,61 @@ export class AuthService {
 
   initializeAuth(): Observable<AuthUser | null> {
     const token = this.getToken();
-    const storedUser = localStorage.getItem('user');
 
-    // Kein Token oder kein User → ausgeloggt
-    if (!token || !storedUser) {
+    if (!token) {
       this._user.set(null);
       this._initialized.set(true);
       return of(null);
     }
 
-    try {
-      const user: AuthUser = JSON.parse(storedUser);
-
-      this._user.set(user);
-      this._initialized.set(true);
-
-      return of(user);
-    } catch (error) {
-      // Falls JSON kaputt ist → cleanup
-      this.removeToken();
-      localStorage.removeItem('user');
-
-      this._user.set(null);
-      this._initialized.set(true);
-
-      return of(null);
-    }
-
-    // 🔁 SPÄTER: API-Version
-    /*
-    return this.http.get<AuthUser>(`${this.apiUrl}/me`).pipe(
+    return this.http.get<{ user: AuthUser }>(`${this.apiUrl}/auth/me`).pipe(
+      map((response) => response.user),
       tap((user) => {
         this._user.set(user);
         this._initialized.set(true);
       }),
       catchError(() => {
         this.removeToken();
-        localStorage.removeItem('user');
-  
         this._user.set(null);
         this._initialized.set(true);
-  
         return of(null);
       })
     );
-    */
   }
 
   requestRegistration(payload: RegisterRequestPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, payload);
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/auth/register-request`,
+      payload
+    );
   }
 
-  forgotPassword(payload: ForgotPasswordPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/forgot-password`, payload);
+  validateRegistrationToken(token: string): Observable<{ valid: boolean; message: string }> {
+    return this.http.get<{ valid: boolean; message: string }>(
+      `${this.apiUrl}/auth/register-token/validate`,
+      {
+        params: { token }
+      }
+    );
   }
 
   setPassword(payload: SetPasswordPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/set-password`, payload);
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/auth/register-password`,
+      payload
+    );
+  }
+
+  forgotPassword(payload: ForgotPasswordPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/auth/forgot-password`,
+      payload
+    );
   }
 
   fetchProfile(): Observable<AuthUser> {
-    return this.http.get<AuthUser>(`${this.apiUrl}/me`).pipe(
+    return this.http.get<{ user: AuthUser }>(`${this.apiUrl}/auth/me`).pipe(
+      map((response) => response.user),
       tap((user) => this._user.set(user))
     );
   }

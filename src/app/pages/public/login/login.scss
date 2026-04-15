@@ -94,16 +94,22 @@
   outline: none;
   background: transparent;
   color: white;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
-.form-group input::placeholder {
-  color: white;
-}
+  &:focus {
+    border-color: white;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.609);
+  }
 
-.form-group input:focus {
-  border-color: white;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.609);
+  &::placeholder {
+    color: white;
+  }
+
+  &.is-invalid {
+    border-color: #c62828;
+  }
 }
 
 .login-btn {
@@ -118,10 +124,15 @@
   width: 50%;
   cursor: pointer;
   transition: opacity 0.2s ease;
-}
 
-.login-btn:hover {
-  opacity: 0.9;
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 }
 
 .forgot-password {
@@ -130,11 +141,24 @@
   font-size: 0.875rem;
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-.forgot-password:hover {
-  text-decoration: underline;
+.register-link {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .login-logo {

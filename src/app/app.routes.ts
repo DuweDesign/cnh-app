@@ -144,6 +144,6 @@ export const routes: Routes = [
 
   {
     path: '**',
-    redirectTo: 'news'
+    redirectTo: 'login'
   }
 ];

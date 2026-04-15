@@ -38,6 +38,10 @@ export interface LoginResponse {
   user: AuthUser;
 }
 
+export interface MeResponse {
+  user: AuthUser;
+}
+
 export interface ForgotPasswordPayload {
   dealernumber: string;
   email: string;
