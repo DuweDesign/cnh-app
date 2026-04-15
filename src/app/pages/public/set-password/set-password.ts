@@ -90,6 +90,7 @@ export class SetPassword implements OnInit {
 
     this.isSubmitting = true;
     this.errorMessage = '';
+    this.cdr.detectChanges();
 
     this.authService.setPassword({
       token: this.token,
