@@ -2,8 +2,6 @@ import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
-import { COMPETITION_CONFIG } from '../../../core/config/competition.config';
-import { RouterLink } from '@angular/router';
 import { USER_ROLES } from '../../../core/models/auth.model';
 
 type RankingParticipant = {
@@ -17,7 +15,7 @@ type RankingParticipant = {
 
 @Component({
   selector: 'cnh-ranking',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './ranking.html',
   styleUrl: './ranking.scss',
 })

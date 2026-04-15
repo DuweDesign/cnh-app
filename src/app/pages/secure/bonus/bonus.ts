@@ -3,11 +3,10 @@ import { CompetitionService } from '../../../core/services/competition.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { USER_ROLES } from '../../../core/models/auth.model';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'cnh-bonus',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './bonus.html',
   styleUrl: './bonus.scss',
 })

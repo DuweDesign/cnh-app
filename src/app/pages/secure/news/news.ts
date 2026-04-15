@@ -1,8 +1,6 @@
 import { Component, computed, DestroyRef, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { CompetitionService } from '../../../core/services/competition.service';
-import { COMPETITION_CONFIG } from '../../../core/config/competition.config';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { USER_ROLES } from '../../../core/models/auth.model';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +13,7 @@ interface NewsImage {
 
 @Component({
   selector: 'cnh-news',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './news.html',
   styleUrl: './news.scss',
 })
