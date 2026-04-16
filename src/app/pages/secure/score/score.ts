@@ -24,7 +24,8 @@ export class Score {
 
   readonly totalPoints = computed(() => this.profile()?.totalPoints ?? 0);
   readonly rank = computed(() => this.profile()?.rank ?? null);
-  // readonly pointsToNextRank = computed(() => this.profile()?.pointsToNextRank ?? 0);
+  readonly isTop10 = computed(() => this.profile()?.isTop10);
+  readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);
 
   readonly rankingHeadline = computed(() => {
     const currentRank = this.rank();
@@ -38,11 +39,11 @@ export class Score {
       return 'Stark! Du bist aktuell auf Platz 1.';
     }
 
-    // if (distance <= 3) {
-    //   return 'Top! Du bist derzeit unter den Gewinnern - jetzt heißt es dran zu bleiben!';
-    // }
+    if (this.isTop10()) {
+      return 'Top! Du bist derzeit unter den Gewinnern - jetzt heißt es dran zu bleiben!';
+    }
 
-    return 'Bleib dran – der nächste Rang ist in Reichweite!';
+    return `Bleib dran – dir fehlen noch ${this.pointsToTop10()} bis zu Rang 10!`;
   });
 
   constructor() {
