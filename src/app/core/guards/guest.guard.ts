@@ -1,14 +1,20 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, map, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 export const guestGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
-    return router.createUrlTree(['/news']);
-  }
-
-  return true;
+  return toObservable(authService.initialized).pipe(
+    filter(initialized => initialized),
+    take(1),
+    map(() => {
+      return authService.isLoggedIn()
+        ? router.createUrlTree(['/news'])
+        : true;
+    })
+  );
 };

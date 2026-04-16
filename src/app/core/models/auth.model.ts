@@ -19,9 +19,10 @@ export interface AuthUser {
   _id: string;
   email: string;
   dealernumber: string;
+  dealerGroupId: string;
+  role: UserRole;
   firstname?: string;
   surname?: string;
-  role: UserRole;
   competition?: CompetitionType | null;
 }
 

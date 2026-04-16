@@ -8,30 +8,73 @@
 
         <div class="page__center">
             <div class="ranking-table-wrapper">
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>Platz</th>
-                            <th>Händlernr.</th>
-                            <th>Name</th>
-                            <th>Unternehmen</th>
-                            <th>Punkte im Mai</th>
-                            <th>Gesamtpunkte</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (participant of sortedParticipants(); track participant.id; let i = $index) {
-                        <tr>
-                            <td>{{ i + 1 }}</td>
-                            <td>{{ participant.dealerNumber }}</td>
-                            <td>{{ participant.name }}</td>
-                            <td>{{ participant.company }}</td>
-                            <td>{{ participant.points }}</td>
-                            <td class="points">{{ participant.points }}</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+
+                @if (loading()) {
+                    <div class="ranking-state">Ranking wird geladen ...</div>
+                } @else if (error()) {
+                    <div class="ranking-state ranking-state--error">{{ error() }}</div>
+                } @else {
+                    <div class="ranking-subsection">
+                        <h2>TOP10 Ranking</h2>
+
+                        <table class="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>Platz</th>
+                                    <th>Händlernr.</th>
+                                    <th>Name</th>
+                                    <th>Unternehmen</th>
+                                    <th>Punkte im {{ currentMonthLabel() }}</th>
+                                    <th>Gesamtpunkte</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (participant of participants(); track participant.id) {
+                                <tr>
+                                    <td>{{ participant.rank ?? '-' }}</td>
+                                    <td>{{ participant.dealerNumber }}</td>
+                                    <td>{{ participant.name }}</td>
+                                    <td>{{ participant.company }}</td>
+                                    <td>{{ participant.monthPoints }}</td>
+                                    <td class="points">{{ participant.totalPoints }}</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (isManagementUser() && teamParticipants().length) {
+                        <div class="ranking-subsection">
+                            <h2>Ihr Team Ranking</h2>
+
+                            <table class="ranking-table ranking-table--team">
+                                <thead>
+                                    <tr>
+                                        <th>Gesamtplatz</th>
+                                        <th>Händlernr.</th>
+                                        <th>Name</th>
+                                        <th>Unternehmen</th>
+                                        <th>Punkte im {{ currentMonthLabel() }}</th>
+                                        <th>Gesamtpunkte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (participant of teamParticipants(); track participant.id) {
+                                    <tr>
+                                        <td>{{ participant.rank ?? '-' }}</td>
+                                        <td>{{ participant.dealerNumber }}</td>
+                                        <td>{{ participant.name }}</td>
+                                        <td>{{ participant.company }}</td>
+                                        <td>{{ participant.monthPoints }}</td>
+                                        <td class="points">{{ participant.totalPoints }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+
             </div>
 
             <div class="page__logo">
@@ -39,14 +82,7 @@
             </div>
         </div>
 
-        <div class="page__bottom">
-            <!-- <div class="bottom">
-                <div class="bottom__badge">
-                    <a routerLink="/preise">Was Sie gewinnen können</a>
-                </div>
-            </div> -->
-        </div>
-
+        <div class="page__bottom"></div>
     </div>
 </div>
 }
