@@ -27,7 +27,6 @@ export interface AuthUser {
 
 export interface LoginPayload {
   dealernumber: string;
-  email: string;
   password: string;
 }
 

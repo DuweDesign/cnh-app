@@ -26,7 +26,6 @@ export class Login {
   errorMessage = '';
 
   loginForm = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(4)]],
     dealernumber: ['', [Validators.required, Validators.minLength(4)]]
   });
@@ -63,10 +62,6 @@ export class Login {
           this.cdr.detectChanges();
         }
       });
-  }
-
-  get email() {
-    return this.loginForm.controls.email;
   }
 
   get password() {
