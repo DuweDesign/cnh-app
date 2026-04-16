@@ -7,66 +7,75 @@
             <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
         </div>
 
-        <div class="page__center">
-            <div class="user">
-                <div class="user__label">
-                    <span>Mein<br>Punktestand</span>
-                </div>
-
-                <div class="user__number">
-                    <div class="number">75</div>
-                </div>
-
-                <div class="user__info">
-                    <p><strong>APRIL - Der Startschuss</strong></p>
-                    <p>
-                        "Mit der Aussaat von Mais, Zuckerrüben und Sommergetreide beginnt die neue Saison.
-                        Jetzt werden die Grundlagen für eine erfolgreiche Ernte gelegt – genau wie im
-                        Verkaufswettbewerb, bei dem ein starker Start entscheidend für den Gesamterfolg ist."
-                    </p>
-                </div>
+        @if (isLoading()) {
+            <div class="page__center">
+                <p>Punktestand wird geladen ...</p>
             </div>
-
-            <div class="user">
-                <div class="user__label">
-                    <span>Meine<br>Platzierung</span>
-                </div>
-
-                <div class="user__number">
-                    <div class="number">14</div>
-                </div>
-
-                <div class="user__info">
-                    <p><strong>Top! Du bist derzeit unter den Gewinnern - jetzt heißt es dran zu bleiben!</strong></p>
-                    <p>Der nächste Rang ist:</p>
-                    <p><strong>3 Punkte</strong> entfernt!</p>
-                </div>
+        } @else if (error()) {
+            <div class="page__center">
+                <p>{{ error() }}</p>
             </div>
+        } @else {
+            <div class="page__center">
+                <div class="user">
+                    <div class="user__label">
+                        <span>Mein<br>Punktestand</span>
+                    </div>
 
-            <div class="page__logo">
-                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
-            </div>
-        </div>
+                    <div class="user__number">
+                        <div class="number">{{ totalPoints() }}</div>
+                    </div>
 
-        <div class="page__bottom">
-
-            <div class="bottom">
-
-                <!-- <div class="bottom__badge">
-                    <a href="" routerLink="/preise">
-                        Was Sie gewinnen können
-                    </a>
-                </div> -->
-
-                <div class="bottom__cta">
-                    <div class="bottom__cta-inner">
-                        <strong>JETZT FÜR EXTRA DÜNGER SORGEN</strong>
-                        <span>Denk an die Mission 15 und hol Dir noch mehr Punkte!</span>
+                    <div class="user__info">
+                        <p><strong>APRIL - Der Startschuss</strong></p>
+                        <p>
+                            Mit der Aussaat von Mais, Zuckerrüben und Sommergetreide beginnt die neue Saison.
+                            Jetzt werden die Grundlagen für eine erfolgreiche Ernte gelegt – genau wie im
+                            Verkaufswettbewerb, bei dem ein starker Start entscheidend für den Gesamterfolg ist.
+                        </p>
                     </div>
                 </div>
 
-            </div>
+                <div class="user">
+                    <div class="user__label">
+                        <span>Meine<br>Platzierung</span>
+                    </div>
 
+                    <div class="user__number">
+                        <div class="number">
+                            {{ rank() ?? '-' }}
+                        </div>
+                    </div>
+
+                    <div class="user__info">
+                        <p><strong>{{ rankingHeadline() }}</strong></p>
+
+                        @if (rank() === 1) {
+                            <p>Du führst das Ranking aktuell an.</p>
+                        } @else if (rank() !== null) {
+                            <p>Der nächste Rang ist:</p>
+                            <!-- <p><strong>{{ pointsToNextRank() }} Punkte</strong> entfernt!</p> -->
+                        } @else {
+                            <p>Bitte versuche es später erneut.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="page__logo">
+                    <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+                </div>
+            </div>
+        }
+
+        <div class="page__bottom">
+            <div class="bottom">
+                <div class="bottom__cta">
+                    <div class="bottom__cta-inner">
+                        <strong>JETZT EXTRA PUNKTE SICHERN!</strong>
+                        <span>Denk an die Mission 15 und hol Dir noch mehr Punkte!</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
