@@ -14,6 +14,8 @@
                 } @else if (error()) {
                     <div class="ranking-state ranking-state--error">{{ error() }}</div>
                 } @else {
+
+                    <!-- TOP10 -->
                     <div class="ranking-subsection">
                         <h2>TOP10 Ranking</h2>
 
@@ -29,7 +31,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (participant of participants(); track participant.id) {
+                                @for (participant of top10Participants(); track participant.id) {
                                 <tr>
                                     <td>{{ participant.rank ?? '-' }}</td>
                                     <td>{{ participant.dealerNumber }}</td>
@@ -43,6 +45,7 @@
                         </table>
                     </div>
 
+                    <!-- MANAGEMENT: TEAM RANKING -->
                     @if (isManagementUser() && teamParticipants().length) {
                         <div class="ranking-subsection">
                             <h2>Ihr Team Ranking</h2>
@@ -71,6 +74,80 @@
                                     }
                                 </tbody>
                             </table>
+                        </div>
+                    }
+
+                    <!-- ADMIN: KOMPLETTES RANKING -->
+                    @if (isAdminUser()) {
+                        <div class="ranking-subsection">
+                            <div class="ranking-subsection__header">
+                                <h2>Komplettes Ranking</h2>
+
+                                <div class="ranking-pagination-size">
+                                    <span>Einträge pro Seite:</span>
+
+                                    @for (size of pageSizeOptions; track size) {
+                                        <button
+                                            type="button"
+                                            class="page-size-button"
+                                            [class.active]="pageSize() === size"
+                                            (click)="setPageSize(size)">
+                                            {{ size }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Platz</th>
+                                        <th>Händlernr.</th>
+                                        <th>Name</th>
+                                        <th>Unternehmen</th>
+                                        <th>Punkte im {{ currentMonthLabel() }}</th>
+                                        <th>Gesamtpunkte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (participant of paginatedParticipants(); track participant.id) {
+                                    <tr>
+                                        <td>{{ participant.rank ?? '-' }}</td>
+                                        <td>{{ participant.dealerNumber }}</td>
+                                        <td>{{ participant.name }}</td>
+                                        <td>{{ participant.company }}</td>
+                                        <td>{{ participant.monthPoints }}</td>
+                                        <td class="points">{{ participant.totalPoints }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            @if (participants().length) {
+                                <div class="ranking-pagination">
+                                    <div class="ranking-pagination__info">
+                                        Zeige {{ paginationStart() }}–{{ paginationEnd() }} von {{ participants().length }}
+                                    </div>
+
+                                    <div class="ranking-pagination__controls">
+                                        <button
+                                            type="button"
+                                            (click)="previousPage()"
+                                            [disabled]="currentPage() === 1">
+                                            Zurück
+                                        </button>
+
+                                        <span>Seite {{ currentPage() }} / {{ totalPages() }}</span>
+
+                                        <button
+                                            type="button"
+                                            (click)="nextPage()"
+                                            [disabled]="currentPage() === totalPages()">
+                                            Weiter
+                                        </button>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     }
                 }

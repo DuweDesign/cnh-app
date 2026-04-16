@@ -8,8 +8,13 @@
   height: auto;
   flex-direction: row;
   justify-content: space-between;
-  gap: 30px;
+  gap: 80px;
+  
+  .page__logo {
+    align-self: flex-start;
+  }
 }
+
 
 /* =========================
    SALE GRID (3 SPALTEN)
@@ -313,6 +318,10 @@
 ========================= */
 
 @media (max-width: 768px) {
+  .page__center {
+    padding-top: 20px;
+  }
+
   .page.ranking {
     padding: 24px 12px;
 

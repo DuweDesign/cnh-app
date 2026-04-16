@@ -37,8 +37,22 @@ export class Ranking {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
+  /**
+   * Admin / Sales Ranking gesamt
+   */
   readonly participants = signal<RankingParticipant[]>([]);
+
+  /**
+   * Management Team Ranking
+   */
   readonly teamParticipants = signal<RankingParticipant[]>([]);
+
+  /**
+   * Pagination nur für Admin-Komplett-Ranking
+   */
+  readonly pageSize = signal(10);
+  readonly currentPage = signal(1);
+  readonly pageSizeOptions = [10, 20, 50];
 
   readonly currentUser = computed(() => this.authService.getCurrentUser());
 
@@ -60,6 +74,41 @@ export class Ranking {
     return now.toLocaleDateString('de-DE', { month: 'long' });
   });
 
+  /**
+   * Für beide Rollen: obere Top10 Tabelle
+   * - Admin: Top10 aus Gesamtranking
+   * - Management: Top10 aus ownSales Ranking
+   */
+  readonly top10Participants = computed(() => this.participants().slice(0, 10));
+
+  /**
+   * Nur Admin: paginierte Gesamtliste
+   */
+  readonly totalPages = computed(() => {
+    const total = this.participants().length;
+    const size = this.pageSize();
+    return total > 0 ? Math.ceil(total / size) : 1;
+  });
+
+  readonly paginatedParticipants = computed(() => {
+    const page = this.currentPage();
+    const size = this.pageSize();
+    const start = (page - 1) * size;
+    const end = start + size;
+
+    return this.participants().slice(start, end);
+  });
+
+  readonly paginationStart = computed(() => {
+    if (!this.participants().length) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+
+  readonly paginationEnd = computed(() => {
+    const end = this.currentPage() * this.pageSize();
+    return Math.min(end, this.participants().length);
+  });
+
   constructor() {
     effect(() => {
       const competition = this.competition();
@@ -68,6 +117,7 @@ export class Ranking {
       if (!competition || !user) {
         this.participants.set([]);
         this.teamParticipants.set([]);
+        this.currentPage.set(1);
         return;
       }
 
@@ -85,6 +135,7 @@ export class Ranking {
 
     this.loading.set(true);
     this.error.set(null);
+    this.currentPage.set(1);
 
     if (user.role === USER_ROLES.CNH_MANAGEMENT) {
       forkJoin({
@@ -95,12 +146,18 @@ export class Ranking {
         team: this.rankingService.getMyTeam(competition),
       }).subscribe({
         next: ({ ranking, team }) => {
+          /**
+           * Obere Tabelle = Top10 des Management-eigenen Rankings
+           */
           this.participants.set(
             ranking.ownSales.map((entry) =>
               this.mapUserToParticipant(entry, entry.rankInOwnList ?? null)
             )
           );
 
+          /**
+           * Untere Tabelle = Team Ranking
+           */
           this.teamParticipants.set(
             team.team.map((entry) =>
               this.mapUserToParticipant(entry, entry.overallRank ?? null)
@@ -180,5 +237,26 @@ export class Ranking {
       (monthlyEntry.bonuspoints ?? 0) +
       (monthlyEntry.partpoints ?? 0)
     );
+  }
+
+  setPageSize(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages()) {
+      return;
+    }
+
+    this.currentPage.set(page);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
   }
 }
