@@ -19,6 +19,7 @@
   height: auto;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 30px;
 
   .page__logo {
@@ -435,5 +436,52 @@
   .bottom__badge {
     font-size: 1rem;
     padding: 16px 24px;
+  }
+}
+
+// SUBNAV
+
+.rules-subnav {
+  margin: 0 0 1.5rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+}
+
+.rules-subnav__item {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &.is-active {
+    background: #fff;
+    color: #1f1f1f;
+  }
+}
+
+@media (max-width: 767px) {
+  .rules-subnav {
+    width: 100%;
+    display: flex;
+  }
+
+  .rules-subnav__item {
+    flex: 1 1 50%;
+    text-align: center;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.95rem;
   }
 }

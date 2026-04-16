@@ -1,6 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompetitionService } from '../../../core/services/competition.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { USER_ROLES } from '../../../core/models/auth.model';
 
 type RuleRow = {
   label: string;
@@ -18,6 +20,8 @@ type RuleExample = {
   text: string;
   result: string;
 };
+
+type RulesTab = 'sales' | 'management';
 
 type RulesConfig = {
   theme: 'case' | 'new-holland';
@@ -74,6 +78,28 @@ type RulesConfig = {
   };
 };
 
+type ManagementRulesConfig = {
+  theme: 'case' | 'new-holland';
+  eyebrow: string;
+  title: string;
+  intro: string;
+  overview: string[];
+  systemIntro: string;
+  pillars: {
+    title: string;
+    text: string;
+    example?: string;
+  }[];
+  marketShareTable: {
+    title: string;
+    rows: {
+      targetAchievement: string;
+      points: number;
+    }[];
+  };
+  websiteNote: string;
+};
+
 @Component({
   selector: 'cnh-rules',
   standalone: true,
@@ -86,6 +112,18 @@ export class Rules {
 
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
+
+  readonly activeTab = signal<RulesTab>('sales');
+
+  private authService = inject(AuthService);
+
+  readonly isSaleUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_SALES
+  );
+
+  setTab(tab: RulesTab): void {
+    this.activeTab.set(tab);
+  }
 
   readonly rulesConfig = computed<RulesConfig | null>(() => {
     const competition = this.competition();
@@ -312,6 +350,58 @@ export class Rules {
         text: 'Wir wünschen Ihnen viel Erfolg beim Verkauf. Das gesamte CASE IH & STEYR Team steht für Rückfragen jederzeit zur Verfügung.',
         highlight: 'Jetzt heißt es: Angriff – und gemeinsam gewinnen.',
       },
+    };
+  });
+
+  readonly managementRulesConfig = computed<ManagementRulesConfig | null>(() => {
+    const competition = this.competition();
+
+    return {
+      theme: competition === 'new-holland' ? 'new-holland' : 'case',
+      eyebrow: 'Geschäftsführer Incentive 2026',
+      title: 'Die Regeln für Geschäftsführer',
+      intro:
+        'Das Geschäftsführer Incentive 2026 belohnt die erfolgreichsten Händler des Jahres. Die 20 Händler mit den meisten Punkten erhalten jeweils zwei Plätze für die Incentive-Reise.',
+      overview: [
+        'Alle Händler haben die gleichen Chancen auf eine Platzierung.',
+        'Die Wertung basiert auf drei Bereichen, die zu einer Gesamtpunktzahl zusammengeführt werden.',
+        'Ihre aktuelle Punktzahl und Platzierung können Sie auf der eigenen Wettbewerbs-Webseite einsehen.',
+      ],
+      systemIntro:
+        'Das Punktesystem setzt sich aus drei Bereichen zusammen:',
+      pillars: [
+        {
+          title: '1. Vertriebsleistung Ihres Teams',
+          text:
+            'Alle Punkte Ihrer Verkäufer, die am Verkäufer-Wettbewerb teilnehmen, werden summiert und anschließend durch die Anzahl Ihrer Verkäufer geteilt.',
+          example:
+            'Beispiel: Sie haben 3 Verkäufer. Verkäufer A hat 100 Punkte, Verkäufer B 150 Punkte und Verkäufer C 110 Punkte. Daraus ergibt sich ein Mittelwert von 120 Punkten für das Geschäftsführer Incentive.',
+        },
+        {
+          title: '2. Marktanteil',
+          text:
+            'Der Marktanteil zeigt, wie erfolgreich Sie mit Ihrem Team die Marktbearbeitung umgesetzt haben. Grundlage ist das in der Jahreszielvereinbarung festgelegte Marktanteilsziel. Bei Zielerreichung oder Übererfüllung erhalten Sie zusätzliche Punkte.',
+          example:
+            'Beispiel: Ihr Marktanteilsziel liegt bei 10 %. Sie erreichen 11,2 %. Damit erhalten Sie 120 Punkte für das Geschäftsführer Incentive.',
+        },
+        {
+          title: '3. Ersatzteile',
+          text:
+            'Parallel zum Verkäufer-Wettbewerb läuft ein Incentive im Bereich Ersatzteile. Die dort erreichten Punkte Ihres Ersatzteilleiters werden ebenfalls für das Geschäftsführer Incentive angerechnet.',
+          example:
+            'Beispiel: Erreicht Ihr Ersatzteilleiter 90 Punkte, werden diese zu den Punkten aus den anderen beiden Bereichen addiert.',
+        },
+      ],
+      marketShareTable: {
+        title: 'Punkte für Zielerreichung beim Marktanteil',
+        rows: [
+          { targetAchievement: '90 % des JZV-Ziels', points: 80 },
+          { targetAchievement: '100 % des JZV-Ziels', points: 100 },
+          { targetAchievement: '110 % des JZV-Ziels', points: 120 },
+        ],
+      },
+      websiteNote:
+        'Für diesen Wettbewerb steht eine eigene Webseite zur Verfügung. Dort sehen Sie jederzeit Ihre Punkte und Ihre aktuelle Platzierung.',
     };
   });
 }

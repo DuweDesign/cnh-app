@@ -8,194 +8,281 @@
         </div>
 
         <div class="page__center">
-            @if (rulesConfig(); as rules) {
-            <section class="rules-page" [ngClass]="'rules-page--' + rules.theme">
-                <div class="rules-page__inner">
-
-                    <header class="rules-hero">
-                        <p class="rules-hero__eyebrow">{{ rules.eyebrow }}</p>
-                        <p class="rules-hero__title">{{ rules.title }}</p>
-                        <p class="rules-hero__intro">{{ rules.intro }}</p>
-                    </header>
-
-                    <section class="rules-section">
-                        <h2>So funktioniert die Verkaufs-Offensive</h2>
-                        <p>{{ rules.howItWorks.text1 }}</p>
-                        <p>{{ rules.howItWorks.text2 }}</p>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Mission 15</h2>
-                        <p class="rules-highlight">{{ rules.mission15.subtitle }}</p>
-                        <p>{{ rules.mission15.text1 }}</p>
-                        <p>{{ rules.mission15.text2 }}</p>
-                        <p>{{ rules.mission15.text3 }}</p>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Monatliche Prämierung</h2>
-                        <p>{{ rules.monthlyReward.text1 }}</p>
-
-                        <div class="rules-card">
-                            <h3>Top Ten des Monats</h3>
-                            <p [innerHTML]="rules.monthlyReward.cardText1"></p>
-                            <p>{{ rules.monthlyReward.cardText2 }}</p>
-                            <p class="rules-note">{{ rules.monthlyReward.cardNote }}</p>
-                        </div>
-
-                        <p>{{ rules.monthlyReward.text2 }}</p>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Wertungstabelle</h2>
-
-                        <div class="rules-table-wrap">
-                            <table class="rules-table">
-                                <thead>
-                                    <tr>
-                                        <th>Produktgruppe</th>
-                                        <th>{{ rules.mainTable.pointsLabel }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (item of rules.mainTable.rows; track item.label) {
-                                    <tr>
-                                        <td>{{ item.label }}</td>
-                                        <td>{{ item.points }}</td>
-                                    </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Saisonaler Push</h2>
-
-                        <div class="rules-table-wrap">
-                            <table class="rules-table">
-                                <thead>
-                                    <tr>
-                                        <th>Produktgruppe</th>
-                                        <th>Zeitraum</th>
-                                        <th>Punkte</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (item of rules.seasonalPush; track item.label) {
-                                    <tr>
-                                        <td>{{ item.label }}</td>
-                                        <td>{{ item.period }}</td>
-                                        <td>{{ item.points }}</td>
-                                    </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Mission 15 – EXTRA-Punkte</h2>
-
-                        <div class="rules-table-wrap">
-                            <table class="rules-table">
-                                <thead>
-                                    <tr>
-                                        <th>Aktion</th>
-                                        <th>EXTRA-Punkte</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ rules.extraPoints.label }}</td>
-                                        <td>{{ rules.extraPoints.points }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    @if (rules.ceLightTable) {
-                    <section class="rules-section">
-                        <h2>{{ rules.ceLightTable.title }}</h2>
-
-                        <div class="rules-table-wrap">
-                            <table class="rules-table">
-                                <thead>
-                                    <tr>
-                                        <th>{{ rules.ceLightTable.labelColumn }}</th>
-                                        <th>{{ rules.ceLightTable.pointsLabel }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (item of rules.ceLightTable.rows; track item.label) {
-                                    <tr>
-                                        <td>{{ item.label }}</td>
-                                        <td>{{ item.points }}</td>
-                                    </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                    }
-
-                    <section class="rules-section">
-                        <h2>Beispiele</h2>
-
-                        @for (example of rules.examples; track example.title) {
-                        <div class="rules-example">
-                            <h3>{{ example.title }}</h3>
-                            <p>{{ example.text }}</p>
-                            <p><strong>{{ example.result }}</strong></p>
-                        </div>
+            
+            <div class="rules-wrapper">
+                @if (!isSaleUser()) {
+                    <div class="rules-subnav">
+                        <button
+                            type="button"
+                            class="rules-subnav__item"
+                            [class.is-active]="activeTab() === 'sales'"
+                            (click)="setTab('sales')">
+                            Verkäufer
+                        </button>
+        
+                        <button
+                            type="button"
+                            class="rules-subnav__item"
+                            [class.is-active]="activeTab() === 'management'"
+                            (click)="setTab('management')">
+                            Geschäftsführer
+                        </button>
+                    </div>
+                }
+                
+                @if (activeTab() === 'sales' && rulesConfig(); as rules) {
+                    <section class="rules-page" [ngClass]="'rules-page--' + rules.theme">
+                    
+                    <div class="rules-page__inner">
+                        <header class="rules-hero">
+                            <p class="rules-hero__eyebrow">{{ rules.eyebrow }}</p>
+                            <p class="rules-hero__title">{{ rules.title }}</p>
+                            <p class="rules-hero__intro">{{ rules.intro }}</p>
+                        </header>
+    
+                        <section class="rules-section">
+                            <h2>So funktioniert die Verkaufs-Offensive</h2>
+                            <p>{{ rules.howItWorks.text1 }}</p>
+                            <p>{{ rules.howItWorks.text2 }}</p>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Mission 15</h2>
+                            <p class="rules-highlight">{{ rules.mission15.subtitle }}</p>
+                            <p>{{ rules.mission15.text1 }}</p>
+                            <p>{{ rules.mission15.text2 }}</p>
+                            <p>{{ rules.mission15.text3 }}</p>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Monatliche Prämierung</h2>
+                            <p>{{ rules.monthlyReward.text1 }}</p>
+    
+                            <div class="rules-card">
+                                <h3>Top Ten des Monats</h3>
+                                <p [innerHTML]="rules.monthlyReward.cardText1"></p>
+                                <p>{{ rules.monthlyReward.cardText2 }}</p>
+                                <p class="rules-note">{{ rules.monthlyReward.cardNote }}</p>
+                            </div>
+    
+                            <p>{{ rules.monthlyReward.text2 }}</p>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Wertungstabelle</h2>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produktgruppe</th>
+                                            <th>{{ rules.mainTable.pointsLabel }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (item of rules.mainTable.rows; track item.label) {
+                                        <tr>
+                                            <td>{{ item.label }}</td>
+                                            <td>{{ item.points }}</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Saisonaler Push</h2>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produktgruppe</th>
+                                            <th>Zeitraum</th>
+                                            <th>Punkte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (item of rules.seasonalPush; track item.label) {
+                                        <tr>
+                                            <td>{{ item.label }}</td>
+                                            <td>{{ item.period }}</td>
+                                            <td>{{ item.points }}</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Mission 15 – EXTRA-Punkte</h2>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Aktion</th>
+                                            <th>EXTRA-Punkte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ rules.extraPoints.label }}</td>
+                                            <td>{{ rules.extraPoints.points }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+    
+                        @if (rules.ceLightTable) {
+                        <section class="rules-section">
+                            <h2>{{ rules.ceLightTable.title }}</h2>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ rules.ceLightTable.labelColumn }}</th>
+                                            <th>{{ rules.ceLightTable.pointsLabel }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (item of rules.ceLightTable.rows; track item.label) {
+                                        <tr>
+                                            <td>{{ item.label }}</td>
+                                            <td>{{ item.points }}</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
                         }
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Laufzeit</h2>
-                        <p>{{ rules.duration.text1 }}</p>
-                        <p>{{ rules.duration.text2 }}</p>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Teilnahmebedingungen</h2>
-                        <ul class="rules-list">
-                            @for (item of rules.conditions; track item) {
-                            <li>{{ item }}</li>
+    
+                        <section class="rules-section">
+                            <h2>Beispiele</h2>
+    
+                            @for (example of rules.examples; track example.title) {
+                            <div class="rules-example">
+                                <h3>{{ example.title }}</h3>
+                                <p>{{ example.text }}</p>
+                                <p><strong>{{ example.result }}</strong></p>
+                            </div>
                             }
-                        </ul>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Administration</h2>
-                        <p>{{ rules.administration.text1 }}</p>
-                        <p>{{ rules.administration.text2 }}</p>
-                        <p>
-                            Gewünschte Änderungen bitte an
-                            <a [href]="'mailto:' + rules.administration.email">{{ rules.administration.email }}</a>
-                            melden.
-                        </p>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Zusätzliche Bedingungen</h2>
-                        <ul class="rules-list">
-                            @for (item of rules.additionalConditions; track item) {
-                            <li>{{ item }}</li>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Laufzeit</h2>
+                            <p>{{ rules.duration.text1 }}</p>
+                            <p>{{ rules.duration.text2 }}</p>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Teilnahmebedingungen</h2>
+                            <ul class="rules-list">
+                                @for (item of rules.conditions; track item) {
+                                <li>{{ item }}</li>
+                                }
+                            </ul>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Administration</h2>
+                            <p>{{ rules.administration.text1 }}</p>
+                            <p>{{ rules.administration.text2 }}</p>
+                            <p>
+                                Gewünschte Änderungen bitte an
+                                <a [href]="'mailto:' + rules.administration.email">{{ rules.administration.email }}</a>
+                                melden.
+                            </p>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Zusätzliche Bedingungen</h2>
+                            <ul class="rules-list">
+                                @for (item of rules.additionalConditions; track item) {
+                                <li>{{ item }}</li>
+                                }
+                            </ul>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Abschluss</h2>
+                            <p>{{ rules.closing.text }}</p>
+                            <p class="rules-highlight">{{ rules.closing.highlight }}</p>
+                        </section>
+    
+                    </div>
+                </section>
+                }
+    
+                @if (activeTab() === 'management' && managementRulesConfig(); as managerRules) {
+                <section class="rules-page" [ngClass]="'rules-page--' + managerRules.theme">
+                    <div class="rules-page__inner">
+    
+                        <header class="rules-hero">
+                            <p class="rules-hero__eyebrow">{{ managerRules.eyebrow }}</p>
+                            <p class="rules-hero__title">{{ managerRules.title }}</p>
+                            <p class="rules-hero__intro">{{ managerRules.intro }}</p>
+                        </header>
+    
+                        <section class="rules-section">
+                            @for (item of managerRules.overview; track item) {
+                            <p>{{ item }}</p>
                             }
-                        </ul>
-                    </section>
-
-                    <section class="rules-section">
-                        <h2>Abschluss</h2>
-                        <p>{{ rules.closing.text }}</p>
-                        <p class="rules-highlight">{{ rules.closing.highlight }}</p>
-                    </section>
-
-                </div>
-            </section>
-            }
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Punktesystem</h2>
+                            <p>{{ managerRules.systemIntro }}</p>
+    
+                            @for (pillar of managerRules.pillars; track pillar.title) {
+                            <div class="rules-example">
+                                <h3>{{ pillar.title }}</h3>
+                                <p>{{ pillar.text }}</p>
+    
+                                @if (pillar.example) {
+                                <p><strong>{{ pillar.example }}</strong></p>
+                                }
+                            </div>
+                            }
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>{{ managerRules.marketShareTable.title }}</h2>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Zielerreichung</th>
+                                            <th>Punkte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (row of managerRules.marketShareTable.rows; track row.targetAchievement) {
+                                        <tr>
+                                            <td>{{ row.targetAchievement }}</td>
+                                            <td>{{ row.points }}</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>Transparenz im Wettbewerb</h2>
+                            <p>{{ managerRules.websiteNote }}</p>
+                        </section>
+    
+                    </div>
+                </section>
+                }
+            </div>
 
             <div class="page__logo">
                 <img src="/images/ertragsmacher_logo.png" alt="Logo" />
@@ -203,17 +290,7 @@
         </div>
 
         <div class="page__bottom">
-
-            <div class="bottom">
-
-                <!-- <div class="bottom__badge">
-                    <a href="" routerLink="/preise">
-                        Was Sie gewinnen können
-                    </a>
-                </div> -->
-
-            </div>
-
+            <div class="bottom"></div>
         </div>
     </div>
 </div>
