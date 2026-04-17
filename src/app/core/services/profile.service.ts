@@ -37,7 +37,7 @@ export class ProfileService {
 
   updateProfile(payload: UpdateProfilePayload): Observable<{ success: boolean; user: AuthUser; message?: string }> {
     return this.http.patch<{ success: boolean; user: AuthUser; message?: string }>(
-      `${this.apiUrl}/user/profile`,
+      `${this.apiUrl}/user/my-profile`,
       payload
     ).pipe(
       tap((response) => {
