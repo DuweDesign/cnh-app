@@ -9,19 +9,18 @@
 
         @if (isAdmin()) {
         <div class="admin-profile-switch">
-            <input type="text" 
-                [ngModel]="dealerNumberInput()" 
-                (ngModelChange)="dealerNumberInput.set($event)"
-                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()"
-                placeholder="User-ID eingeben" />
+            <input type="text" [ngModel]="dealerNumberInput()" (ngModelChange)="dealerNumberInput.set($event)"
+                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()" placeholder="User-ID eingeben" />
 
-            <button type="button" (click)="onLoadAdminProfile()">
-                Profil laden
-            </button>
+            <div class="actions">
+                <button type="button" (click)="onLoadAdminProfile()">
+                    Profil laden
+                </button>
 
-            <button type="button" (click)="onResetToOwnProfile()">
-                Mein Profil
-            </button>
+                <button type="button" (click)="onResetToOwnProfile()">
+                    Reset
+                </button>
+            </div>
         </div>
         }
 

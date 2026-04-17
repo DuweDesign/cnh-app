@@ -15,13 +15,16 @@
                 (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()"
                 placeholder="User-ID eingeben" />
 
-            <button type="button" (click)="onLoadAdminProfile()">
-                Profil laden
-            </button>
+            <div class="actions">
+                <button type="button" (click)="onLoadAdminProfile()">
+                    Profil laden
+                </button>
+    
+                <button type="button" (click)="onResetToOwnProfile()">
+                    Reset
+                </button>
+            </div>
 
-            <button type="button" (click)="onResetToOwnProfile()">
-                Mein Profil
-            </button>
         </div>
         }
 

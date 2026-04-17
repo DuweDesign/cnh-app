@@ -11,7 +11,6 @@
   gap: 30px;
 }
 
-
 .admin-profile-switch {
   display: flex;
   gap: 12px;
@@ -22,16 +21,27 @@
   input {
     min-width: 320px;
     padding: 10px 14px;
-    border: 1px solid rgba(255,255,255,.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
   }
 
-  button {
-    padding: 10px 14px;
-    border: 0;
-    border-radius: 8px;
-    background-color: white;
-    cursor: pointer;
+  .actions {
+    display: flex;
+    gap: 20px;
+
+    button {
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+    }
+  }
+
+  @media (max-width: 778px) {
+    margin-top: 30px;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -351,6 +361,36 @@
 ========================= */
 
 @media (max-width: 768px) {
+  .user__mission {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'number label'
+      'info   info';
+    column-gap: 15px;
+    row-gap: 10px;
+    align-items: center;
+
+    .user__number {
+      grid-area: number;
+    }
+
+    .user__label {
+      grid-area: label;
+
+      span {
+        font-size: 1.8rem;
+        line-height: 1.1;
+      }
+    }
+
+    .user__info {
+      grid-area: info;
+      max-width: 100%;
+      margin-top: 20px;
+    }
+  }
+
   .page.bonus {
     padding: 24px 12px;
 
