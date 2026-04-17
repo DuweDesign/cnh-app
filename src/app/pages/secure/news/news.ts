@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,7 +19,6 @@ interface NewsImage {
 })
 export class News {
   private competitionService = inject(CompetitionService);
-  private destroyRef = inject(DestroyRef);
 
   @ViewChild('pageContent') pageContentRef?: ElementRef<HTMLElement>;
   @ViewChild('timeline') timelineRef?: ElementRef<HTMLElement>;
