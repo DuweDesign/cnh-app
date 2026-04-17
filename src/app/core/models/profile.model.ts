@@ -50,3 +50,13 @@ export interface MyProfile extends Profile {
   isTop10: boolean;
   pointsToTop10: number | null;
 }
+
+export interface UpdateProfilePayload {
+  firstname: string;
+  surname: string;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}

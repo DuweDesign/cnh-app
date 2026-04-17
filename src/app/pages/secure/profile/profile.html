@@ -1,1 +1,131 @@
-<p>profile works!</p>
+@if (competitionConfig(); as config) {
+<div class="page profile" [ngStyle]="{'background-image': `url(${config.score.backgroundImage})`}">
+    <div class="page__content">
+        <div class="page__title">
+            <h1>Profil</h1>
+            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+        </div>
+
+        @if (user(); as user) {
+        <div class="profile__grid">
+            <div class="profile__card">
+                <h2>User Infos</h2>
+
+                <div class="profile__info-list">
+                    <div class="profile__row">
+                        <span class="label">Name</span>
+                        <span class="value">{{ user.firstname }} {{ user.surname }}</span>
+                    </div>
+
+                    <div class="profile__row">
+                        <span class="label">User ID / Dealernumber</span>
+                        <span class="value">{{ user.dealernumber }}</span>
+                    </div>
+
+                    <div class="profile__row">
+                        <span class="label">E-Mail</span>
+                        <span class="value">{{ user.email }}</span>
+                    </div>
+
+                    <div class="profile__row">
+                        <span class="label">Competition</span>
+                        <span class="value">{{ displayCompetition() }}</span>
+                    </div>
+
+                    <div class="profile__row">
+                        <span class="label">Unternehmen</span>
+                        <span class="value">{{ profile()?.company || '-' }}</span>
+                    </div>
+
+                    <div class="profile__row">
+                        <span class="label">Rolle</span>
+                        <span class="value">{{ displayRole() }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile__card">
+                <h2>Aktionen</h2>
+
+                <div class="profile__actions">
+                    <button type="button" class="btn" (click)="startEditName()">
+                        Namen bearbeiten
+                    </button>
+
+                    <button type="button" class="btn" (click)="startChangePassword()">
+                        Passwort ändern
+                    </button>
+                </div>
+
+                @if (successMessage()) {
+                <p class="message message--success">{{ successMessage() }}</p>
+                }
+
+                @if (errorMessage()) {
+                <p class="message message--error">{{ errorMessage() }}</p>
+                }
+            </div>
+        </div>
+
+        @if (isEditingName()) {
+        <div class="profile__card profile__card--form">
+            <h2>Name bearbeiten</h2>
+
+            <form [formGroup]="nameForm" (ngSubmit)="saveName()">
+                <div class="form__row">
+                    <label for="firstname">Vorname</label>
+                    <input id="firstname" type="text" formControlName="firstname" />
+                </div>
+
+                <div class="form__row">
+                    <label for="surname">Nachname</label>
+                    <input id="surname" type="text" formControlName="surname" />
+                </div>
+
+                <div class="form__actions">
+                    <button type="submit" class="btn" [disabled]="loading()">Speichern</button>
+                    <button type="button" class="btn btn--secondary" (click)="cancelEditName()">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+        }
+
+        @if (isChangingPassword()) {
+        <div class="profile__card profile__card--form">
+            <h2>Passwort ändern</h2>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+                <div class="form__row">
+                    <label for="currentPassword">Aktuelles Passwort</label>
+                    <input id="currentPassword" type="password" formControlName="currentPassword" />
+                </div>
+
+                <div class="form__row">
+                    <label for="newPassword">Neues Passwort</label>
+                    <input id="newPassword" type="password" formControlName="newPassword" />
+                </div>
+
+                <div class="form__row">
+                    <label for="confirmPassword">Neues Passwort bestätigen</label>
+                    <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+                </div>
+
+                @if (passwordForm.errors?.['passwordMismatch'] && passwordForm.touched) {
+                <p class="message message--error">Die neuen Passwörter stimmen nicht überein.</p>
+                }
+
+                <div class="form__actions">
+                    <button type="submit" class="btn" [disabled]="loading()">Speichern</button>
+                    <button type="button" class="btn btn--secondary" (click)="cancelChangePassword()">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+        }
+        } @else {
+        <div class="profile__card">
+            <p>Profil wird geladen ...</p>
+        </div>
+        }
+    </div>
+</div>
+}
