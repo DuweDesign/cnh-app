@@ -6,17 +6,37 @@
             <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
         </div>
 
+        @if (isAdmin()) {
+        <div class="admin-profile-switch">
+            <input 
+                type="text" 
+                [ngModel]="dealerNumberInput()" 
+                (ngModelChange)="dealerNumberInput.set($event)"
+                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()"
+                placeholder="User-ID eingeben" />
+
+            <button type="button" (click)="onLoadAdminProfile()">
+                Profil laden
+            </button>
+
+            <button type="button" (click)="onResetToOwnProfile()">
+                Mein Profil
+            </button>
+        </div>
+        }
+
         <div class="page__center page__center--sale">
-            <div class="user__info">
+            <div class="bonus__info">
                 <p>
-                    Die Top Ten Verkäuferinnen / Verkäufer erhalten pro Monat einen Amazon-Gutschein in Höhe von
+                    Die Top 10 Verkäuferinnen und Verkäufer des aktuellen Monats erhalten
+                    einen Amazon-Gutschein in Höhe von
                 </p>
                 <span>175,00 €*</span>
                 <p>
-                    Die Gutscheine werden monatlich nach der Auswertung im Folgemonat verschickt.
+                    Der Versand erfolgt nach der monatlichen Auswertung im Folgemonat.
                 </p>
                 <small>
-                    *Die erforderliche Pauschalversteuerung wird darüber hinaus von uns übernommen.
+                    *Die erforderliche Pauschalversteuerung wird zusätzlich übernommen.
                 </small>
             </div>
 
@@ -29,24 +49,51 @@
             </div>
 
             <div class="user__mission">
+                @if (loading()) {
                 <div class="user__label">
-                    <span>Bonus</span>
-                    <p>Bis zum Monatsbonus fehlen noch <strong>3</strong> Verkäufe!</p>
+                    <span>Bonuspunkte</span>
+                    <p>Bonusstatus wird geladen ...</p>
+                </div>
+                } @else if (error()) {
+                <div class="user__label">
+                    <span>Bonuspunkte</span>
+                    <p>{{ error() }}</p>
+                </div>
+                } @else if (bonusStatus(); as status) {
+                
+                <div class="user__label">
+                    <span>Meine<br>Bonuspunkte</span>
                 </div>
 
                 <div class="user__number">
-                    <div class="number">3</div>
+                    @if (status.isTop10) {
+                    <div class="number number--success">{{ status.myMonthPoints }}</div>
+                    } @else if (status.top10Count < 10) { <div class="number">-
                 </div>
+                } @else {
+                <div class="number">{{ status.pointsToTop10 }}</div>
+                }
             </div>
-        </div>
 
-        <div class="page__bottom">
-            <!-- <div class="bottom">
-                <div class="bottom__badge">
-                    <a routerLink="/preise">Was Sie gewinnen können</a>
-                </div>
-            </div> -->
+            <div class="user__info">
+                <span>Bonus</span>
+    
+                @if (status.isTop10) {
+                <p>Du bist aktuell unter den <strong>Top 10</strong> – weiter so!</p>
+                } @else if (status.top10Count < 10) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
+                    } @else {
+                    <p>
+                        Bis zum Monatsbonus fehlen dir noch
+                        <strong>{{ status.pointsToTop10 }}</strong>
+                        {{ status.pointsToTop10 === 1 ? 'Punkt' : 'Punkte' }}.
+                    </p>
+                    }
+            </div>
+        }
         </div>
     </div>
+
+    <div class="page__bottom"></div>
+</div>
 </div>
 }

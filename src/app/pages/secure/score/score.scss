@@ -6,6 +6,12 @@
   column-gap: 40px;
   row-gap: 40px;
   align-items: center;
+
+  .loading {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
 }
 
 .admin-profile-switch {

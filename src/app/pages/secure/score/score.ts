@@ -7,6 +7,11 @@ import { ProfileService } from '../../../core/services/profile.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MyProfile } from '../../../core/models/profile.model';
 
+type ScorePhase = {
+  title: string;
+  description: string;
+}
+
 @Component({
   selector: 'cnh-score',
   standalone: true,
@@ -56,6 +61,62 @@ export class Score {
 
     return `Bleib dran – dir fehlen noch ${this.pointsToTop10()} Punkte bis zu Rang 10!`;
   });
+
+  private readonly phaseMap: Record<number, ScorePhase> = {
+    3: {
+      title: 'APRIL – Der Startschuss',
+      description:
+        'Mit der Aussaat von Mais, Zuckerrüben und Sommergetreide beginnt die neue Saison. Jetzt werden die Grundlagen für eine erfolgreiche Ernte gelegt – genau wie im Verkaufswettbewerb, bei dem ein starker Start entscheidend für den Gesamterfolg ist.',
+    },
+    4: {
+      title: 'MAI – Wachstum und Pflege',
+      description:
+        'Die Kulturen werden gepflegt, gedüngt und geschützt. Aufmerksamkeit und Einsatz zahlen sich aus – so wie im Verkaufswettbewerb, bei dem konstante Aktivität und Kundenfokus den Unterschied machen.',
+    },
+    5: {
+      title: 'JUNI – Volle Leistung',
+      description:
+        'Intensives Pflanzenwachstum und erste Grünfutterernte prägen den Monat. Höchstleistung auf dem Feld ist gefragt – vergleichbar mit der heißen Phase des Verkaufswettbewerbs, in der Engagement und Tempo zählen.',
+    },
+    6: {
+      title: 'JULI – Erste Erfolge',
+      description:
+        'Die Getreideernte beginnt, Ergebnisse werden sichtbar. Ähnlich zeigen sich im Verkaufswettbewerb erste Erfolge und Zwischenstände, die zusätzlich motivieren.',
+    },
+    7: {
+      title: 'AUGUST – Erntehochphase',
+      description:
+        'Haupterntezeit für Getreide und Raps. Jetzt zahlt sich die Arbeit der vergangenen Monate aus – wie im Verkaufswettbewerb, wenn Abschlüsse realisiert und Punkte gesammelt werden.',
+    },
+    8: {
+      title: 'SEPTEMBER – Weichen für die Zukunft',
+      description:
+        'Aussaat von Wintergetreide und Ernte von Mais und Kartoffeln. Parallel dazu heißt es im Verkaufswettbewerb: Chancen nutzen und die Basis für den Endspurt legen.',
+    },
+    9: {
+      title: 'OKTOBER – Abschluss und Vorbereitung',
+      description:
+        'Letzte Erntearbeiten und Bodenvorbereitung bestimmen den Monat. Im Verkaufswettbewerb geht es darum, offene Potenziale zu heben und sich auf das Finale vorzubereiten.',
+    },
+    10: {
+      title: 'NOVEMBER – Zielgerade',
+      description:
+        'Die Felder kommen zur Ruhe, Planung und Wartung stehen im Mittelpunkt. Auch im Verkaufswettbewerb beginnt die Zielgerade: Jetzt entscheiden Fokus und Ausdauer über den Erfolg.',
+    },
+    11: {
+      title: 'DEZEMBER – Ernte der Leistungen',
+      description:
+        'Winterruhe auf den Feldern, Rückblick und Planung für das neue Jahr. Zeit, im Verkaufswettbewerb die Leistungen zu feiern, Gewinner zu küren und Motivation für die nächste Saison zu schaffen.',
+    },
+  };
+
+  readonly currentPhase = computed<ScorePhase>(() => {
+    const month = new Date().getMonth();
+
+    return (
+      this.phaseMap[month] ?? { title: 'AKTUELLE PHASE', description: 'Die aktuelle Montasphase wird in Kürze angezeigt.' }
+    )
+  })
 
   constructor() {
     this.loadProfile();

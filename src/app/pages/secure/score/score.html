@@ -9,7 +9,10 @@
 
         @if (isAdmin()) {
         <div class="admin-profile-switch">
-            <input type="text" [ngModel]="dealerNumberInput()" (ngModelChange)="dealerNumberInput.set($event)"
+            <input type="text" 
+                [ngModel]="dealerNumberInput()" 
+                (ngModelChange)="dealerNumberInput.set($event)"
+                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()"
                 placeholder="User-ID eingeben" />
 
             <button type="button" (click)="onLoadAdminProfile()">
@@ -24,7 +27,7 @@
 
         @if (isLoading()) {
         <div class="page__center">
-            <p>Punktestand wird geladen ...</p>
+            <p class="loading">Punktestand wird geladen ...</p>
         </div>
         } @else if (error()) {
         <div class="page__center">
@@ -42,11 +45,9 @@
                 </div>
 
                 <div class="user__info">
-                    <p><strong>APRIL - Der Startschuss</strong></p>
+                    <p><strong>{{ currentPhase().title }}</strong></p>
                     <p>
-                        Mit der Aussaat von Mais, Zuckerrüben und Sommergetreide beginnt die neue Saison.
-                        Jetzt werden die Grundlagen für eine erfolgreiche Ernte gelegt – genau wie im
-                        Verkaufswettbewerb, bei dem ein starker Start entscheidend für den Gesamterfolg ist.
+                        {{ currentPhase().description }}
                     </p>
                 </div>
             </div>
