@@ -163,8 +163,6 @@
 }
 
 .ranking-subsection {
-  border-radius: 16px;
-  overflow: hidden;
   h2 {
     color: white;
     display: flex;
@@ -259,11 +257,20 @@
   min-width: 900px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
 
   thead {
-    background: #1d1d1d;
     color: #fff;
 
+    &.case-steyr {
+      background: linear-gradient(135deg, #7d141d, #b12631);
+    }
+   
+    &.new-holland {
+      background: linear-gradient(135deg, #00366f, #0059bb);
+    }
+    
     th {
       text-align: left;
       padding: 16px 18px;
@@ -434,8 +441,151 @@
   .page__user-logo {
     display: none;
   }
+}
+
+@media (max-width: 768px) {
+  .page__center {
+    padding-top: 20px;
+  }
+
+  .page.ranking {
+    padding: 24px 12px;
+
+    .page__title h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .user__image {
+    justify-content: flex-start;
+  }
+
+  .page__user-logo {
+    display: none;
+  }
+
+  .ranking-table-wrapper {
+    gap: 30px;
+  }
+
+  .ranking-subsection {
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .ranking-subsection__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ranking-pagination-size {
+    width: 100%;
+    gap: 8px;
+
+    span {
+      width: 100%;
+    }
+  }
+
+  .ranking-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ranking-pagination__controls {
+    width: 100%;
+    justify-content: space-between;
+
+    span {
+      font-size: 0.9rem;
+      padding: 0 10px;
+    }
+
+    button {
+      padding: 0.55rem 0.8rem;
+    }
+  }
 
   .ranking-table {
-    min-width: 700px;
+    min-width: 100%;
+    background: transparent;
+    box-shadow: none;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .ranking-table thead {
+    display: none;
+  }
+
+  .ranking-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ranking-table tbody tr {
+    display: block;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 14px;
+    border-bottom: none;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.869);;
+      }
+  }
+
+  .ranking-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    text-align: right;
+  }
+
+  .ranking-table tbody td:first-child {
+    border-bottom: none;
+    color: white;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+
+    &.case-steyr {
+      background: linear-gradient(135deg, #7d141d, #b12631);
+    }
+   
+    &.new-holland {
+      background: linear-gradient(135deg, #00366f, #0059bb);
+    }
+
+    &::before {
+      color: white;
+    }
+  }
+  
+  .ranking-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .ranking-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    text-align: left;
+    color: #1d1d1d;
+    flex: 0 0 45%;
+  }
+
+  .ranking-table tbody td.points {
+    font-weight: 700;
+  }
+
+  .page-size-button {
+    min-width: 40px;
+    padding: 0.4rem 0.7rem;
   }
 }

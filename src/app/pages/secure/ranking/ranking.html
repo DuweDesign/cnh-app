@@ -20,10 +20,10 @@
                         <h2>TOP10 Ranking</h2>
 
                         <table class="ranking-table">
-                            <thead>
+                            <thead [ngClass]="config.key">
                                 <tr>
                                     <th>Platz</th>
-                                    <th>Händlernr.</th>
+                                    <th>User ID</th>
                                     <th>Name</th>
                                     <th>Unternehmen</th>
                                     <th>Punkte im {{ currentMonthLabel() }}</th>
@@ -33,12 +33,12 @@
                             <tbody>
                                 @for (participant of top10Participants(); track participant.id) {
                                 <tr>
-                                    <td>{{ participant.rank ?? '-' }}</td>
-                                    <td>{{ participant.dealerNumber }}</td>
-                                    <td>{{ participant.name }}</td>
-                                    <td>{{ participant.company }}</td>
-                                    <td>{{ participant.monthPoints }}</td>
-                                    <td class="points">{{ participant.totalPoints }}</td>
+                                    <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-' }}</strong></td>
+                                    <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                    <td data-label="Name">{{ participant.name }}</td>
+                                    <td data-label="Unternehmen">{{ participant.company }}</td>
+                                    <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                    <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                 </tr>
                                 }
                             </tbody>
@@ -51,10 +51,10 @@
                             <h2>Ihr Team Ranking</h2>
 
                             <table class="ranking-table ranking-table--team">
-                                <thead>
+                                <thead [ngClass]="config.key">
                                     <tr>
-                                        <th>Gesamtplatz</th>
-                                        <th>Händlernr.</th>
+                                        <th>Platz</th>
+                                        <th>User ID</th>
                                         <th>Name</th>
                                         <th>Unternehmen</th>
                                         <th>Punkte im {{ currentMonthLabel() }}</th>
@@ -64,12 +64,12 @@
                                 <tbody>
                                     @for (participant of teamParticipants(); track participant.id) {
                                     <tr>
-                                        <td>{{ participant.rank ?? '-' }}</td>
-                                        <td>{{ participant.dealerNumber }}</td>
-                                        <td>{{ participant.name }}</td>
-                                        <td>{{ participant.company }}</td>
-                                        <td>{{ participant.monthPoints }}</td>
-                                        <td class="points">{{ participant.totalPoints }}</td>
+                                        <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-' }}</strong></td>
+                                        <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                        <td data-label="Name">{{ participant.name }}</td>
+                                        <td data-label="Unternehmen">{{ participant.company }}</td>
+                                        <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                        <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                     </tr>
                                     }
                                 </tbody>
@@ -103,10 +103,10 @@
                             </div>
 
                             <table class="ranking-table">
-                                <thead>
+                                <thead [ngClass]="config.key">
                                     <tr>
                                         <th>Platz</th>
-                                        <th>Händlernr.</th>
+                                        <th>User ID</th>
                                         <th>Name</th>
                                         <th>Unternehmen</th>
                                         <th>Punkte im {{ currentMonthLabel() }}</th>
@@ -116,12 +116,12 @@
                                 <tbody>
                                     @for (participant of paginatedParticipants(); track participant.id) {
                                     <tr>
-                                        <td>{{ participant.rank ?? '-' }}</td>
-                                        <td>{{ participant.dealerNumber }}</td>
-                                        <td>{{ participant.name }}</td>
-                                        <td>{{ participant.company }}</td>
-                                        <td>{{ participant.monthPoints }}</td>
-                                        <td class="points">{{ participant.totalPoints }}</td>
+                                        <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-' }}</strong></td>
+                                        <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                        <td data-label="Name">{{ participant.name }}</td>
+                                        <td data-label="Unternehmen">{{ participant.company }}</td>
+                                        <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                        <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                     </tr>
                                     }
                                 </tbody>
