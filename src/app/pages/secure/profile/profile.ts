@@ -117,6 +117,11 @@ export class Profile {
 
     this.profileService.updateProfile(this.nameForm.getRawValue()).subscribe({
       next: (response) => {
+
+        if(response.user) {
+          this.authService.setUser(response.user);
+        }
+
         this.successMessage.set(response.message || 'Name erfolgreich aktualisiert.');
         this.isEditingName.set(false);
         this.loading.set(false);

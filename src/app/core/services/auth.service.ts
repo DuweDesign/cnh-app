@@ -36,6 +36,10 @@ export class AuthService {
     this.initializeAuth().subscribe();
   }
 
+  setUser(user: AuthUser): void {
+    this._user.set({ ...user });
+  }
+
   login(payload: LoginPayload): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, payload).pipe(
       tap((response) => {
