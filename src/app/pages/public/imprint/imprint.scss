@@ -1,1 +1,29 @@
 @use 'page' as *;
+
+
+.page.imprint {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  padding-bottom: 0;
+
+  &::before {
+    display: none;
+  }
+
+  .page__content {
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+
+    justify-content: flex-start;
+
+    .page__title {
+        h1 {
+            color: #000;
+        }
+    }
+  }
+}

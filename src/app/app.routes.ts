@@ -50,11 +50,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/public/imprint/imprint').then(m => m.Imprint)
       },
-      {
-        path: 'datenschutz',
-        loadComponent: () =>
-          import('./pages/public/privacy/privacy').then(m => m.Privacy)
-      }
+      // {
+      //   path: 'datenschutz',
+      //   loadComponent: () =>
+      //     import('./pages/public/privacy/privacy').then(m => m.Privacy)
+      // }
     ]
   },
 

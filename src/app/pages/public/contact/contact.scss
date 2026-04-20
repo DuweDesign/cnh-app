@@ -1,1 +1,85 @@
 @use 'page' as *;
+
+.page.contact {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  padding-bottom: 0;
+
+  &::before {
+    display: none;
+  }
+
+  .page__content {
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+
+    justify-content: flex-start;
+
+    .page__title {
+      h1 {
+        color: #000;
+      }
+    }
+
+    .contact__wrapper {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+      justify-content: center;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+
+    .contact__card {
+      background: #2a3439;
+      padding: 30px 40px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: 0.5s ease;
+
+      h2 {
+        margin: 0 0 10px;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      span {
+        color: #fff;
+        text-decoration: underline;
+        font-size: 16px;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      &:hover {
+        background-color: #a32428;
+      }
+
+      @media (max-width: 768px) {
+        min-width: 100%;
+      }
+    }
+  }
+}
