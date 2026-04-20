@@ -8,6 +8,8 @@ import { RankingService } from '../../../core/services/ranking.service';
 
 import { USER_ROLES } from '../../../core/models/auth.model';
 import { RankingUser } from '../../../core/models/ranking.model';
+import { ProfileService } from '../../../core/services/profile.service';
+import { MyProfile } from '../../../core/models/profile.model';
 
 type RankingParticipant = {
   id: string;
@@ -30,12 +32,14 @@ export class Ranking {
   private competitionService = inject(CompetitionService);
   private authService = inject(AuthService);
   private rankingService = inject(RankingService);
+  private profileService = inject(ProfileService);
 
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly profile = signal<MyProfile | null>(null);
 
   /**
    * Admin / Sales Ranking gesamt
@@ -259,4 +263,22 @@ export class Ranking {
   nextPage(): void {
     this.goToPage(this.currentPage() + 1);
   }
+
+  // PARTSPOINTS
+  readonly currentManagementPartPoints = computed(() => {
+    const profile = this.profile();
+
+    if (!profile || profile.role !== USER_ROLES.CNH_MANAGEMENT || !this.authService.isAdmin()) {
+      return 0;
+    }
+
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    const monthlyEntry = profile.monthlyPoints?.find(
+      (entry) => entry.monthKey === monthKey
+    );
+
+    return monthlyEntry?.partpoints ?? 0;
+  });
 }

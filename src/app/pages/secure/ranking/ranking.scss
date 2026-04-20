@@ -23,12 +23,63 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 80px;
-  
+
   .page__logo {
     align-self: flex-start;
   }
 }
 
+.ranking-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 32px;
+  flex-shrink: 0;
+
+  @media (max-width: 778px) {
+    align-items: flex-start;
+  }
+}
+
+.part-score-card {
+  width: 390px;
+  max-width: 100%;
+  padding: 18px 18px 18px 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  border-radius: 0;
+  // background: rgba(255, 255, 255, 0.18);
+  // backdrop-filter: blur(3px);
+  // -webkit-backdrop-filter: blur(3px);
+
+  @media (max-width: 778px) {
+    flex-direction: row-reverse;
+  }
+}
+
+.part-score-card__label {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.part-score-card__value {
+  min-width: 120px;
+  height: 120px;
+  padding: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  color: #fff;
+  font-size: 4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 12px;
+}
 
 /* =========================
    SALE GRID (3 SPALTEN)
@@ -199,7 +250,7 @@
 .page-size-button {
   min-width: 44px;
   padding: 0.45rem 0.75rem;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   background: transparent;
   color: #fff;
   cursor: pointer;
@@ -235,7 +286,7 @@
     font-size: 400;
     padding: 0 6px;
   }
-  
+
   button {
     padding: 0.5rem 0.9rem;
     border: none;
@@ -266,11 +317,11 @@
     &.case-steyr {
       background: linear-gradient(135deg, #7d141d, #b12631);
     }
-   
+
     &.new-holland {
       background: linear-gradient(135deg, #00366f, #0059bb);
     }
-    
+
     th {
       text-align: left;
       padding: 16px 18px;
@@ -355,7 +406,9 @@
 @media (max-width: 992px) {
   .page__center {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    gap: 20px;
   }
 
   .page__center--sale {
@@ -470,7 +523,7 @@
 
   .ranking-subsection {
     h2 {
-      font-size: 1.3rem;
+      font-size: 2rem;
     }
   }
 
@@ -533,8 +586,8 @@
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 
     &:hover {
-        background: rgba(255, 255, 255, 0.869);;
-      }
+      background: rgba(255, 255, 255, 0.869);
+    }
   }
 
   .ranking-table tbody td {
@@ -558,7 +611,7 @@
     &.case-steyr {
       background: linear-gradient(135deg, #7d141d, #b12631);
     }
-   
+
     &.new-holland {
       background: linear-gradient(135deg, #00366f, #0059bb);
     }
@@ -567,7 +620,7 @@
       color: white;
     }
   }
-  
+
   .ranking-table tbody td:last-child {
     border-bottom: none;
   }
