@@ -38,11 +38,22 @@ export class News {
 
   newsImages = signal<NewsImage[]>([]);
 
+  readonly newsImageGroups = computed(() => {
+    const images = this.newsImages();
+    const groups: NewsImage[][] = [];
+
+    for (let i = 0; i < images.length; i += 6) {
+      groups.push(images.slice(i, i + 6));
+    }
+
+    return groups;
+  });
+
   ngOnInit(): void {
     this.loadNewsImages();
   }
 
-  loadNewsImages(): void {
+   loadNewsImages(): void {
     this.http.get<{ success: boolean; images: NewsImage[] }>(`${environment.apiUrl}/v1/cnh/news/images`)
       .subscribe({
         next: (response) => {
