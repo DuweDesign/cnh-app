@@ -494,27 +494,9 @@
   .page__user-logo {
     display: none;
   }
-}
 
-@media (max-width: 768px) {
-  .page__center {
-    padding-top: 20px;
-  }
-
-  .page.ranking {
-    padding: 24px 12px;
-
-    .page__title h1 {
-      font-size: 1.8rem;
-    }
-  }
-
-  .user__image {
-    justify-content: flex-start;
-  }
-
-  .page__user-logo {
-    display: none;
+  .part-score-card__label {
+    font-size: 1.5rem;
   }
 
   .ranking-table-wrapper {
