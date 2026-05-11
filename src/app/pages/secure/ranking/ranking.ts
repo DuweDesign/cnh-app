@@ -70,6 +70,7 @@ export class Ranking {
       USER_ROLES.SYSADMIN,
       USER_ROLES.CNH_ADMIN,
       USER_ROLES.VIPP_ADMIN,
+      USER_ROLES.WAREHOUSE_ADMIN
     ].includes(role as never);
   });
 
