@@ -14,7 +14,7 @@
   }
 
   &.error {
-    background-color: rgb(255, 177, 177);
+    background-color: rgb(255, 205, 205);
     border-radius: 10px;
     border: 1px solid red;
     text-align: center;
@@ -23,7 +23,7 @@
     width: 50%;
     align-self: center;
     p {
-      color: white;
+      color: red;
       font-size: 1.3rem;
       font-weight: 500;
     }
