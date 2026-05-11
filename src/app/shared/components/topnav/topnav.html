@@ -46,7 +46,7 @@
       <nav class="topnav__desktop-nav">
         <div class="main-nav">
           <a routerLink="/news" routerLinkActive="active">News</a>
-          @if (!isSaleUser()) {
+          @if (!isSaleUser() || !isWarehouseUser()) {
           <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
           }
           @if (isSaleUser() || authService.isAdmin()) {
