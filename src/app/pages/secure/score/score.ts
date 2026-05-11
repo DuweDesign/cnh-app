@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,7 +10,7 @@ import { MyProfile } from '../../../core/models/profile.model';
 type ScorePhase = {
   title: string;
   description: string;
-}
+};
 
 @Component({
   selector: 'cnh-score',
@@ -24,6 +24,8 @@ export class Score {
   private profileService = inject(ProfileService);
   private authService = inject(AuthService);
 
+  private profileRequestId = 0;
+
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
@@ -34,14 +36,16 @@ export class Score {
   readonly dealerNumberInput = signal<string>('');
 
   readonly currentUser = this.authService.user;
+
   readonly isAdmin = computed(() => {
     const role = this.currentUser()?.role;
+
     return ['sysadmin', 'vipp-admin', 'cnh-admin', 'warehouse-admin'].includes(role ?? '');
   });
 
   readonly totalPoints = computed(() => this.profile()?.totalPoints ?? 0);
   readonly rank = computed(() => this.profile()?.rank ?? null);
-  readonly isTop10 = computed(() => this.profile()?.isTop10);
+  readonly isTop10 = computed(() => this.profile()?.isTop10 ?? false);
   readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);
 
   readonly rankingHeadline = computed(() => {
@@ -114,29 +118,58 @@ export class Score {
     const month = new Date().getMonth();
 
     return (
-      this.phaseMap[month] ?? { title: 'AKTUELLE PHASE', description: 'Die aktuelle Montasphase wird in Kürze angezeigt.' }
-    )
-  })
+      this.phaseMap[month] ?? {
+        title: 'AKTUELLE PHASE',
+        description: 'Die aktuelle Monatsphase wird in Kürze angezeigt.',
+      }
+    );
+  });
 
   constructor() {
-    this.loadProfile();
+    effect(() => {
+      const competitionKey = this.competitionConfig()?.key;
+
+      if (!competitionKey) {
+        return;
+      }
+
+      untracked(() => {
+        this.dealerNumberInput.set('');
+        this.profile.set(null);
+        this.loadProfile(undefined, competitionKey);
+      });
+    });
   }
 
-  loadProfile(dealernumber?: string): void {
+  loadProfile(dealernumber?: string, expectedCompetitionKey = this.competitionConfig()?.key): void {
+    const requestId = ++this.profileRequestId;
+
     this.isLoading.set(true);
     this.error.set(null);
 
     this.profileService.getMyProfile(dealernumber).subscribe({
       next: (profile) => {
-        if (profile.competition !== this.competitionConfig()?.key) {
-          throw 'Profil nicht gefunden!'
+        if (requestId !== this.profileRequestId) {
+          return;
+        }
+
+        if (expectedCompetitionKey && profile.competition !== expectedCompetitionKey) {
+          this.profile.set(null);
+          this.error.set('Profil nicht gefunden!');
+          this.isLoading.set(false);
+          return;
         }
 
         this.profile.set(profile);
         this.isLoading.set(false);
       },
       error: (err) => {
+        if (requestId !== this.profileRequestId) {
+          return;
+        }
+
         console.error('Fehler beim Laden des Profils:', err);
+        this.profile.set(null);
         this.error.set('Der Punktestand konnte nicht geladen werden.');
         this.isLoading.set(false);
       },
@@ -145,11 +178,13 @@ export class Score {
 
   onLoadAdminProfile(): void {
     const dealernumber = this.dealerNumberInput().trim();
-    this.loadProfile(dealernumber || undefined);
+
+    this.loadProfile(dealernumber || undefined, this.competitionConfig()?.key);
   }
 
   onResetToOwnProfile(): void {
     this.dealerNumberInput.set('');
-    this.loadProfile();
+
+    this.loadProfile(undefined, this.competitionConfig()?.key);
   }
 }
