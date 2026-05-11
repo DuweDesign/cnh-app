@@ -12,6 +12,20 @@
     font-size: 1.3rem;
     font-weight: 500;
   }
+
+  &.error {
+    background-color: rgb(255, 177, 177);
+    border-radius: 10px;
+    border: 1px solid red;
+    text-align: center;
+    grid-template-columns: inherit;
+    j
+    p {
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+  }
 }
 
 .admin-profile-switch {
