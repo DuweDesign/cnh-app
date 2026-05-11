@@ -49,7 +49,7 @@
           @if (!isSaleUser() && !isWarehouseUser()) {
           <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
           }
-          @if (isSaleUser() || authService.isAdmin()) {
+          @if (isSaleUser ()|| isWarehouseUser() || authService.isAdmin()) {
           <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
           <a routerLink="/bonus" routerLinkActive="active">Bonus</a>
           }
