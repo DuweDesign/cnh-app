@@ -128,6 +128,7 @@ export class Score {
 
     this.profileService.getMyProfile(dealernumber).subscribe({
       next: (profile) => {
+        console.log('this.competition.name: ', this.competition.name);
         if (profile.competition !== this.competition.name) {
           throw 'Profil nicht gefunden!'
         }
