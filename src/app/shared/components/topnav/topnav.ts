@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, HostListener, inject, Input, ElementRef } from '@angular/core';
+import { Component, computed, HostListener, inject, Input, ElementRef, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { COMPETITIONS, USER_ROLES } from '../../../core/models/auth.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+type CompetitionSelectValue = 'case-steyr' | 'new-holland' | 'warehouse';
 
 @Component({
   selector: 'cnh-topnav',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './topnav.html',
   styleUrl: './topnav.scss'
 })
@@ -17,6 +20,8 @@ export class Topnav {
 
   isProfileMenuOpen = false;
   isMobileMenuOpen = false;
+
+  competitionSelect: CompetitionSelectValue = 'case-steyr';
 
   readonly authService = inject(AuthService);
   readonly competitionService = inject(CompetitionService);
@@ -29,18 +34,81 @@ export class Topnav {
   readonly isNewHolland = computed(() =>
     this.competitionService.activeCompetition() === COMPETITIONS.NEW_HOLLAND
   );
+  
+  readonly isCaseSteyr = computed(() =>
+    this.competitionService.activeCompetition() === COMPETITIONS.CASE_STEYR
+  );
+  
+  readonly isWarehouse = computed(() =>
+    this.competitionService.activeCompetition() === COMPETITIONS.WAREHOUSE
+  );
 
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
-  constructor(private elRef: ElementRef) { }
+  readonly isWarehouseUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
+  );
+
+  readonly isAdmin = computed(() => {
+    const role = this.authService.getUserRole();
+    return ['sysadmin', 'vipp-admin'].includes(role ?? '');
+  });
+
+  readonly isWarehousAdmin = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.WAREHOUSE_ADMIN
+  );
+
+  readonly isCnhAdmin = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_ADMIN
+  );
+
+  constructor(private elRef: ElementRef) {
+    effect(() => {
+      const activeCompetition = this.competitionService.activeCompetition();
+
+      if (
+        activeCompetition === COMPETITIONS.CASE_STEYR ||
+        activeCompetition === COMPETITIONS.NEW_HOLLAND ||
+        activeCompetition === COMPETITIONS.WAREHOUSE
+      ) {
+        this.competitionSelect = activeCompetition;
+      }
+    });
+  }
 
 
   toggleProfileMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.isMobileMenuOpen = false;
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  onCompetitionSelectChange(value: string): void {
+    if (!this.isCompetitionSelectValue(value)) {
+      return;
+    }
+
+    this.competitionSelect = value;
+
+    switch (value) {
+      case 'case-steyr':
+        this.competitionService.setCompetition(COMPETITIONS.CASE_STEYR);
+        break;
+
+      case 'new-holland':
+        this.competitionService.setCompetition(COMPETITIONS.NEW_HOLLAND);
+        break;
+
+      case 'warehouse':
+        this.competitionService.setCompetition(COMPETITIONS.WAREHOUSE);
+        break;
+    }
+  }
+
+  private isCompetitionSelectValue(value: string): value is CompetitionSelectValue {
+    return ['case-steyr', 'new-holland', 'warehouse'].includes(value);
   }
 
   closeProfileMenu(): void {

@@ -10,7 +10,13 @@
       <div class="topnav__brands topnav__brands--mobile">
         @if (isNewHolland()) {
         <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-        } @else {
+        }
+        @if (isCaseSteyr()) {
+        <span><img src="/images/case_logo.png" alt="CASE"></span>
+        <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+        }
+        @if (isWarehouse()) {
+        <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
         <span><img src="/images/case_logo.png" alt="CASE"></span>
         <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
         }
@@ -41,11 +47,11 @@
         <div class="main-nav">
           <a routerLink="/news" routerLinkActive="active">News</a>
           @if (!isSaleUser()) {
-            <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+          <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
           }
           @if (isSaleUser() || authService.isAdmin()) {
-            <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
-            <a routerLink="/bonus" routerLinkActive="active">Bonus</a>
+          <a routerLink="/punktestand" routerLinkActive="active">Punktestand</a>
+          <a routerLink="/bonus" routerLinkActive="active">Bonus</a>
           }
           <a routerLink="/reise" routerLinkActive="active">Reise</a>
           <a routerLink="/regeln" routerLinkActive="active">Regeln</a>
@@ -54,7 +60,13 @@
         <div class="topnav__brands topnav__brands--desktop">
           @if (isNewHolland()) {
           <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
-          } @else {
+          }
+          @if (isCaseSteyr()) {
+          <span><img src="/images/case_logo.png" alt="CASE"></span>
+          <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
+          }
+          @if (isWarehouse()) {
+          <span><img src="/images/new-holland_logo.png" alt="NEW HOLLAND"></span>
           <span><img src="/images/case_logo.png" alt="CASE"></span>
           <span><img style="margin-top: 8px;" src="/images/steyr_logo.png" alt="STEYR"></span>
           }
@@ -68,11 +80,25 @@
           @if (isProfileMenuOpen) {
           <div class="profile-dropdown">
             @if (showCompetitionToggle()) {
+            @if (isCnhAdmin()) {
             <div class="competition-toggle" (click)="toggleCompetition()">
               <span class="label left">CASE IH & STEYR</span>
               <span class="label right">NEW HOLLAND</span>
               <div class="slider" [class.right]="isNewHolland()"></div>
             </div>
+            }
+            @if (isAdmin()) {
+            <div class="competition-select">
+              <label for="competitionSelect">Wettbewerb</label>
+
+              <select id="competitionSelect" [ngModel]="competitionSelect"
+                (ngModelChange)="onCompetitionSelectChange($event)">
+                <option value="case-steyr">CASE IH & STEYR</option>
+                <option value="new-holland">NEW HOLLAND</option>
+                <option value="warehouse">WAREHOUSE</option>
+              </select>
+            </div>
+            }
             }
 
             <a routerLink="/profil" routerLinkActive="active" (click)="closeProfileMenu()">
@@ -129,11 +155,11 @@
     <div class="mobile-menu__links">
       <a routerLink="/news" routerLinkActive="active" (click)="closeMobileMenu()">News</a>
       @if (!isSaleUser()) {
-        <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
+      <a routerLink="/ranking" routerLinkActive="active" (click)="closeMobileMenu()">Ranking</a>
       }
       @if (isSaleUser() || authService.isAdmin()) {
-        <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
-        <a routerLink="/bonus" routerLinkActive="active" (click)="closeMobileMenu()">Bonus</a>
+      <a routerLink="/punktestand" routerLinkActive="active" (click)="closeMobileMenu()">Punktestand</a>
+      <a routerLink="/bonus" routerLinkActive="active" (click)="closeMobileMenu()">Bonus</a>
       }
       <a routerLink="/reise" routerLinkActive="active" (click)="closeMobileMenu()">Reise</a>
       <a routerLink="/regeln" routerLinkActive="active" (click)="closeMobileMenu()">Regeln</a>

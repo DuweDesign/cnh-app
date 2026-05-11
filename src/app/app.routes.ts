@@ -77,7 +77,8 @@ export const routes: Routes = [
             USER_ROLES.SYSADMIN,
             USER_ROLES.VIPP_ADMIN,
             USER_ROLES.CNH_ADMIN,
-            USER_ROLES.CNH_SALES
+            USER_ROLES.CNH_SALES,
+            USER_ROLES.CNH_WAREHOUSE
           ]
         },
         loadComponent: () =>
@@ -91,6 +92,7 @@ export const routes: Routes = [
             USER_ROLES.SYSADMIN,
             USER_ROLES.VIPP_ADMIN,
             USER_ROLES.CNH_ADMIN,
+            USER_ROLES.WAREHOUSE_ADMIN,
             USER_ROLES.CNH_MANAGEMENT
           ]
         },
@@ -115,7 +117,8 @@ export const routes: Routes = [
             USER_ROLES.SYSADMIN,
             USER_ROLES.VIPP_ADMIN,
             USER_ROLES.CNH_ADMIN,
-            USER_ROLES.CNH_SALES
+            USER_ROLES.CNH_SALES,
+            USER_ROLES.CNH_WAREHOUSE
           ]
         },
         loadComponent: () =>
@@ -133,7 +136,8 @@ export const routes: Routes = [
           roles: [
             USER_ROLES.SYSADMIN,
             USER_ROLES.VIPP_ADMIN,
-            USER_ROLES.CNH_ADMIN
+            USER_ROLES.CNH_ADMIN,
+            USER_ROLES.WAREHOUSE_ADMIN
           ]
         },
         loadComponent: () =>

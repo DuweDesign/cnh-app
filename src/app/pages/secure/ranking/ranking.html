@@ -160,7 +160,7 @@
                     <img src="/images/ertragsmacher_logo.png" alt="Logo" />
                 </div>
 
-                @if (isManagementUser() || isAdminUser()) {
+                @if (isManagementUser() || isAdminUser() && config.key !== 'warehouse') {
                 <div class="part-score-card">
                     <div class="part-score-card__label">
                         Mein Part<br />

@@ -133,12 +133,14 @@ export class CompetitionService {
       });
   }
 
-  private getCompetitionSlug(competition: CompetitionType): 'case-steyr' | 'new-holland' {
+  private getCompetitionSlug(competition: CompetitionType): 'case-steyr' | 'new-holland' | 'warehouse' {
     switch (competition) {
       case COMPETITIONS.CASE_STEYR:
         return 'case-steyr';
       case COMPETITIONS.NEW_HOLLAND:
         return 'new-holland';
+      case COMPETITIONS.WAREHOUSE:
+        return 'warehouse';
       default:
         return 'case-steyr';
     }
@@ -149,7 +151,8 @@ export class CompetitionService {
 
     if (
       value === COMPETITIONS.CASE_STEYR ||
-      value === COMPETITIONS.NEW_HOLLAND
+      value === COMPETITIONS.NEW_HOLLAND ||
+      value === COMPETITIONS.WAREHOUSE
     ) {
       return value;
     }

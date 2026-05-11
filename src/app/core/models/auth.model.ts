@@ -2,15 +2,18 @@ export const USER_ROLES = {
   SYSADMIN: 'sysadmin',
   VIPP_ADMIN: 'vipp-admin',
   CNH_ADMIN: 'cnh-admin',
+  WAREHOUSE_ADMIN: 'warehouse-admin',
   CNH_SALES: 'cnh-sales',
-  CNH_MANAGEMENT: 'cnh-management'
+  CNH_MANAGEMENT: 'cnh-management',
+  CNH_WAREHOUSE: 'cnh-warehouse'
 } as const;
 
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
 
 export const COMPETITIONS = {
   CASE_STEYR: 'case-steyr',
-  NEW_HOLLAND: 'new-holland'
+  NEW_HOLLAND: 'new-holland',
+  WAREHOUSE: 'warehouse'
 } as const;
 
 export type  CompetitionType = typeof COMPETITIONS[keyof typeof COMPETITIONS];

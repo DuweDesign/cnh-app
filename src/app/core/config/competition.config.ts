@@ -72,5 +72,33 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
             backgroundImage: '',
             title: 'Die Reise'
         }
+    },
+    [COMPETITIONS.WAREHOUSE]: {
+        key: COMPETITIONS.WAREHOUSE,
+        label: 'WAREHOUSE',
+        news: {
+            backgroundImage: '',
+            title: 'News'
+        },
+        ranking: {
+            backgroundImage: '',
+            title: 'Ranking'
+        },
+        bonus: {
+            backgroundImage: '',
+            title: 'Preise jeden Monat'
+        },
+        score: {
+            backgroundImage: '',
+            title: 'Mein Fortschritt'
+        },
+        rules: {
+            backgroundImage: '',
+            title: 'Die Regeln'
+        },
+        travel: {
+            backgroundImage: '',
+            title: 'Die Reise'
+        }
     }
 };

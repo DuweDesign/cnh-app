@@ -340,3 +340,59 @@
     min-width: 200px;
   }
 }
+
+.competition-select {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+
+  label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #000;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 10px;
+  }
+
+  select {
+    min-width: 180px;
+    width: 100%;
+    appearance: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    padding: 8px 34px 8px 14px;
+    border-radius: 999px;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1f2933;
+
+    background-image:
+      linear-gradient(45deg, transparent 50%, #1f2933 50%),
+      linear-gradient(135deg, #1f2933 50%, transparent 50%);
+    background-position:
+      calc(100% - 17px) 50%,
+      calc(100% - 12px) 50%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f3f4f6;
+      transform: translateY(-1px);
+    }
+  }
+}

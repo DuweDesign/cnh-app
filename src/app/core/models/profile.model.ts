@@ -2,12 +2,15 @@ export type UserRole =
   | 'sysadmin'
   | 'vipp-admin'
   | 'cnh-admin'
+  | 'warehouse-admin'
   | 'cnh-sales'
-  | 'cnh-management';
+  | 'cnh-management'
+  | 'cnh-warehouse';
 
 export type CompetitionType =
   | 'case-steyr'
   | 'new-holland'
+  | 'warehouse'
   | null;
 
 export interface MonthlyPoints {

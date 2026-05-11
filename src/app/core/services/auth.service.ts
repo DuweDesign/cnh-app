@@ -94,7 +94,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const userRole = this._user()?.role ?? null;
-    return userRole === 'sysadmin' || userRole === 'vipp-admin' || userRole === 'cnh-admin';
+    return userRole === 'sysadmin' || userRole === 'vipp-admin' || userRole === 'cnh-admin' || userRole === 'warehouse-admin';
   }
 
   canSelectCompetition(): boolean {
