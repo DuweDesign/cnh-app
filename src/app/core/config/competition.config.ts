@@ -3,6 +3,7 @@ import { COMPETITIONS, CompetitionType } from '../models/auth.model';
 export interface CompetitionConfig {
     key: CompetitionType;
     label: string;
+    logoUrl: string;
     news: Site;
     ranking: Site;
     bonus: Site;
@@ -20,6 +21,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
     [COMPETITIONS.CASE_STEYR]: {
         key: COMPETITIONS.CASE_STEYR,
         label: 'CASE / STEYR',
+        logoUrl: '/images/ertragsmacher_logo.png',
         news: {
             backgroundImage: '',
             title: 'News'
@@ -48,6 +50,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
     [COMPETITIONS.NEW_HOLLAND]: {
         key: COMPETITIONS.NEW_HOLLAND,
         label: 'NEW HOLLAND',
+        logoUrl: '/images/ertragsmacher_logo.png',
         news: {
             backgroundImage: '',
             title: 'News'
@@ -76,6 +79,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
     [COMPETITIONS.WAREHOUSE]: {
         key: COMPETITIONS.WAREHOUSE,
         label: 'WAREHOUSE',
+        logoUrl: '/images/die_lagerchamps.png',
         news: {
             backgroundImage: '',
             title: 'News'

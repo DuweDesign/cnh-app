@@ -3,7 +3,7 @@
     <div class="page__content">
         <div class="page__title">
             <h1>Profil</h1>
-            <img src="/images/ertragsmacher_logo.png" class="title-logo" alt="Logo" />
+            <img [src]="config.logoUrl" class="title-logo" alt="Logo" />
         </div>
 
         @if (user(); as user) {
