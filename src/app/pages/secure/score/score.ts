@@ -128,6 +128,9 @@ export class Score {
 
     this.profileService.getMyProfile(dealernumber).subscribe({
       next: (profile) => {
+        if (profile.competition !== this.competition.name) {
+          throw 'Profil nicht gefunden!'
+        }
         this.profile.set(profile);
         this.isLoading.set(false);
       },
