@@ -49,10 +49,14 @@ export class Profile {
         return 'VIPP Admin';
       case 'cnh-admin':
         return 'CNH Admin';
+      case 'warehouse-admin':
+        return 'Admin';
       case 'cnh-sales':
         return 'Verkäufer';
       case 'cnh-management':
         return 'Geschäftsführung';
+      case 'cnh-warehouse':
+        return 'Lagerleiter';
       default:
         return '-';
     }
