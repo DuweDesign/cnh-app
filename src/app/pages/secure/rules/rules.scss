@@ -339,6 +339,20 @@
   }
 }
 
+.rules-page--warehouse {
+  .rules-hero__eyebrow,
+  .rules-highlight,
+  .rules-section a,
+  .rules-section h2 {
+    color: #1b1b1b;
+  }
+
+  .rules-table thead th {
+    background: linear-gradient(135deg, #4d4d4d, #a9a9a9);
+    color: #fff;
+  }
+}
+
 .rules-page--new-holland {
   .rules-hero__eyebrow,
   .rules-highlight,
