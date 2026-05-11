@@ -37,7 +37,7 @@ export class Bonus {
 
   readonly isAdmin = computed(() => {
     const role = this.currentUser()?.role;
-    return ['sysadmin', 'vipp-admin', 'cnh-admin'].includes(role ?? '');
+    return ['sysadmin', 'vipp-admin', 'cnh-admin', 'warehouse-admin'].includes(role ?? '');
   });
 
   readonly loading = signal(true);

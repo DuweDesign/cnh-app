@@ -36,7 +36,7 @@ export class Score {
   readonly currentUser = this.authService.user;
   readonly isAdmin = computed(() => {
     const role = this.currentUser()?.role;
-    return ['sysadmin', 'vipp-admin', 'cnh-admin'].includes(role ?? '');
+    return ['sysadmin', 'vipp-admin', 'cnh-admin', 'warehouse-admin'].includes(role ?? '');
   });
 
   readonly totalPoints = computed(() => this.profile()?.totalPoints ?? 0);
