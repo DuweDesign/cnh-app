@@ -37,6 +37,7 @@ export class Profile {
     const competition = this.user()?.competition;
     if (competition === 'case-steyr') return 'CASE / STEYR';
     if (competition === 'new-holland') return 'New Holland';
+    if (competition === 'warehouse') return 'Lager';
     return '-';
   });
 
