@@ -33,6 +33,10 @@ export class News {
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
+  
+  readonly isManagementUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_MANAGEMENT
+  );
 
   private http = inject(HttpClient);
 
