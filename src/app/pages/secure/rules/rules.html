@@ -296,7 +296,7 @@
 
             @if (config.key == 'warehouse') {
                 <div class="rules-wrapper">
-                    @if (warehouseRulesConfig(); as managerRules) {
+                    @if (activeTab() === 'warehouse' && warehouseRulesConfig(); as managerRules) {
                     <section class="rules-page" [ngClass]="'rules-page--' + managerRules.theme">
                         <div class="rules-page__inner">
         

@@ -431,8 +431,7 @@ export class Rules {
     };
   });
   
-  readonly warehouseRulesConfig = computed<WarehouseRulesConfig | null>(() => {
-    const competition = this.competition();
+    readonly warehouseRulesConfig = computed<WarehouseRulesConfig | null>(() => {
 
     return {
       theme: 'warehouse',
