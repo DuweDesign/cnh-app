@@ -187,9 +187,9 @@ export class Ranking {
     }
 
     if (this.isAdminUser()) {
-      if (user.role === USER_ROLES.WAREHOUSE_ADMIN) {
-        return;
-      }
+      // if (user.role === USER_ROLES.WAREHOUSE_ADMIN) {
+      //   return;
+      // }
 
       this.rankingService.getSalesRanking(competition).subscribe({
         next: (response) => {
