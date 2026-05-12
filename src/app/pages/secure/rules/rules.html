@@ -9,7 +9,7 @@
 
         <div class="page__center">
             
-            @if(config.key == 'new-holland' || config.key == 'case-steyr') {
+            
                 <div class="rules-wrapper">
                     @if (!isSaleUser()) {
                         <div class="rules-subnav">
@@ -291,32 +291,28 @@
                         </div>
                     </section>
                     }
-                </div>
-            }
 
-            @if (config.key == 'warehouse') {
-                <div class="rules-wrapper">
-                    @if (activeTab() === 'warehouse' && warehouseRulesConfig(); as managerRules) {
-                    <section class="rules-page" [ngClass]="'rules-page--' + managerRules.theme">
+                    @if (activeTab() === 'warehouse' && warehouseRulesConfig(); as warehouseRules) {
+                    <section class="rules-page" [ngClass]="'rules-page--' + warehouseRules.theme">
                         <div class="rules-page__inner">
         
                             <header class="rules-hero">
-                                <p class="rules-hero__eyebrow">{{ managerRules.eyebrow }}</p>
-                                <p class="rules-hero__title">{{ managerRules.title }}</p>
-                                <p class="rules-hero__intro">{{ managerRules.intro }}</p>
+                                <p class="rules-hero__eyebrow">{{ warehouseRules.eyebrow }}</p>
+                                <p class="rules-hero__title">{{ warehouseRules.title }}</p>
+                                <p class="rules-hero__intro">{{ warehouseRules.intro }}</p>
                             </header>
         
                             <section class="rules-section">
-                                @for (item of managerRules.overview; track item) {
+                                @for (item of warehouseRules.overview; track item) {
                                 <p>{{ item }}</p>
                                 }
                             </section>
         
                             <section class="rules-section">
                                 <h2>Punktesystem</h2>
-                                <p>{{ managerRules.systemIntro }}</p>
+                                <p>{{ warehouseRules.systemIntro }}</p>
         
-                                @for (pillar of managerRules.pillars; track pillar.title) {
+                                @for (pillar of warehouseRules.pillars; track pillar.title) {
                                 <div class="rules-example">
                                     <h3>{{ pillar.title }}</h3>
                                     <p>{{ pillar.text }}</p>
@@ -329,7 +325,7 @@
                             </section>
         
                             <section class="rules-section">
-                                <h2>{{ managerRules.marketShareTable.title }}</h2>
+                                <h2>{{ warehouseRules.marketShareTable.title }}</h2>
         
                                 <div class="rules-table-wrap">
                                     <table class="rules-table">
@@ -340,7 +336,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @for (row of managerRules.marketShareTable.rows; track row.targetAchievement) {
+                                            @for (row of warehouseRules.marketShareTable.rows; track row.targetAchievement) {
                                             <tr>
                                                 <td>{{ row.targetAchievement }}</td>
                                                 <td>{{ row.points }}</td>
@@ -353,14 +349,19 @@
         
                             <section class="rules-section">
                                 <h2>Transparenz im Wettbewerb</h2>
-                                <p>{{ managerRules.websiteNote }}</p>
+                                <p>{{ warehouseRules.websiteNote }}</p>
                             </section>
         
                         </div>
                     </section>
                     }
                 </div>
-            }
+
+            <!-- @if (config.key == 'warehouse') {
+                <div class="rules-wrapper">
+                    
+                </div>
+            } -->
 
 
             <div class="page__logo">
