@@ -28,6 +28,14 @@
                                 (click)="setTab('management')">
                                 Geschäftsführer
                             </button>
+
+                            <button
+                                type="button"
+                                class="rules-subnav__item"
+                                [class.is-active]="activeTab() === 'warehouse'"
+                                (click)="setTab('warehouse')">
+                                Lagerleiter
+                            </button>
                         </div>
                     }
                     
