@@ -151,6 +151,14 @@ export class Rules {
     this.activeTab.set(tab);
   }
 
+  constructor() {
+    if (this.competitionConfig()?.key && this.competitionConfig()?.key === 'warehouse') {
+      this.setTab('warehouse');
+    } else {
+      this.setTab('sales');
+    }
+  }
+
   readonly rulesConfig = computed<RulesConfig | null>(() => {
     const competition = this.competition();
 
