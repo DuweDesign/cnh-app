@@ -160,7 +160,7 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if (isManagementUser() || isAdminUser() && config.key !== 'warehouse') {
+                @if ((isManagementUser() || isAdminUser()) && config.key !== 'warehouse') {
                 <div class="part-score-card">
                     <div class="part-score-card__label">
                         Mein Part<br />
