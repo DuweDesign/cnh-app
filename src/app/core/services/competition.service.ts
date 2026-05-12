@@ -39,6 +39,10 @@ export class CompetitionService {
       return user.competition;
     }
 
+    if (user.role === 'warehouse-admin') {
+      return COMPETITIONS.WAREHOUSE
+    }
+
     if (this.authService.canSelectCompetition()) {
       return this._selectedCompetition() ?? COMPETITIONS.CASE_STEYR;
     }
@@ -100,9 +104,7 @@ export class CompetitionService {
 
   private loadCompetitionConfig(competition: CompetitionType): void {
     const slug = this.getCompetitionSlug(competition);
-    console.log('slug: ', slug);
     const baseConfig = structuredClone(COMPETITION_CONFIG[slug]);
-    console.log('baseConfig: ', baseConfig);
 
     this.http
       .get<CompetitionBackgroundResponse>(`${this.apiUrl}/v1/cnh/competition-background/${slug}`)
