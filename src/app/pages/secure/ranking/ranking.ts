@@ -63,6 +63,10 @@ export class Ranking {
   readonly isManagementUser = computed(
     () => this.authService.getUserRole() === USER_ROLES.CNH_MANAGEMENT
   );
+  
+  readonly isWarehouseUser = computed(
+    () => this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
+  );
 
   readonly isAdminUser = computed(() => {
     const role = this.authService.getUserRole();
@@ -183,6 +187,10 @@ export class Ranking {
     }
 
     if (this.isAdminUser()) {
+      if (user.role === USER_ROLES.WAREHOUSE_ADMIN) {
+        return;
+      }
+
       this.rankingService.getSalesRanking(competition).subscribe({
         next: (response) => {
           this.participants.set(
