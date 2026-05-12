@@ -10,15 +10,9 @@
             <div class="ranking-table-wrapper">
 
                 @if (loading()) {
-                <div class="ranking-state">
-                    <p>Ranking wird geladen ...</p>
-                </div>
+                <div class="ranking-state"><p>Ranking wird geladen ...</p></div>
                 } @else if (error()) {
-                <div class="ranking-state ranking-state--error">
-                    <p>
-                        {{ error() }}
-                    </p>
-                </div>
+                <div class="ranking-state ranking-state--error"><p>{{ error() }}</p></div>
                 } @else {
 
                 <!-- TOP10 -->
