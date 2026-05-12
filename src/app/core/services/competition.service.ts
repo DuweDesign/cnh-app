@@ -100,9 +100,7 @@ export class CompetitionService {
 
   private loadCompetitionConfig(competition: CompetitionType): void {
     const slug = this.getCompetitionSlug(competition);
-    console.log('slug: ', slug);
-    const baseConfig = structuredClone(COMPETITION_CONFIG[competition]);
-    console.log('baseConfig: ', baseConfig);
+    const baseConfig = structuredClone(COMPETITION_CONFIG[slug]);
 
     this.http
       .get<CompetitionBackgroundResponse>(`${this.apiUrl}/v1/cnh/competition-background/${slug}`)
