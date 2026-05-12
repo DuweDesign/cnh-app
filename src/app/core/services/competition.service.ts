@@ -134,6 +134,11 @@ export class CompetitionService {
   }
 
   private getCompetitionSlug(competition: CompetitionType): 'case-steyr' | 'new-holland' | 'warehouse' {
+    
+    if (this.authService.getUserRole() === 'warehouse-admin') {
+      return 'warehouse';
+    }
+
     switch (competition) {
       case COMPETITIONS.CASE_STEYR:
         return 'case-steyr';
