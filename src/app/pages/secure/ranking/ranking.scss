@@ -1,20 +1,20 @@
 @use 'page' as *;
 
 &.ranking-state.ranking-state--error {
-    background-color: rgb(255, 205, 205);
-    border-radius: 10px;
-    border: 1px solid red;
-    text-align: center;
-    grid-template-columns: inherit;
-    padding: 0;
-    width: 50%;
-    align-self: center;
-    p {
-      color: red;
-      font-size: 1.3rem;
-      font-weight: 500;
-    }
+  background-color: rgb(255, 205, 205);
+  border-radius: 10px;
+  border: 1px solid red;
+  text-align: center;
+  grid-template-columns: inherit;
+  padding: 0;
+  width: 50%;
+  align-self: center;
+  p {
+    color: red;
+    font-size: 1.3rem;
+    font-weight: 500;
   }
+}
 
 /* =========================
    LAYOUT
@@ -337,7 +337,7 @@
     &.new-holland {
       background: linear-gradient(135deg, #00366f, #0059bb);
     }
-    
+
     &.warehouse {
       background: linear-gradient(135deg, #4d4d4d, #a9a9a9);
     }
