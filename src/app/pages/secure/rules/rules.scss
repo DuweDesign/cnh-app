@@ -195,6 +195,17 @@
   }
 }
 
+
+.rules-card + .rules-table-wrap,
+.rules-example + .rules-table-wrap {
+  margin-top: 18px;
+}
+
+.rules-table-wrap + .rules-note,
+.rules-table-wrap + p {
+  margin-top: 14px;
+}
+
 /* Lists */
 .rules-list {
   margin: 0;
@@ -278,6 +289,11 @@
     width: 140px;
     font-weight: 800;
   }
+}
+
+
+.rules-table--wide {
+  min-width: 760px;
 }
 
 /* Bottom */

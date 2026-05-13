@@ -105,21 +105,41 @@ type WarehouseRulesConfig = {
   eyebrow: string;
   title: string;
   intro: string;
-  overview: string[];
-  systemIntro: string;
-  pillars: {
+  workflow: {
     title: string;
-    text: string;
-    example?: string;
-  }[];
-  marketShareTable: {
+    paragraphs: string[];
+  };
+  quarterlyGoals: {
     title: string;
+    paragraphs: string[];
+    facts: {
+      label: string;
+      value: string;
+    }[];
     rows: {
       targetAchievement: string;
-      points: number;
+      points: string;
     }[];
   };
-  websiteNote: string;
+  quarterlyChallenges: {
+    title: string;
+    paragraphs: string[];
+  };
+  precisionFarming: {
+    title: string;
+    paragraphs: string[];
+    facts: {
+      label: string;
+      value: string;
+    }[];
+    rows: {
+      dealer: string;
+      referenceRevenue: string;
+      targetOne: string;
+      targetTwo: string;
+    }[];
+    note: string;
+  };
 };
 
 @Component({
@@ -152,11 +172,18 @@ export class Rules {
   }
 
   constructor() {
-    if (this.competitionConfig()?.key && this.competitionConfig()?.key === 'warehouse') {
+    if (this.isWarehouseContext()) {
       this.setTab('warehouse');
     } else {
       this.setTab('sales');
     }
+  }
+
+  private isWarehouseContext(): boolean {
+    return (
+      this.competitionConfig()?.key === 'warehouse' ||
+      this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
+    );
   }
 
   readonly rulesConfig = computed<RulesConfig | null>(() => {
@@ -438,55 +465,74 @@ export class Rules {
         'Für diesen Wettbewerb steht eine eigene Webseite zur Verfügung. Dort sehen Sie jederzeit Ihre Punkte und Ihre aktuelle Platzierung.',
     };
   });
-  
-    readonly warehouseRulesConfig = computed<WarehouseRulesConfig | null>(() => {
 
+
+  readonly warehouseRulesConfig = computed<WarehouseRulesConfig | null>(() => {
     return {
       theme: 'warehouse',
-      eyebrow: 'Lagerleiter Incentive 2026',
-      title: 'Die Regeln für Lagerleiter',
+      eyebrow: 'General Business',
+      title: 'Die Regeln für Warehouse',
       intro:
-        'Das Geschäftsführer Incentive 2026 belohnt die erfolgreichsten Händler des Jahres. Die 20 Händler mit den meisten Punkten erhalten jeweils zwei Plätze für die Incentive-Reise.',
-      overview: [
-        'Alle Händler haben die gleichen Chancen auf eine Platzierung.',
-        'Die Wertung basiert auf drei Bereichen, die zu einer Gesamtpunktzahl zusammengeführt werden.',
-        'Ihre aktuelle Punktzahl und Platzierung können Sie auf der eigenen Wettbewerbs-Webseite einsehen.',
-      ],
-      systemIntro:
-        'Das Punktesystem setzt sich aus drei Bereichen zusammen:',
-      pillars: [
-        {
-          title: '1. Vertriebsleistung Ihres Teams',
-          text:
-            'Alle Punkte Ihrer Verkäufer, die am Verkäufer-Wettbewerb teilnehmen, werden summiert und anschließend durch die Anzahl Ihrer Verkäufer geteilt.',
-          example:
-            'Beispiel: Sie haben 3 Verkäufer. Verkäufer A hat 100 Punkte, Verkäufer B 150 Punkte und Verkäufer C 110 Punkte. Daraus ergibt sich ein Mittelwert von 120 Punkten für das Geschäftsführer Incentive.',
-        },
-        {
-          title: '2. Marktanteil',
-          text:
-            'Der Marktanteil zeigt, wie erfolgreich Sie mit Ihrem Team die Marktbearbeitung umgesetzt haben. Grundlage ist das in der Jahreszielvereinbarung festgelegte Marktanteilsziel. Bei Zielerreichung oder Übererfüllung erhalten Sie zusätzliche Punkte.',
-          example:
-            'Beispiel: Ihr Marktanteilsziel liegt bei 10 %. Sie erreichen 11,2 %. Damit erhalten Sie 120 Punkte für das Geschäftsführer Incentive.',
-        },
-        {
-          title: '3. Ersatzteile',
-          text:
-            'Parallel zum Verkäufer-Wettbewerb läuft ein Incentive im Bereich Ersatzteile. Die dort erreichten Punkte Ihres Ersatzteilleiters werden ebenfalls für das Geschäftsführer Incentive angerechnet.',
-          example:
-            'Beispiel: Erreicht Ihr Ersatzteilleiter 90 Punkte, werden diese zu den Punkten aus den anderen beiden Bereichen addiert.',
-        },
-      ],
-      marketShareTable: {
-        title: 'Punkte für Zielerreichung beim Marktanteil',
-        rows: [
-          { targetAchievement: '90 % des JZV-Ziels', points: 80 },
-          { targetAchievement: '100 % des JZV-Ziels', points: 100 },
-          { targetAchievement: '110 % des JZV-Ziels', points: 120 },
+        'Über das restliche Jahr werden verschiedene Wettbewerbe angeboten, in denen Punkte gesammelt werden können.',
+      workflow: {
+        title: 'Wie läuft der Wettbewerb ab?',
+        paragraphs: [
+          'Über das restliche Jahr werden verschiedene Wettbewerbe angeboten, in denen Sie Punkte erzielen können.',
         ],
       },
-      websiteNote:
-        'Für diesen Wettbewerb steht eine eigene Webseite zur Verfügung. Dort sehen Sie jederzeit Ihre Punkte und Ihre aktuelle Platzierung.',
+      quarterlyGoals: {
+        title: '1. Erreichung von Quartalszielen',
+        paragraphs: [
+          'In den Quartalen 2 bis 4 werden Punkte für zwei Stufen der Übererreichung des Quartalsziels gemäß Bonussystem vergeben.',
+          'Die Stufen liegen bei 106 % und 108 %. Für jedes Quartalsziel werden 12 rollierende Monate berücksichtigt – analog zum Standard-Bonussystem.',
+          'Bei Fragen zur Systematik kontaktieren Sie bitte Ihren zuständigen Ersatzteilaußendienst / PSM.',
+        ],
+        facts: [
+          { label: 'Teilnahmebedingung', value: 'Bonussystem (Umsatz Depot + Petronas)' },
+          { label: 'Punktevergabe', value: 'Quartalsweise' },
+        ],
+        rows: [
+          { targetAchievement: 'ab 106 %', points: '5 Punkte' },
+          { targetAchievement: 'ab 108 %', points: '10 Punkte' },
+        ],
+      },
+      quarterlyChallenges: {
+        title: '2. Teilnahme an Quartalschallenges',
+        paragraphs: [
+          'Neben der Erreichung des Quartalsziels werden in den Quartalen 2, 3 und 4 jeweils zusätzliche Wettbewerbe angeboten, durch die Punkte für die exklusive Reise gesammelt werden können.',
+          'Die Challenges drehen sich um die Themen Precision Farming, Originalteile und Partnerhändler.',
+          'Die Details der ersten Challenge zu Precision Farming stehen bereits fest. Nähere Informationen zu den beiden weiteren Quartalschallenges folgen.',
+        ],
+      },
+      precisionFarming: {
+        title: 'Wie funktioniert der Precision Farming Wettbewerb?',
+        paragraphs: [
+          'Basierend auf 12 rollierenden Monaten (RM12) wird ein Ziel für Quartal 2/2026 definiert.',
+          'Der Referenzzeitraum sind die Quartale 2 bis 4 aus 2025 sowie Quartal 1/2026. Das Ziel erhalten Sie von Ihrem zuständigen Precision Farming Spezialisten.',
+          'Um Punkte für die Reise zu erhalten, gibt es zwei Stufen der Übererreichung: Bei 105 % Übererreichung im Vergleich zum Referenzzeitraum erhalten Sie 10 Punkte, bei 110 % erhalten Sie 20 Punkte.',
+        ],
+        facts: [
+          { label: 'Umfang', value: 'Umsatz aus MPL 660' },
+          { label: 'Umsatz Referenzzeitraum', value: 'Quartale 2 bis 4/2025 und Quartal 1/2026' },
+          { label: 'Aktionszeitraum', value: 'Bewertet wird der Umsatz aus Q3 bis Q4/2025 und Q1 bis Q2/2026' },
+        ],
+        rows: [
+          {
+            dealer: 'Händler A',
+            referenceRevenue: '100.000 €',
+            targetOne: '105.000 €',
+            targetTwo: '110.000 €',
+          },
+          {
+            dealer: 'Händler B',
+            referenceRevenue: '7.000 €',
+            targetOne: '10.500 €',
+            targetTwo: '11.000 €',
+          },
+        ],
+        note:
+          'Als Mindestumsatz im Referenzzeitraum werden sowohl für Punkte zur Reise als auch für die Tischkicker 10.000 € angesetzt. Liegt der Umsatz im Referenzzeitraum unter 10.000 €, wird die Prozentsteigerung erst ab 10.000 € berechnet.',
+      },
     };
   });
 }

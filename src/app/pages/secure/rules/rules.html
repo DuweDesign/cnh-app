@@ -34,7 +34,7 @@
                             class="rules-subnav__item"
                             [class.is-active]="activeTab() === 'warehouse'"
                             (click)="setTab('warehouse')">
-                            Lagerleiter
+                            Warehouse
                         </button>
                     </div>
                 }
@@ -303,29 +303,23 @@
                         </header>
     
                         <section class="rules-section">
-                            @for (item of warehouseRules.overview; track item) {
+                            <h2>{{ warehouseRules.workflow.title }}</h2>
+                            @for (item of warehouseRules.workflow.paragraphs; track item) {
                             <p>{{ item }}</p>
                             }
                         </section>
     
                         <section class="rules-section">
-                            <h2>Punktesystem</h2>
-                            <p>{{ warehouseRules.systemIntro }}</p>
-    
-                            @for (pillar of warehouseRules.pillars; track pillar.title) {
-                            <div class="rules-example">
-                                <h3>{{ pillar.title }}</h3>
-                                <p>{{ pillar.text }}</p>
-    
-                                @if (pillar.example) {
-                                <p><strong>{{ pillar.example }}</strong></p>
+                            <h2>{{ warehouseRules.quarterlyGoals.title }}</h2>
+                            @for (item of warehouseRules.quarterlyGoals.paragraphs; track item) {
+                            <p>{{ item }}</p>
+                            }
+
+                            <div class="rules-card">
+                                @for (fact of warehouseRules.quarterlyGoals.facts; track fact.label) {
+                                <p><strong>{{ fact.label }}:</strong> {{ fact.value }}</p>
                                 }
                             </div>
-                            }
-                        </section>
-    
-                        <section class="rules-section">
-                            <h2>{{ warehouseRules.marketShareTable.title }}</h2>
     
                             <div class="rules-table-wrap">
                                 <table class="rules-table">
@@ -336,7 +330,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for (row of warehouseRules.marketShareTable.rows; track row.targetAchievement) {
+                                        @for (row of warehouseRules.quarterlyGoals.rows; track row.targetAchievement) {
                                         <tr>
                                             <td>{{ row.targetAchievement }}</td>
                                             <td>{{ row.points }}</td>
@@ -348,8 +342,50 @@
                         </section>
     
                         <section class="rules-section">
-                            <h2>Transparenz im Wettbewerb</h2>
-                            <p>{{ warehouseRules.websiteNote }}</p>
+                            <h2>{{ warehouseRules.quarterlyChallenges.title }}</h2>
+                            @for (item of warehouseRules.quarterlyChallenges.paragraphs; track item) {
+                            <p>{{ item }}</p>
+                            }
+                        </section>
+    
+                        <section class="rules-section">
+                            <h2>{{ warehouseRules.precisionFarming.title }}</h2>
+                            @for (item of warehouseRules.precisionFarming.paragraphs; track item) {
+                            <p>{{ item }}</p>
+                            }
+
+                            <div class="rules-card">
+                                <h3>Beispiel-Basis</h3>
+                                @for (fact of warehouseRules.precisionFarming.facts; track fact.label) {
+                                <p><strong>{{ fact.label }}:</strong> {{ fact.value }}</p>
+                                }
+                                <p class="rules-highlight">Sie haben also noch vollen Einfluss auf Ihr Ergebnis mit dem Umsatz im zweiten Quartal 2026.</p>
+                            </div>
+    
+                            <div class="rules-table-wrap">
+                                <table class="rules-table rules-table--wide">
+                                    <thead>
+                                        <tr>
+                                            <th>Händler</th>
+                                            <th>Umsatz Referenzzeitraum</th>
+                                            <th>Ziel I / 105 %</th>
+                                            <th>Ziel II / 110 %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (row of warehouseRules.precisionFarming.rows; track row.dealer) {
+                                        <tr>
+                                            <td>{{ row.dealer }}</td>
+                                            <td>{{ row.referenceRevenue }}</td>
+                                            <td>{{ row.targetOne }}</td>
+                                            <td>{{ row.targetTwo }}</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p class="rules-note">{{ warehouseRules.precisionFarming.note }}</p>
                         </section>
     
                     </div>
