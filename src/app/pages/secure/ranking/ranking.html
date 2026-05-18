@@ -321,7 +321,7 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if ((isManagementUser() || isFullAdminUser()) && config.key !== 'warehouse') {
+                @if (isManagementUser() && config.key !== 'warehouse') {
                 <div class="part-score-card">
                     <div class="part-score-card__label">
                         Gesamt Lager<br />
