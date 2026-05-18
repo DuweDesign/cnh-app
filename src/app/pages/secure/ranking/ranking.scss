@@ -644,3 +644,35 @@
     padding: 0.4rem 0.7rem;
   }
 }
+
+/* =========================
+   RANKING TABS / STATES
+========================= */
+
+.ranking-tabs {
+  margin-bottom: -20px;
+}
+
+.ranking-table__empty {
+  text-align: center;
+  color: #1d1d1d;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .ranking-tabs {
+    margin-bottom: 0;
+  }
+
+  .ranking-table__empty {
+    display: block;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 14px;
+    padding: 16px;
+
+    &::before {
+      display: none;
+    }
+  }
+}

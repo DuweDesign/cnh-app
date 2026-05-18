@@ -21,6 +21,16 @@ type RankingParticipant = {
   totalPoints: number;
 };
 
+type Tab = 'sales' | 'warehouse';
+type RankingCompetition = Parameters<RankingService['getSalesRanking']>[0];
+type RankingResponse = ReturnType<RankingService['getSalesRanking']>;
+
+type RankingUserWithFallbacks = RankingUser & {
+  ggdNumber?: string;
+  warehouseNumber?: string;
+  userId?: string;
+};
+
 @Component({
   selector: 'cnh-ranking',
   standalone: true,
@@ -34,6 +44,8 @@ export class Ranking {
   private rankingService = inject(RankingService);
   private profileService = inject(ProfileService);
 
+  readonly activeTab = signal<Tab>('sales');
+
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
@@ -42,20 +54,27 @@ export class Ranking {
   readonly profile = signal<MyProfile | null>(null);
 
   /**
-   * Admin / Sales Ranking gesamt
+   * Aktives Ranking für Top10 und Admin-Komplettliste.
    */
   readonly participants = signal<RankingParticipant[]>([]);
 
   /**
-   * Management Team Ranking
+   * Management Team Ranking.
    */
   readonly teamParticipants = signal<RankingParticipant[]>([]);
 
   /**
-   * Pagination nur für Admin-Komplett-Ranking
+   * Pagination für Admin-Komplett-Ranking.
    */
   readonly pageSize = signal(10);
   readonly currentPage = signal(1);
+
+  /**
+   * Pagination für Management Team Ranking.
+   */
+  readonly teamPageSize = signal(10);
+  readonly teamCurrentPage = signal(1);
+
   readonly pageSizeOptions = [10, 20, 50];
 
   readonly currentUser = computed(() => this.authService.getCurrentUser());
@@ -63,39 +82,70 @@ export class Ranking {
   readonly isManagementUser = computed(
     () => this.authService.getUserRole() === USER_ROLES.CNH_MANAGEMENT
   );
-  
+
+  readonly isSaleUser = computed(
+    () => this.authService.getUserRole() === USER_ROLES.CNH_SALES
+  );
+
   readonly isWarehouseUser = computed(
     () => this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
   );
 
   readonly isAdminUser = computed(() => {
     const role = this.authService.getUserRole();
+
     return [
       USER_ROLES.SYSADMIN,
       USER_ROLES.CNH_ADMIN,
       USER_ROLES.VIPP_ADMIN,
-      USER_ROLES.WAREHOUSE_ADMIN
+      USER_ROLES.WAREHOUSE_ADMIN,
     ].includes(role as never);
   });
+
+  readonly showRankingTabs = computed(() => this.isAdminUser());
+
+  readonly effectiveTab = computed<Tab>(() => {
+    if (this.isWarehouseUser()) {
+      return 'warehouse';
+    }
+
+    return this.activeTab();
+  });
+
+  readonly rankingThemeClass = computed(() => {
+    if (this.effectiveTab() === 'warehouse') {
+      return 'warehouse';
+    }
+
+    return this.competitionConfig()?.key ?? '';
+  });
+
+  readonly top10Title = computed(() =>
+    this.effectiveTab() === 'warehouse'
+      ? 'TOP10 Lager Ranking'
+      : 'TOP10 Verkäufer Ranking'
+  );
+
+  readonly fullRankingTitle = computed(() =>
+    this.effectiveTab() === 'warehouse'
+      ? 'Top 100 Lager'
+      : 'Top 100 Verkäufer'
+  );
 
   readonly currentMonthLabel = computed(() => {
     const now = new Date();
     return now.toLocaleDateString('de-DE', { month: 'long' });
   });
 
-  /**
-   * Für beide Rollen: obere Top10 Tabelle
-   * - Admin: Top10 aus Gesamtranking
-   * - Management: Top10 aus ownSales Ranking
-   */
   readonly top10Participants = computed(() => this.participants().slice(0, 10));
 
   /**
-   * Nur Admin: paginierte Gesamtliste
+   * Admin-Komplett-Ranking Pagination.
    */
   readonly totalPages = computed(() => {
     const total = this.participants().length;
     const size = this.pageSize();
+
     return total > 0 ? Math.ceil(total / size) : 1;
   });
 
@@ -110,32 +160,74 @@ export class Ranking {
 
   readonly paginationStart = computed(() => {
     if (!this.participants().length) return 0;
+
     return (this.currentPage() - 1) * this.pageSize() + 1;
   });
 
   readonly paginationEnd = computed(() => {
     const end = this.currentPage() * this.pageSize();
+
     return Math.min(end, this.participants().length);
+  });
+
+  /**
+   * Team-Ranking Pagination.
+   */
+  readonly teamTotalPages = computed(() => {
+    const total = this.teamParticipants().length;
+    const size = this.teamPageSize();
+
+    return total > 0 ? Math.ceil(total / size) : 1;
+  });
+
+  readonly paginatedTeamParticipants = computed(() => {
+    const page = this.teamCurrentPage();
+    const size = this.teamPageSize();
+    const start = (page - 1) * size;
+    const end = start + size;
+
+    return this.teamParticipants().slice(start, end);
+  });
+
+  readonly teamPaginationStart = computed(() => {
+    if (!this.teamParticipants().length) return 0;
+
+    return (this.teamCurrentPage() - 1) * this.teamPageSize() + 1;
+  });
+
+  readonly teamPaginationEnd = computed(() => {
+    const end = this.teamCurrentPage() * this.teamPageSize();
+
+    return Math.min(end, this.teamParticipants().length);
   });
 
   constructor() {
     effect(() => {
       const competition = this.competition();
       const user = this.currentUser();
+      const tab = this.effectiveTab();
 
       if (!competition || !user) {
-        this.participants.set([]);
-        this.teamParticipants.set([]);
-        this.currentPage.set(1);
+        this.resetRankingState();
         return;
       }
 
-      this.loadRanking();
+      this.loadRanking(tab);
     });
   }
 
-  private loadRanking(): void {
-    const competition = this.competition();
+  setTab(tab: Tab): void {
+    if (this.activeTab() === tab) {
+      return;
+    }
+
+    this.activeTab.set(tab);
+    this.currentPage.set(1);
+    this.teamCurrentPage.set(1);
+  }
+
+  private loadRanking(tab: Tab): void {
+    const competition = this.competition() as RankingCompetition | null;
     const user = this.currentUser();
 
     if (!competition || !user) {
@@ -145,84 +237,134 @@ export class Ranking {
     this.loading.set(true);
     this.error.set(null);
     this.currentPage.set(1);
+    this.teamCurrentPage.set(1);
 
     if (user.role === USER_ROLES.CNH_MANAGEMENT) {
-      forkJoin({
-        ranking: this.rankingService.getManagementRanking(
-          competition,
-          user.dealerGroupId
-        ),
-        team: this.rankingService.getMyTeam(competition),
-      }).subscribe({
-        next: ({ ranking, team }) => {
-          /**
-           * Obere Tabelle = Top10 des Management-eigenen Rankings
-           */
-          this.participants.set(
-            ranking.ownSales.map((entry) =>
-              this.mapUserToParticipant(entry, entry.rankInOwnList ?? null)
-            )
-          );
-
-          /**
-           * Untere Tabelle = Team Ranking
-           */
-          this.teamParticipants.set(
-            team.team.map((entry) =>
-              this.mapUserToParticipant(entry, entry.overallRank ?? null)
-            )
-          );
-
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set(err?.error?.message || 'Ranking konnte nicht geladen werden.');
-          this.participants.set([]);
-          this.teamParticipants.set([]);
-          this.loading.set(false);
-        },
-      });
-
+      this.loadManagementRanking(competition);
       return;
     }
 
     if (this.isAdminUser()) {
-      this.rankingService.getSalesRanking(competition).subscribe({
-        next: (response) => {
-          this.participants.set(
-            response.ranking.map((entry) =>
-              this.mapUserToParticipant(entry, entry.rank ?? null)
-            )
-          );
-          this.teamParticipants.set([]);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set(err?.error?.message || 'Ranking konnte nicht geladen werden.');
-          this.participants.set([]);
-          this.teamParticipants.set([]);
-          this.loading.set(false);
-        },
-      });
-
+      this.loadAdminRanking(competition, tab);
       return;
     }
 
     this.error.set('Keine Berechtigung für diese Seite.');
+    this.resetRankingState();
+    this.loading.set(false);
+  }
+
+  private loadManagementRanking(competition: RankingCompetition): void {
+    const user = this.currentUser();
+
+    if (!user) {
+      this.resetRankingState();
+      this.loading.set(false);
+      return;
+    }
+
+    forkJoin({
+      ranking: this.rankingService.getManagementRanking(
+        competition,
+        user.dealerGroupId
+      ),
+      team: this.rankingService.getMyTeam(competition),
+    }).subscribe({
+      next: ({ ranking, team }) => {
+        /**
+         * Obere Tabelle = Top10 des Management-eigenen Rankings.
+         */
+        this.participants.set(
+          ranking.ownSales.map((entry) =>
+            this.mapUserToParticipant(entry, entry.rankInOwnList ?? null)
+          )
+        );
+
+        /**
+         * Untere Tabelle = Team Ranking.
+         */
+        this.teamParticipants.set(
+          team.team.map((entry) =>
+            this.mapUserToParticipant(entry, entry.overallRank ?? null)
+          )
+        );
+
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message || 'Ranking konnte nicht geladen werden.');
+        this.resetRankingState();
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private loadAdminRanking(competition: RankingCompetition, tab: Tab): void {
+    const request$ = this.getRankingRequest(competition, tab);
+
+    if (!request$) {
+      this.error.set('Warehouse-Ranking konnte nicht geladen werden. Bitte getWarehouseRanking() im RankingService ergänzen.');
+      this.resetRankingState();
+      this.loading.set(false);
+      return;
+    }
+
+    request$.subscribe({
+      next: (response) => {
+        this.participants.set(
+          response.ranking.map((entry) =>
+            this.mapUserToParticipant(entry, entry.rank ?? null)
+          )
+        );
+        this.teamParticipants.set([]);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message || 'Ranking konnte nicht geladen werden.');
+        this.resetRankingState();
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private getRankingRequest(
+    competition: RankingCompetition,
+    tab: Tab
+  ): RankingResponse | null {
+    if (tab === 'warehouse') {
+      const rankingService = this.rankingService as RankingService & {
+        getWarehouseRanking?: (competition: RankingCompetition) => RankingResponse;
+      };
+
+      return rankingService.getWarehouseRanking?.call(this.rankingService, competition) ?? null;
+    }
+
+    return this.rankingService.getSalesRanking(competition);
+  }
+
+  private resetRankingState(): void {
     this.participants.set([]);
     this.teamParticipants.set([]);
-    this.loading.set(false);
+    this.currentPage.set(1);
+    this.teamCurrentPage.set(1);
   }
 
   private mapUserToParticipant(
     user: RankingUser,
     rank: number | null
   ): RankingParticipant {
+    const userWithFallbacks = user as RankingUserWithFallbacks;
+
     return {
       id: user._id,
       rank,
-      dealerNumber: user.dealernumber,
-      name: `${user.firstname} ${user.surname}`,
+      dealerNumber:
+        userWithFallbacks.dealernumber ||
+        userWithFallbacks.ggdNumber ||
+        userWithFallbacks.warehouseNumber ||
+        userWithFallbacks.userId ||
+        '-',
+      name: `${user.firstname ?? ''} ${user.surname ?? ''}`.trim() || '-',
       company: user.company || '-',
       monthPoints: this.getCurrentMonthPoints(user),
       totalPoints: user.totalPoints ?? 0,
@@ -267,6 +409,27 @@ export class Ranking {
 
   nextPage(): void {
     this.goToPage(this.currentPage() + 1);
+  }
+
+  setTeamPageSize(size: number): void {
+    this.teamPageSize.set(size);
+    this.teamCurrentPage.set(1);
+  }
+
+  goToTeamPage(page: number): void {
+    if (page < 1 || page > this.teamTotalPages()) {
+      return;
+    }
+
+    this.teamCurrentPage.set(page);
+  }
+
+  previousTeamPage(): void {
+    this.goToTeamPage(this.teamCurrentPage() - 1);
+  }
+
+  nextTeamPage(): void {
+    this.goToTeamPage(this.teamCurrentPage() + 1);
   }
 
   // PARTSPOINTS

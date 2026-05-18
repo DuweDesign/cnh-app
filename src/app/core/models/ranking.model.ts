@@ -22,6 +22,11 @@ export interface SalesRankingResponse {
   ranking: RankingUser[];
 }
 
+export interface WarehouseRankingResponse {
+  success: boolean;
+  ranking: RankingUser[];
+}
+
 export interface ManagementRankingResponse {
   success: boolean;
   ownSales: RankingUser[];

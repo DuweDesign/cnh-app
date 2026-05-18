@@ -15,12 +15,32 @@
                 <div class="ranking-state ranking-state--error"><p>{{ error() }}</p></div>
                 } @else {
 
+                @if (showRankingTabs()) {
+                <div class="rules-subnav ranking-tabs">
+                    <button
+                        type="button"
+                        class="rules-subnav__item"
+                        [class.is-active]="effectiveTab() === 'sales'"
+                        (click)="setTab('sales')">
+                        Verkäufer
+                    </button>
+
+                    <button
+                        type="button"
+                        class="rules-subnav__item"
+                        [class.is-active]="effectiveTab() === 'warehouse'"
+                        (click)="setTab('warehouse')">
+                        Lager
+                    </button>
+                </div>
+                }
+
                 <!-- TOP10 -->
                 <div class="ranking-subsection">
-                    <h2>TOP10 Ranking</h2>
+                    <h2>{{ top10Title() }}</h2>
 
                     <table class="ranking-table">
-                        <thead [ngClass]="config.key">
+                        <thead [ngClass]="rankingThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -33,14 +53,18 @@
                         <tbody>
                             @for (participant of top10Participants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-'
-                                        }}</strong></td>
+                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                    <strong>{{ participant.rank ?? '-' }}</strong>
+                                </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
                                 <td data-label="Name">{{ participant.name }}</td>
                                 <td data-label="Unternehmen">{{ participant.company }}</td>
-                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}
-                                </td>
+                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                 <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
                             </tr>
                             }
                         </tbody>
@@ -50,10 +74,26 @@
                 <!-- MANAGEMENT: TEAM RANKING -->
                 @if (isManagementUser() && teamParticipants().length) {
                 <div class="ranking-subsection">
-                    <h2>Ihr Team Ranking</h2>
+                    <div class="ranking-subsection__header">
+                        <h2>Ihr Team Ranking</h2>
+
+                        <div class="ranking-pagination-size">
+                            <span>Einträge pro Seite:</span>
+
+                            @for (size of pageSizeOptions; track size) {
+                            <button
+                                type="button"
+                                class="page-size-button"
+                                [class.active]="teamPageSize() === size"
+                                (click)="setTeamPageSize(size)">
+                                {{ size }}
+                            </button>
+                            }
+                        </div>
+                    </div>
 
                     <table class="ranking-table ranking-table--team">
-                        <thead [ngClass]="config.key">
+                        <thead [ngClass]="rankingThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -64,20 +104,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (participant of teamParticipants(); track participant.id) {
+                            @for (participant of paginatedTeamParticipants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-'
-                                        }}</strong></td>
+                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                    <strong>{{ participant.rank ?? '-' }}</strong>
+                                </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
                                 <td data-label="Name">{{ participant.name }}</td>
                                 <td data-label="Unternehmen">{{ participant.company }}</td>
-                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}
-                                </td>
+                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                 <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                             </tr>
                             }
                         </tbody>
                     </table>
+
+                    <div class="ranking-pagination">
+                        <div class="ranking-pagination__info">
+                            Zeige {{ teamPaginationStart() }}–{{ teamPaginationEnd() }} von {{ teamParticipants().length }}
+                        </div>
+
+                        <div class="ranking-pagination__controls">
+                            <button type="button" (click)="previousTeamPage()" [disabled]="teamCurrentPage() === 1">
+                                Zurück
+                            </button>
+
+                            <span>Seite {{ teamCurrentPage() }} / {{ teamTotalPages() }}</span>
+
+                            <button type="button" (click)="nextTeamPage()" [disabled]="teamCurrentPage() === teamTotalPages()">
+                                Weiter
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 }
 
@@ -86,16 +144,18 @@
                 <div class="ranking-subsection">
                     <div class="ranking-subsection__header">
                         <h2>
-                            Top 100
+                            {{ fullRankingTitle() }}
                             <small>Nur als Admin sichtbar</small>
                         </h2>
-
 
                         <div class="ranking-pagination-size">
                             <span>Einträge pro Seite:</span>
 
                             @for (size of pageSizeOptions; track size) {
-                            <button type="button" class="page-size-button" [class.active]="pageSize() === size"
+                            <button
+                                type="button"
+                                class="page-size-button"
+                                [class.active]="pageSize() === size"
                                 (click)="setPageSize(size)">
                                 {{ size }}
                             </button>
@@ -104,7 +164,7 @@
                     </div>
 
                     <table class="ranking-table">
-                        <thead [ngClass]="config.key">
+                        <thead [ngClass]="rankingThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -117,14 +177,18 @@
                         <tbody>
                             @for (participant of paginatedParticipants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="config.key"><strong>{{ participant.rank ?? '-'
-                                        }}</strong></td>
+                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                    <strong>{{ participant.rank ?? '-' }}</strong>
+                                </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
                                 <td data-label="Name">{{ participant.name }}</td>
                                 <td data-label="Unternehmen">{{ participant.company }}</td>
-                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}
-                                </td>
+                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                 <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
                             </tr>
                             }
                         </tbody>
@@ -160,7 +224,7 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if ((isManagementUser() || isAdminUser()) && config.key !== 'warehouse') {
+                @if ((isManagementUser() || isAdminUser()) && effectiveTab() === 'sales' && config.key !== 'warehouse') {
                 <div class="part-score-card">
                     <div class="part-score-card__label">
                         Mein Part<br />

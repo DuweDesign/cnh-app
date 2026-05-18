@@ -16,17 +16,17 @@
                         <button
                             type="button"
                             class="rules-subnav__item"
-                            [class.is-active]="activeTab() === 'sales'"
-                            (click)="setTab('sales')">
-                            Verkäufer
-                        </button>
-        
-                        <button
-                            type="button"
-                            class="rules-subnav__item"
                             [class.is-active]="activeTab() === 'management'"
                             (click)="setTab('management')">
                             Geschäftsführer
+                        </button>
+                        
+                        <button
+                            type="button"
+                            class="rules-subnav__item"
+                            [class.is-active]="activeTab() === 'sales'"
+                            (click)="setTab('sales')">
+                            Verkäufer
                         </button>
 
                         <button

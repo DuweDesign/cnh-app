@@ -174,8 +174,10 @@ export class Rules {
   constructor() {
     if (this.isWarehouseContext()) {
       this.setTab('warehouse');
-    } else {
+    } else if (this.isSaleUser()) {
       this.setTab('sales');
+    } else {
+      this.setTab('management');
     }
   }
 

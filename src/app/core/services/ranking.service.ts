@@ -7,6 +7,7 @@ import {
   SalesRankingResponse,
   ManagementRankingResponse,
   MyTeamResponse,
+  WarehouseRankingResponse,
 } from '../models/ranking.model';
 import { CompetitionType } from '../models/auth.model';
 
@@ -44,6 +45,13 @@ export class RankingService {
       { params }
     );
   }
+
+  getWarehouseRanking(competition: CompetitionType) {
+  return this.http.get<WarehouseRankingResponse>(
+    `${environment.apiUrl}/v1/cnh/user/ranking/warehouse`,
+    { params: { competition } }
+  );
+}
 
   getMyTeam(
     competition?: CompetitionType,
