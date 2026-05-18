@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
@@ -21,7 +21,6 @@ type RankingParticipant = {
   totalPoints: number;
 };
 
-type Tab = 'sales' | 'warehouse';
 type RankingCompetition = Parameters<RankingService['getSalesRanking']>[0];
 type RankingResponse = ReturnType<RankingService['getSalesRanking']>;
 
@@ -44,8 +43,6 @@ export class Ranking {
   private rankingService = inject(RankingService);
   private profileService = inject(ProfileService);
 
-  readonly activeTab = signal<Tab>('sales');
-
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
@@ -54,9 +51,14 @@ export class Ranking {
   readonly profile = signal<MyProfile | null>(null);
 
   /**
-   * Aktives Ranking für Top10 und Admin-Komplettliste.
+   * Verkäufer Ranking.
    */
-  readonly participants = signal<RankingParticipant[]>([]);
+  readonly salesParticipants = signal<RankingParticipant[]>([]);
+
+  /**
+   * Lager Ranking.
+   */
+  readonly warehouseParticipants = signal<RankingParticipant[]>([]);
 
   /**
    * Management Team Ranking.
@@ -64,13 +66,19 @@ export class Ranking {
   readonly teamParticipants = signal<RankingParticipant[]>([]);
 
   /**
-   * Pagination für Admin-Komplett-Ranking.
+   * Pagination Verkäufer Top 100.
    */
-  readonly pageSize = signal(10);
-  readonly currentPage = signal(1);
+  readonly salesPageSize = signal(10);
+  readonly salesCurrentPage = signal(1);
 
   /**
-   * Pagination für Management Team Ranking.
+   * Pagination Lager Top 100.
+   */
+  readonly warehousePageSize = signal(10);
+  readonly warehouseCurrentPage = signal(1);
+
+  /**
+   * Pagination Management Team Ranking.
    */
   readonly teamPageSize = signal(10);
   readonly teamCurrentPage = signal(1);
@@ -91,83 +99,120 @@ export class Ranking {
     () => this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
   );
 
-  readonly isAdminUser = computed(() => {
+  readonly isWarehouseAdminUser = computed(
+    () => this.authService.getUserRole() === USER_ROLES.WAREHOUSE_ADMIN
+  );
+
+  readonly isFullAdminUser = computed(() => {
     const role = this.authService.getUserRole();
 
     return [
       USER_ROLES.SYSADMIN,
       USER_ROLES.CNH_ADMIN,
       USER_ROLES.VIPP_ADMIN,
-      USER_ROLES.WAREHOUSE_ADMIN,
     ].includes(role as never);
   });
 
-  readonly showRankingTabs = computed(() => this.isAdminUser());
-
-  readonly effectiveTab = computed<Tab>(() => {
-    if (this.isWarehouseUser()) {
-      return 'warehouse';
-    }
-
-    return this.activeTab();
-  });
-
-  readonly rankingThemeClass = computed(() => {
-    if (this.effectiveTab() === 'warehouse') {
-      return 'warehouse';
-    }
-
-    return this.competitionConfig()?.key ?? '';
-  });
-
-  readonly top10Title = computed(() =>
-    this.effectiveTab() === 'warehouse'
-      ? 'TOP10 Lager Ranking'
-      : 'TOP10 Verkäufer Ranking'
+  readonly isAdminUser = computed(
+    () => this.isFullAdminUser() || this.isWarehouseAdminUser()
   );
 
-  readonly fullRankingTitle = computed(() =>
-    this.effectiveTab() === 'warehouse'
-      ? 'Top 100 Lager'
-      : 'Top 100 Verkäufer'
+  /**
+   * Verkäufer-Ranking:
+   * - Management sieht Verkäufer Top10 + eigenes Team.
+   * - Full Admins sehen Verkäufer Top10 + Top100.
+   */
+  readonly canShowSalesRanking = computed(
+    () => this.isManagementUser() || this.isFullAdminUser()
   );
+
+  /**
+   * Lager-Ranking:
+   * - Warehouse User sieht Lager Top10.
+   * - Warehouse Admin sieht Lager Top10 + Top100.
+   * - Full Admins sehen Lager Top10 + Top100 zusätzlich zum Verkäufer-Ranking.
+   */
+  readonly canShowWarehouseRanking = computed(
+    () => this.isWarehouseUser() || this.isWarehouseAdminUser() || this.isFullAdminUser()
+  );
+
+  readonly showSalesFullRanking = computed(() => this.isFullAdminUser());
+
+  readonly showWarehouseFullRanking = computed(
+    () => this.isWarehouseAdminUser() || this.isFullAdminUser()
+  );
+
+  readonly salesThemeClass = computed(() => this.competitionConfig()?.key ?? '');
+  readonly warehouseThemeClass = computed(() => 'warehouse');
 
   readonly currentMonthLabel = computed(() => {
     const now = new Date();
     return now.toLocaleDateString('de-DE', { month: 'long' });
   });
 
-  readonly top10Participants = computed(() => this.participants().slice(0, 10));
+  readonly salesTop10Participants = computed(() => this.salesParticipants().slice(0, 10));
+  readonly warehouseTop10Participants = computed(() => this.warehouseParticipants().slice(0, 10));
 
   /**
-   * Admin-Komplett-Ranking Pagination.
+   * Verkäufer Top 100 Pagination.
    */
-  readonly totalPages = computed(() => {
-    const total = this.participants().length;
-    const size = this.pageSize();
+  readonly salesTotalPages = computed(() => {
+    const total = this.salesParticipants().length;
+    const size = this.salesPageSize();
 
     return total > 0 ? Math.ceil(total / size) : 1;
   });
 
-  readonly paginatedParticipants = computed(() => {
-    const page = this.currentPage();
-    const size = this.pageSize();
+  readonly paginatedSalesParticipants = computed(() => {
+    const page = this.salesCurrentPage();
+    const size = this.salesPageSize();
     const start = (page - 1) * size;
     const end = start + size;
 
-    return this.participants().slice(start, end);
+    return this.salesParticipants().slice(start, end);
   });
 
-  readonly paginationStart = computed(() => {
-    if (!this.participants().length) return 0;
+  readonly salesPaginationStart = computed(() => {
+    if (!this.salesParticipants().length) return 0;
 
-    return (this.currentPage() - 1) * this.pageSize() + 1;
+    return (this.salesCurrentPage() - 1) * this.salesPageSize() + 1;
   });
 
-  readonly paginationEnd = computed(() => {
-    const end = this.currentPage() * this.pageSize();
+  readonly salesPaginationEnd = computed(() => {
+    const end = this.salesCurrentPage() * this.salesPageSize();
 
-    return Math.min(end, this.participants().length);
+    return Math.min(end, this.salesParticipants().length);
+  });
+
+  /**
+   * Lager Top 100 Pagination.
+   */
+  readonly warehouseTotalPages = computed(() => {
+    const total = this.warehouseParticipants().length;
+    const size = this.warehousePageSize();
+
+    return total > 0 ? Math.ceil(total / size) : 1;
+  });
+
+  readonly paginatedWarehouseParticipants = computed(() => {
+    const page = this.warehouseCurrentPage();
+    const size = this.warehousePageSize();
+    const start = (page - 1) * size;
+    const end = start + size;
+
+    return this.warehouseParticipants().slice(start, end);
+  });
+
+  readonly warehousePaginationStart = computed(() => {
+    if (!this.warehouseParticipants().length) return 0;
+
+    return (this.warehouseCurrentPage() - 1) * this.warehousePageSize() + 1;
+  });
+
+  readonly warehousePaginationEnd = computed(() => {
+    const end = this.warehouseCurrentPage() * this.warehousePageSize();
+
+    return Math.min(end, this.warehouseParticipants().length);
   });
 
   /**
@@ -205,28 +250,17 @@ export class Ranking {
     effect(() => {
       const competition = this.competition();
       const user = this.currentUser();
-      const tab = this.effectiveTab();
 
       if (!competition || !user) {
         this.resetRankingState();
         return;
       }
 
-      this.loadRanking(tab);
+      this.loadRanking();
     });
   }
 
-  setTab(tab: Tab): void {
-    if (this.activeTab() === tab) {
-      return;
-    }
-
-    this.activeTab.set(tab);
-    this.currentPage.set(1);
-    this.teamCurrentPage.set(1);
-  }
-
-  private loadRanking(tab: Tab): void {
+  private loadRanking(): void {
     const competition = this.competition() as RankingCompetition | null;
     const user = this.currentUser();
 
@@ -236,16 +270,15 @@ export class Ranking {
 
     this.loading.set(true);
     this.error.set(null);
-    this.currentPage.set(1);
-    this.teamCurrentPage.set(1);
+    this.resetPagination();
 
     if (user.role === USER_ROLES.CNH_MANAGEMENT) {
       this.loadManagementRanking(competition);
       return;
     }
 
-    if (this.isAdminUser()) {
-      this.loadAdminRanking(competition, tab);
+    if (this.canShowWarehouseRanking() || this.canShowSalesRanking()) {
+      this.loadRoleBasedRankings(competition);
       return;
     }
 
@@ -272,9 +305,9 @@ export class Ranking {
     }).subscribe({
       next: ({ ranking, team }) => {
         /**
-         * Obere Tabelle = Top10 des Management-eigenen Rankings.
+         * Obere Tabelle = Top10 des Management-eigenen Verkäufer-Rankings.
          */
-        this.participants.set(
+        this.salesParticipants.set(
           ranking.ownSales.map((entry) =>
             this.mapUserToParticipant(entry, entry.rankInOwnList ?? null)
           )
@@ -289,6 +322,7 @@ export class Ranking {
           )
         );
 
+        this.warehouseParticipants.set([]);
         this.loading.set(false);
       },
       error: (err) => {
@@ -299,23 +333,37 @@ export class Ranking {
     });
   }
 
-  private loadAdminRanking(competition: RankingCompetition, tab: Tab): void {
-    const request$ = this.getRankingRequest(competition, tab);
+  private loadRoleBasedRankings(competition: RankingCompetition): void {
+    const shouldLoadSales = this.canShowSalesRanking();
+    const shouldLoadWarehouse = this.canShowWarehouseRanking();
+    const warehouseRequest$ = shouldLoadWarehouse
+      ? this.getWarehouseRankingRequest(competition)
+      : of(null);
 
-    if (!request$) {
+    if (shouldLoadWarehouse && !warehouseRequest$) {
       this.error.set('Warehouse-Ranking konnte nicht geladen werden. Bitte getWarehouseRanking() im RankingService ergänzen.');
       this.resetRankingState();
       this.loading.set(false);
       return;
     }
 
-    request$.subscribe({
-      next: (response) => {
-        this.participants.set(
-          response.ranking.map((entry) =>
+    forkJoin({
+      sales: shouldLoadSales ? this.rankingService.getSalesRanking(competition) : of(null),
+      warehouse: warehouseRequest$ ?? of(null),
+    }).subscribe({
+      next: ({ sales, warehouse }) => {
+        this.salesParticipants.set(
+          sales?.ranking.map((entry) =>
             this.mapUserToParticipant(entry, entry.rank ?? null)
-          )
+          ) ?? []
         );
+
+        this.warehouseParticipants.set(
+          warehouse?.ranking.map((entry) =>
+            this.mapUserToParticipant(entry, entry.rank ?? null)
+          ) ?? []
+        );
+
         this.teamParticipants.set([]);
         this.loading.set(false);
       },
@@ -327,25 +375,26 @@ export class Ranking {
     });
   }
 
-  private getRankingRequest(
-    competition: RankingCompetition,
-    tab: Tab
+  private getWarehouseRankingRequest(
+    competition: RankingCompetition
   ): RankingResponse | null {
-    if (tab === 'warehouse') {
-      const rankingService = this.rankingService as RankingService & {
-        getWarehouseRanking?: (competition: RankingCompetition) => RankingResponse;
-      };
+    const rankingService = this.rankingService as RankingService & {
+      getWarehouseRanking?: (competition: RankingCompetition) => RankingResponse;
+    };
 
-      return rankingService.getWarehouseRanking?.call(this.rankingService, competition) ?? null;
-    }
-
-    return this.rankingService.getSalesRanking(competition);
+    return rankingService.getWarehouseRanking?.call(this.rankingService, competition) ?? null;
   }
 
   private resetRankingState(): void {
-    this.participants.set([]);
+    this.salesParticipants.set([]);
+    this.warehouseParticipants.set([]);
     this.teamParticipants.set([]);
-    this.currentPage.set(1);
+    this.resetPagination();
+  }
+
+  private resetPagination(): void {
+    this.salesCurrentPage.set(1);
+    this.warehouseCurrentPage.set(1);
     this.teamCurrentPage.set(1);
   }
 
@@ -390,25 +439,46 @@ export class Ranking {
     );
   }
 
-  setPageSize(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+  setSalesPageSize(size: number): void {
+    this.salesPageSize.set(size);
+    this.salesCurrentPage.set(1);
   }
 
-  goToPage(page: number): void {
-    if (page < 1 || page > this.totalPages()) {
+  goToSalesPage(page: number): void {
+    if (page < 1 || page > this.salesTotalPages()) {
       return;
     }
 
-    this.currentPage.set(page);
+    this.salesCurrentPage.set(page);
   }
 
-  previousPage(): void {
-    this.goToPage(this.currentPage() - 1);
+  previousSalesPage(): void {
+    this.goToSalesPage(this.salesCurrentPage() - 1);
   }
 
-  nextPage(): void {
-    this.goToPage(this.currentPage() + 1);
+  nextSalesPage(): void {
+    this.goToSalesPage(this.salesCurrentPage() + 1);
+  }
+
+  setWarehousePageSize(size: number): void {
+    this.warehousePageSize.set(size);
+    this.warehouseCurrentPage.set(1);
+  }
+
+  goToWarehousePage(page: number): void {
+    if (page < 1 || page > this.warehouseTotalPages()) {
+      return;
+    }
+
+    this.warehouseCurrentPage.set(page);
+  }
+
+  previousWarehousePage(): void {
+    this.goToWarehousePage(this.warehouseCurrentPage() - 1);
+  }
+
+  nextWarehousePage(): void {
+    this.goToWarehousePage(this.warehouseCurrentPage() + 1);
   }
 
   setTeamPageSize(size: number): void {

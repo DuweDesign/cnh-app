@@ -15,32 +15,13 @@
                 <div class="ranking-state ranking-state--error"><p>{{ error() }}</p></div>
                 } @else {
 
-                @if (showRankingTabs()) {
-                <div class="rules-subnav ranking-tabs">
-                    <button
-                        type="button"
-                        class="rules-subnav__item"
-                        [class.is-active]="effectiveTab() === 'sales'"
-                        (click)="setTab('sales')">
-                        Verkäufer
-                    </button>
-
-                    <button
-                        type="button"
-                        class="rules-subnav__item"
-                        [class.is-active]="effectiveTab() === 'warehouse'"
-                        (click)="setTab('warehouse')">
-                        Lager
-                    </button>
-                </div>
-                }
-
-                <!-- TOP10 -->
+                <!-- SALES: TOP10 -->
+                @if (canShowSalesRanking()) {
                 <div class="ranking-subsection">
-                    <h2>{{ top10Title() }}</h2>
+                    <h2>TOP10 Verkäufer Ranking</h2>
 
                     <table class="ranking-table">
-                        <thead [ngClass]="rankingThemeClass()">
+                        <thead [ngClass]="salesThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -51,9 +32,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (participant of top10Participants(); track participant.id) {
+                            @for (participant of salesTop10Participants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                <td data-label="Platz" [ngClass]="salesThemeClass()">
                                     <strong>{{ participant.rank ?? '-' }}</strong>
                                 </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
@@ -70,6 +51,7 @@
                         </tbody>
                     </table>
                 </div>
+                }
 
                 <!-- MANAGEMENT: TEAM RANKING -->
                 @if (isManagementUser() && teamParticipants().length) {
@@ -93,7 +75,7 @@
                     </div>
 
                     <table class="ranking-table ranking-table--team">
-                        <thead [ngClass]="rankingThemeClass()">
+                        <thead [ngClass]="salesThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -106,7 +88,7 @@
                         <tbody>
                             @for (participant of paginatedTeamParticipants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                <td data-label="Platz" [ngClass]="salesThemeClass()">
                                     <strong>{{ participant.rank ?? '-' }}</strong>
                                 </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
@@ -139,12 +121,12 @@
                 </div>
                 }
 
-                <!-- ADMIN: KOMPLETTES RANKING -->
-                @if (isAdminUser()) {
+                <!-- ADMIN: SALES TOP 100 -->
+                @if (showSalesFullRanking()) {
                 <div class="ranking-subsection">
                     <div class="ranking-subsection__header">
                         <h2>
-                            {{ fullRankingTitle() }}
+                            Top 100 Verkäufer
                             <small>Nur als Admin sichtbar</small>
                         </h2>
 
@@ -155,8 +137,8 @@
                             <button
                                 type="button"
                                 class="page-size-button"
-                                [class.active]="pageSize() === size"
-                                (click)="setPageSize(size)">
+                                [class.active]="salesPageSize() === size"
+                                (click)="setSalesPageSize(size)">
                                 {{ size }}
                             </button>
                             }
@@ -164,7 +146,7 @@
                     </div>
 
                     <table class="ranking-table">
-                        <thead [ngClass]="rankingThemeClass()">
+                        <thead [ngClass]="salesThemeClass()">
                             <tr>
                                 <th>Platz</th>
                                 <th>User ID</th>
@@ -175,9 +157,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (participant of paginatedParticipants(); track participant.id) {
+                            @for (participant of paginatedSalesParticipants(); track participant.id) {
                             <tr>
-                                <td data-label="Platz" [ngClass]="rankingThemeClass()">
+                                <td data-label="Platz" [ngClass]="salesThemeClass()">
                                     <strong>{{ participant.rank ?? '-' }}</strong>
                                 </td>
                                 <td data-label="User ID">{{ participant.dealerNumber }}</td>
@@ -194,20 +176,135 @@
                         </tbody>
                     </table>
 
-                    @if (participants().length) {
+                    @if (salesParticipants().length) {
                     <div class="ranking-pagination">
                         <div class="ranking-pagination__info">
-                            Zeige {{ paginationStart() }}–{{ paginationEnd() }} von {{ participants().length }}
+                            Zeige {{ salesPaginationStart() }}–{{ salesPaginationEnd() }} von {{ salesParticipants().length }}
                         </div>
 
                         <div class="ranking-pagination__controls">
-                            <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">
+                            <button type="button" (click)="previousSalesPage()" [disabled]="salesCurrentPage() === 1">
                                 Zurück
                             </button>
 
-                            <span>Seite {{ currentPage() }} / {{ totalPages() }}</span>
+                            <span>Seite {{ salesCurrentPage() }} / {{ salesTotalPages() }}</span>
 
-                            <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+                            <button type="button" (click)="nextSalesPage()" [disabled]="salesCurrentPage() === salesTotalPages()">
+                                Weiter
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+
+                <!-- WAREHOUSE: TOP10 -->
+                @if (canShowWarehouseRanking()) {
+                <div class="ranking-subsection ranking-subsection--warehouse">
+                    <h2>TOP10 Lager Ranking</h2>
+
+                    <table class="ranking-table">
+                        <thead [ngClass]="warehouseThemeClass()">
+                            <tr>
+                                <th>Platz</th>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Unternehmen</th>
+                                <th>Punkte im {{ currentMonthLabel() }}</th>
+                                <th>Gesamtpunkte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (participant of warehouseTop10Participants(); track participant.id) {
+                            <tr>
+                                <td data-label="Platz" [ngClass]="warehouseThemeClass()">
+                                    <strong>{{ participant.rank ?? '-' }}</strong>
+                                </td>
+                                <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                <td data-label="Name">{{ participant.name }}</td>
+                                <td data-label="Unternehmen">{{ participant.company }}</td>
+                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+
+                <!-- ADMIN: WAREHOUSE TOP 100 -->
+                @if (showWarehouseFullRanking()) {
+                <div class="ranking-subsection ranking-subsection--warehouse">
+                    <div class="ranking-subsection__header">
+                        <h2>
+                            Top 100 Lager
+                            <small>Nur als Admin sichtbar</small>
+                        </h2>
+
+                        <div class="ranking-pagination-size">
+                            <span>Einträge pro Seite:</span>
+
+                            @for (size of pageSizeOptions; track size) {
+                            <button
+                                type="button"
+                                class="page-size-button"
+                                [class.active]="warehousePageSize() === size"
+                                (click)="setWarehousePageSize(size)">
+                                {{ size }}
+                            </button>
+                            }
+                        </div>
+                    </div>
+
+                    <table class="ranking-table">
+                        <thead [ngClass]="warehouseThemeClass()">
+                            <tr>
+                                <th>Platz</th>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Unternehmen</th>
+                                <th>Punkte im {{ currentMonthLabel() }}</th>
+                                <th>Gesamtpunkte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (participant of paginatedWarehouseParticipants(); track participant.id) {
+                            <tr>
+                                <td data-label="Platz" [ngClass]="warehouseThemeClass()">
+                                    <strong>{{ participant.rank ?? '-' }}</strong>
+                                </td>
+                                <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                <td data-label="Name">{{ participant.name }}</td>
+                                <td data-label="Unternehmen">{{ participant.company }}</td>
+                                <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    @if (warehouseParticipants().length) {
+                    <div class="ranking-pagination">
+                        <div class="ranking-pagination__info">
+                            Zeige {{ warehousePaginationStart() }}–{{ warehousePaginationEnd() }} von {{ warehouseParticipants().length }}
+                        </div>
+
+                        <div class="ranking-pagination__controls">
+                            <button type="button" (click)="previousWarehousePage()" [disabled]="warehouseCurrentPage() === 1">
+                                Zurück
+                            </button>
+
+                            <span>Seite {{ warehouseCurrentPage() }} / {{ warehouseTotalPages() }}</span>
+
+                            <button type="button" (click)="nextWarehousePage()" [disabled]="warehouseCurrentPage() === warehouseTotalPages()">
                                 Weiter
                             </button>
                         </div>
@@ -224,7 +321,7 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if ((isManagementUser() || isAdminUser()) && effectiveTab() === 'sales' && config.key !== 'warehouse') {
+                @if ((isManagementUser() || isFullAdminUser()) && config.key !== 'warehouse') {
                 <div class="part-score-card">
                     <div class="part-score-card__label">
                         Mein Part<br />
