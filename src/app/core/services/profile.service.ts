@@ -11,7 +11,7 @@ import { AuthUser } from '../models/auth.model';
 })
 export class ProfileService {
   private http = inject(HttpClient);
-  
+
   private readonly apiUrl = `${environment.apiUrl}/v1/cnh`;
   private readonly _user = signal<AuthUser | null>(null);
 
@@ -28,10 +28,19 @@ export class ProfileService {
 
     return this.http
       .get<{
-        user: MyProfile
+        success: boolean;
+        user: MyProfile;
+        rank: number | null;
+        isTop10: boolean;
+        pointsToTop10: number;
       }>(`${this.apiUrl}/user/my-profile`, { params })
       .pipe(
-        map((response) => response.user)
+        map((response) => ({
+          ...response.user,
+          rank: response.rank,
+          isTop10: response.isTop10,
+          pointsToTop10: response.pointsToTop10,
+        }))
       );
   }
 
