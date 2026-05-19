@@ -33,6 +33,8 @@ export class ProfileService {
         rank: number | null;
         isTop10: boolean;
         pointsToTop10: number;
+        nextRank: number | null;
+        pointsToNextRank: number;
       }>(`${this.apiUrl}/user/my-profile`, { params })
       .pipe(
         map((response) => ({
@@ -40,6 +42,8 @@ export class ProfileService {
           rank: response.rank,
           isTop10: response.isTop10,
           pointsToTop10: response.pointsToTop10,
+          nextRank: response.nextRank,
+          pointsToNextRank: response.pointsToNextRank,
         }))
       );
   }

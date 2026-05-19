@@ -47,6 +47,8 @@ export class Score {
   readonly rank = computed(() => this.profile()?.rank ?? null);
   readonly isTop10 = computed(() => this.profile()?.isTop10 ?? false);
   readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);
+  readonly nextRank = computed(() => this.profile()?.nextRank ?? null);
+  readonly pointsToNextRank = computed(() => this.profile()?.pointsToNextRank ?? 0);
 
   readonly rankingHeadline = computed(() => {
     const currentRank = this.rank();

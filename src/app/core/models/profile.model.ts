@@ -52,6 +52,8 @@ export interface MyProfile extends Profile {
   rank: number | null;
   isTop10: boolean;
   pointsToTop10: number | null;
+  nextRank: number | null;
+  pointsToNextRank: number | null;
 }
 
 export interface UpdateProfilePayload {

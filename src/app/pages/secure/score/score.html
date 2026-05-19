@@ -67,8 +67,11 @@
 
                     @if (rank() === 1) {
                     <p>Du führst das Ranking aktuell an.</p>
-                    } @else if (rank() !== null) {
-                    <p>Der nächste Rang ist:</p>
+                    } @else if (rank() !== null && nextRank() !== null) {
+                    <p>
+                        Bis zu Platz {{ nextRank() }} fehlen dir aktuell
+                        <strong>{{ pointsToNextRank() }}</strong> Punkte.
+                    </p>
                     } @else {
                     <p>Bitte versuche es später erneut.</p>
                     }
