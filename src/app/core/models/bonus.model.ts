@@ -3,7 +3,7 @@ export interface BonusStatusResponse {
   success: boolean;
   monthKey: string;
   myRank: number | null;
-  myMonthPoints: number;
+  myMonthBonusPoints: number;
   isTop10: boolean;
   pointsToTop10: number;
   thresholdPoints: number | null;
