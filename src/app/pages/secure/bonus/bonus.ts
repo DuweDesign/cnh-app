@@ -101,7 +101,6 @@ export class Bonus {
 
     this.profileService.getBonusStatus(dealernumber).subscribe({
       next: (response) => {
-        console.log('response: ', response);
         this.bonusStatus.set(response);
         this.isLoading.set(false);
       },

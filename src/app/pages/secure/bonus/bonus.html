@@ -8,18 +8,14 @@
 
         @if (isAdmin()) {
         <div class="admin-profile-switch">
-            <input 
-                type="text" 
-                [ngModel]="dealerNumberInput()" 
-                (ngModelChange)="dealerNumberInput.set($event)"
-                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()"
-                placeholder="User-ID eingeben" />
+            <input type="text" [ngModel]="dealerNumberInput()" (ngModelChange)="dealerNumberInput.set($event)"
+                (keyup.enter)="dealerNumberInput() && onLoadAdminProfile()" placeholder="User-ID eingeben" />
 
             <div class="actions">
                 <button type="button" (click)="onLoadAdminProfile()">
                     Profil laden
                 </button>
-    
+
                 <button type="button" (click)="onResetToOwnProfile()">
                     Reset
                 </button>
@@ -63,7 +59,7 @@
                     <p>{{ error() }}</p>
                 </div>
                 } @else if (bonusStatus(); as status) {
-                
+
                 <div class="user__label">
                     <span>Meine<br>Bonuspunkte</span>
                 </div>
@@ -80,8 +76,10 @@
 
             <div class="user__info">
                 <span>Bonus</span>
-    
-                @if (status.isTop10) {
+
+                @if (status.myMonthBonusPoints === 0) {
+                <p>Du hast diesen Monat noch keine Punkte gesammelt.</p>
+                } @else if (status.isTop10) {
                 <p>Du bist aktuell unter den <strong>Top 10</strong> – weiter so!</p>
                 } @else if (status.top10Count < 10) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
                     } @else {
@@ -92,7 +90,7 @@
                     </p>
                     }
             </div>
-        }
+            }
         </div>
     </div>
 
