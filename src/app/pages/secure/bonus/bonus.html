@@ -84,7 +84,7 @@
                 } @else if (status.top10Count < 10) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
                     } @else {
                     <p>
-                        Bis zum Monatsbonus fehlen dir noch
+                        Bis zum Monatsbonus {{ status.pointsToTop10 === 1 ? 'fehlt' : 'fehlen' }} dir noch
                         <strong>{{ status.pointsToTop10 }}</strong>
                         {{ status.pointsToTop10 === 1 ? 'Punkt' : 'Punkte' }}.
                     </p>
