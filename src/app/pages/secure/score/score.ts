@@ -149,6 +149,7 @@ export class Score {
 
     this.profileService.getMyProfile(dealernumber).subscribe({
       next: (profile) => {
+        console.log('profile: ', profile);
         if (requestId !== this.profileRequestId) {
           return;
         }
