@@ -59,6 +59,7 @@ export class Bonus {
 
     this.profileService.getBonusStatus().subscribe({
       next: (response) => {
+        console.log('response: ', response);
         this.bonusStatus.set(response);
         this.loading.set(false);
       },
