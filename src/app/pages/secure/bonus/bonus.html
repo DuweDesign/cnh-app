@@ -50,18 +50,18 @@
             <div class="user__mission">
                 @if (loading()) {
                 <div class="user__label">
-                    <span>Bonuspunkte</span>
-                    <p>Bonusstatus wird geladen ...</p>
+                    <span>Mission15 Punkte</span>
+                    <p>Mission15 Punkte wird geladen ...</p>
                 </div>
                 } @else if (error()) {
                 <div class="user__label">
-                    <span>Bonuspunkte</span>
+                    <span>Mission15 Punkte</span>
                     <p>{{ error() }}</p>
                 </div>
                 } @else if (bonusStatus(); as status) {
 
                 <div class="user__label">
-                    <span>Meine<br>Bonuspunkte</span>
+                    <span>Meine Mission15<br>Punkte</span>
                 </div>
 
                 <div class="user__number">
