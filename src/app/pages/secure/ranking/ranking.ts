@@ -313,7 +313,7 @@ export class Ranking {
       return;
     }
 
-    const warehouseRequest$ = this.getWarehouseRankingRequest('warehouse' as RankingCompetition);
+    const warehouseRequest$ = this.getWarehouseRankingRequest();
 
     forkJoin({
       ranking: this.rankingService.getManagementRanking(
@@ -366,7 +366,7 @@ export class Ranking {
     const shouldLoadSales = this.canShowSalesRanking();
     const shouldLoadWarehouse = this.canShowWarehouseRanking();
     const warehouseRequest$ = shouldLoadWarehouse
-      ? this.getWarehouseRankingRequest(competition)
+      ? this.getWarehouseRankingRequest()
       : of(null);
 
     if (shouldLoadWarehouse && !warehouseRequest$) {
@@ -404,14 +404,12 @@ export class Ranking {
     });
   }
 
-  private getWarehouseRankingRequest(
-    competition: RankingCompetition
-  ): RankingResponse | null {
+  private getWarehouseRankingRequest(): RankingResponse | null {
     const rankingService = this.rankingService as RankingService & {
-      getWarehouseRanking?: (competition: RankingCompetition) => RankingResponse;
+      getWarehouseRanking?: () => RankingResponse;
     };
 
-    return rankingService.getWarehouseRanking?.call(this.rankingService, competition) ?? null;
+    return rankingService.getWarehouseRanking?.call(this.rankingService) ?? null;
   }
 
   private resetRankingState(): void {

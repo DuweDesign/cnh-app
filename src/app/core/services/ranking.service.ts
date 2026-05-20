@@ -46,12 +46,11 @@ export class RankingService {
     );
   }
 
-  getWarehouseRanking(competition: CompetitionType) {
-  return this.http.get<WarehouseRankingResponse>(
-    `${environment.apiUrl}/v1/cnh/user/ranking/warehouse`,
-    { params: { competition } }
-  );
-}
+  getWarehouseRanking() {
+    return this.http.get<WarehouseRankingResponse>(
+      `${environment.apiUrl}/v1/cnh/user/ranking/warehouse`
+    );
+  }
 
   getMyTeam(
     competition?: CompetitionType,
