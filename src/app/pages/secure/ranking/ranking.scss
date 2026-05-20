@@ -122,6 +122,10 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 
+  &.warehouse {
+    background: linear-gradient(135deg, #4d4d4d, #a9a9a9);
+  }
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
