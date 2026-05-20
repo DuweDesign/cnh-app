@@ -411,7 +411,8 @@
                     @if (isManagementSalesRankingVisible()) {
                     <button
                         type="button"
-                        class="ranking-switch-button ranking-switch-button--sidebar warehouse"
+                        class="ranking-switch-button ranking-switch-button--sidebar"
+                        [ngClass]="warehouseThemeClass()"
                         (click)="openManagementWarehouseRanking()">
                         Gesamtes Lager Ranking anzeigen
                     </button>
