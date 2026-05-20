@@ -114,16 +114,23 @@
   padding: 0.75rem 1.1rem;
   border: none;
   border-radius: 999px;
-  background: #fff;
-  color: #1d1d1d;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  color: white;
 
   &.warehouse {
     background: linear-gradient(135deg, #4d4d4d, #a9a9a9);
+  }
+
+  &.case-steyr {
+    background: linear-gradient(135deg, #7d141d, #b12631);
+  }
+
+  &.new-holland {
+    background: linear-gradient(135deg, #00366f, #0059bb);
   }
 
   &:hover {
