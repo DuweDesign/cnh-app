@@ -15,7 +15,7 @@
                 <div class="ranking-state ranking-state--error"><p>{{ error() }}</p></div>
             } @else {
 
-                @if (config.key === 'new-holland' || config.key === 'case-steyr') {
+                @if ((config.key === 'new-holland' || config.key === 'case-steyr') && isManagementSalesRankingVisible()) {
                     <!-- SALES: TOP10 -->
                     @if (canShowSalesRanking()) {
                     <div class="ranking-subsection">
@@ -200,6 +200,74 @@
                     }
                 }
 
+
+                @if ((config.key === 'new-holland' || config.key === 'case-steyr') && isManagementWarehouseRankingVisible()) {
+                    <!-- MANAGEMENT: WAREHOUSE RANKING -->
+                    <div class="ranking-subsection ranking-subsection--warehouse">
+                        <div class="ranking-subsection__header">
+                            <h2>Gesamtes Lager Ranking</h2>
+
+                            <button
+                                type="button"
+                                class="ranking-switch-button ranking-switch-button--header"
+                                (click)="openManagementSalesRanking()">
+                                Zurück zum Verkäufer Ranking
+                            </button>
+                        </div>
+
+                        <table class="ranking-table">
+                            <thead [ngClass]="warehouseThemeClass()">
+                                <tr>
+                                    <th>Platz</th>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Unternehmen</th>
+                                    <th>Punkte im {{ currentMonthLabel() }}</th>
+                                    <th>Gesamtpunkte</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (participant of paginatedWarehouseParticipants(); track participant.id) {
+                                <tr>
+                                    <td data-label="Platz" [ngClass]="warehouseThemeClass()">
+                                        <strong>{{ participant.rank ?? '-' }}</strong>
+                                    </td>
+                                    <td data-label="User ID">{{ participant.dealerNumber }}</td>
+                                    <td data-label="Name">{{ participant.name }}</td>
+                                    <td data-label="Unternehmen">{{ participant.company }}</td>
+                                    <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
+                                    <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
+                                </tr>
+                                } @empty {
+                                <tr>
+                                    <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (warehouseParticipants().length) {
+                        <div class="ranking-pagination">
+                            <div class="ranking-pagination__info">
+                                Zeige {{ warehousePaginationStart() }}–{{ warehousePaginationEnd() }} von {{ warehouseParticipants().length }}
+                            </div>
+
+                            <div class="ranking-pagination__controls">
+                                <button type="button" (click)="previousWarehousePage()" [disabled]="warehouseCurrentPage() === 1">
+                                    Zurück
+                                </button>
+
+                                <span>Seite {{ warehouseCurrentPage() }} / {{ warehouseTotalPages() }}</span>
+
+                                <button type="button" (click)="nextWarehousePage()" [disabled]="warehouseCurrentPage() === warehouseTotalPages()">
+                                    Weiter
+                                </button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                }
+
                 @if (config.key === 'warehouse') {
                     <!-- WAREHOUSE: TOP10 -->
                     @if (canShowWarehouseRanking()) {
@@ -327,15 +395,26 @@
                 </div>
 
                 @if (isManagementUser() && config.key !== 'warehouse') {
-                <div class="part-score-card">
-                    <div class="part-score-card__label">
-                        Gesamt Lager<br />
-                        Punktestand
+                <div class="part-score-card-wrapper">
+                    <div class="part-score-card">
+                        <div class="part-score-card__label">
+                            Gesamt Lager<br />
+                            Punktestand
+                        </div>
+
+                        <div class="part-score-card__value">
+                            {{ currentManagementPartPoints() }}
+                        </div>
                     </div>
 
-                    <div class="part-score-card__value">
-                        {{ currentManagementPartPoints() }}
-                    </div>
+                    @if (isManagementSalesRankingVisible()) {
+                    <button
+                        type="button"
+                        class="ranking-switch-button ranking-switch-button--sidebar"
+                        (click)="openManagementWarehouseRanking()">
+                        Gesamtes Lager Ranking anzeigen
+                    </button>
+                    }
                 </div>
                 }
             </div>

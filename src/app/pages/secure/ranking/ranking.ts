@@ -30,6 +30,8 @@ type RankingUserWithFallbacks = RankingUser & {
   userId?: string;
 };
 
+type ManagementRankingView = 'sales' | 'warehouse';
+
 @Component({
   selector: 'cnh-ranking',
   standalone: true,
@@ -49,6 +51,13 @@ export class Ranking {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly profile = signal<MyProfile | null>(null);
+
+  /**
+   * Ansicht für Management User:
+   * sales = Verkäufer-/Team-Ranking
+   * warehouse = Gesamtes Lager-Ranking
+   */
+  readonly managementRankingView = signal<ManagementRankingView>('sales');
 
   /**
    * Verkäufer Ranking.
@@ -93,6 +102,14 @@ export class Ranking {
 
   readonly isSaleUser = computed(
     () => this.authService.getUserRole() === USER_ROLES.CNH_SALES
+  );
+
+  readonly isManagementSalesRankingVisible = computed(
+    () => !this.isManagementUser() || this.managementRankingView() === 'sales'
+  );
+
+  readonly isManagementWarehouseRankingVisible = computed(
+    () => this.isManagementUser() && this.managementRankingView() === 'warehouse'
   );
 
   readonly isWarehouseUser = computed(
@@ -296,14 +313,17 @@ export class Ranking {
       return;
     }
 
+    const warehouseRequest$ = this.getWarehouseRankingRequest('warehouse' as RankingCompetition);
+
     forkJoin({
       ranking: this.rankingService.getManagementRanking(
         competition,
         user.dealerGroupId
       ),
       team: this.rankingService.getMyTeam(competition),
+      warehouse: warehouseRequest$ ?? of(null),
     }).subscribe({
-      next: ({ ranking, team }) => {
+      next: ({ ranking, team, warehouse }) => {
         /**
          * Obere Tabelle = Top10 des Management-eigenen Verkäufer-Rankings.
          */
@@ -322,7 +342,16 @@ export class Ranking {
           )
         );
 
-        this.warehouseParticipants.set([]);
+        /**
+         * Lager Ranking wird für Manager vorgeladen,
+         * aber erst nach Klick auf den Button angezeigt.
+         */
+        this.warehouseParticipants.set(
+          warehouse?.ranking.map((entry) =>
+            this.mapUserToParticipant(entry, entry.rank ?? null)
+          ) ?? []
+        );
+
         this.loading.set(false);
       },
       error: (err) => {
@@ -389,6 +418,7 @@ export class Ranking {
     this.salesParticipants.set([]);
     this.warehouseParticipants.set([]);
     this.teamParticipants.set([]);
+    this.managementRankingView.set('sales');
     this.resetPagination();
   }
 
@@ -500,6 +530,16 @@ export class Ranking {
 
   nextTeamPage(): void {
     this.goToTeamPage(this.teamCurrentPage() + 1);
+  }
+
+  openManagementWarehouseRanking(): void {
+    this.managementRankingView.set('warehouse');
+    this.warehouseCurrentPage.set(1);
+  }
+
+  openManagementSalesRanking(): void {
+    this.managementRankingView.set('sales');
+    this.teamCurrentPage.set(1);
   }
 
   // PARTSPOINTS
