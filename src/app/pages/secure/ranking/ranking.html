@@ -25,8 +25,6 @@
                             <thead [ngClass]="salesThemeClass()">
                                 <tr>
                                     <th>Platz</th>
-                                    <!-- <th>User ID</th> -->
-                                    <!-- <th>Name</th> -->
                                     <th>Unternehmen</th>
                                     <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
@@ -38,8 +36,6 @@
                                     <td data-label="Platz" [ngClass]="salesThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>
                                     </td>
-                                    <!-- <td data-label="User ID">{{ participant.dealerNumber }}</td> -->
-                                    <!-- <td data-label="Name">{{ participant.name }}</td> -->
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
                                     <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
@@ -58,7 +54,7 @@
                     @if (isManagementUser() && teamParticipants().length) {
                     <div class="ranking-subsection">
                         <div class="ranking-subsection__header">
-                            <h2>Ihr Team Ranking</h2>
+                            <h2>Meine Verkaufsmannschaft im Überblick</h2>
     
                             <div class="ranking-pagination-size">
                                 <span>Einträge pro Seite:</span>
@@ -220,8 +216,6 @@
                             <thead [ngClass]="warehouseThemeClass()">
                                 <tr>
                                     <th>Platz</th>
-                                    <!-- <th>User ID</th> -->
-                                    <!-- <th>Name</th> -->
                                     <th>Unternehmen</th>
                                     <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
@@ -233,8 +227,6 @@
                                     <td data-label="Platz" [ngClass]="warehouseThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>
                                     </td>
-                                    <!-- <td data-label="User ID">{{ participant.dealerNumber }}</td> -->
-                                    <!-- <td data-label="Name">{{ participant.name }}</td> -->
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
                                     <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
@@ -279,8 +271,6 @@
                             <thead [ngClass]="warehouseThemeClass()">
                                 <tr>
                                     <th>Platz</th>
-                                    <!-- <th>User ID</th> -->
-                                    <!-- <th>Name</th> -->
                                     <th>Unternehmen</th>
                                     <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
@@ -292,8 +282,6 @@
                                     <td data-label="Platz" [ngClass]="warehouseThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>
                                     </td>
-                                    <!-- <td data-label="User ID">{{ participant.dealerNumber }}</td> -->
-                                    <!-- <td data-label="Name">{{ participant.name }}</td> -->
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
                                     <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
