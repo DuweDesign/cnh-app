@@ -383,7 +383,7 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if (isManagementUser() && config.key !== 'warehouse') {
+                @if ((isManagementUser() && config.key !== 'warehouse') || isAdminUser()) {
                 <div class="part-score-card-wrapper">
                     <div class="part-score-card">
                         <div class="part-score-card__label">
@@ -396,7 +396,7 @@
                         </div>
                     </div>
 
-                    @if (isManagementSalesRankingVisible() || isAdminUser()) {
+                    @if (isManagementSalesRankingVisible()) {
                     <button
                         type="button"
                         class="ranking-switch-button ranking-switch-button--sidebar"
