@@ -5,6 +5,8 @@ export interface RankingUser {
   surname: string;
   company: string;
   totalPoints: number;
+  managementRankingTotal?: number;
+  managementRankingPart?: number;
   monthlyPoints?: {
     monthKey: string;
     points: number;

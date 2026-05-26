@@ -30,6 +30,8 @@ type RankingUserWithFallbacks = RankingUser & {
   userId?: string;
 };
 
+type RankingPointsField = 'totalPoints' | 'managementRankingTotal' | 'managementRankingPart';
+
 type ManagementRankingView = 'sales' | 'warehouse';
 
 @Component({
@@ -313,23 +315,26 @@ export class Ranking {
       return;
     }
 
-    const warehouseRequest$ = this.getWarehouseRankingRequest();
-
     forkJoin({
       ranking: this.rankingService.getManagementRanking(
         competition,
         user.dealerGroupId
       ),
       team: this.rankingService.getMyTeam(competition),
-      warehouse: warehouseRequest$ ?? of(null),
     }).subscribe({
-      next: ({ ranking, team, warehouse }) => {
+      next: ({ ranking, team }) => {
+        const managementEntries = ranking.top20 ?? ranking.ownSales ?? [];
+
         /**
-         * Obere Tabelle = Top10 des Management-eigenen Verkäufer-Rankings.
+         * Obere Tabelle = Top10 Geschäftsführer nach Management-Gesamtpunkten.
          */
         this.salesParticipants.set(
-          ranking.ownSales.map((entry) =>
-            this.mapUserToParticipant(entry, entry.rankInOwnList ?? null)
+          this.sortUsersByPoints(managementEntries, 'managementRankingTotal').map((entry, index) =>
+            this.mapUserToParticipant(
+              entry,
+              index + 1,
+              'managementRankingTotal'
+            )
           )
         );
 
@@ -343,13 +348,16 @@ export class Ranking {
         );
 
         /**
-         * Lager Ranking wird für Manager vorgeladen,
-         * aber erst nach Klick auf den Button angezeigt.
+         * Geschäftsführer Lager Ranking nach Management-Lagerpunkten.
          */
         this.warehouseParticipants.set(
-          warehouse?.ranking.map((entry) =>
-            this.mapUserToParticipant(entry, entry.rank ?? null)
-          ) ?? []
+          this.sortUsersByPoints(managementEntries, 'managementRankingPart').map((entry, index) =>
+            this.mapUserToParticipant(
+              entry,
+              index + 1,
+              'managementRankingPart'
+            )
+          )
         );
 
         this.loading.set(false);
@@ -428,7 +436,8 @@ export class Ranking {
 
   private mapUserToParticipant(
     user: RankingUser,
-    rank: number | null
+    rank: number | null,
+    pointsField: RankingPointsField = 'totalPoints'
   ): RankingParticipant {
     const userWithFallbacks = user as RankingUserWithFallbacks;
 
@@ -444,8 +453,25 @@ export class Ranking {
       name: `${user.firstname ?? ''} ${user.surname ?? ''}`.trim() || '-',
       company: user.company || '-',
       monthPoints: this.getCurrentMonthPoints(user),
-      totalPoints: user.totalPoints ?? 0,
+      totalPoints: this.getUserPoints(user, pointsField),
     };
+  }
+
+  private sortUsersByPoints(
+    users: RankingUser[],
+    pointsField: RankingPointsField
+  ): RankingUser[] {
+    return [...users].sort(
+      (a, b) => this.getUserPoints(b, pointsField) - this.getUserPoints(a, pointsField)
+    );
+  }
+
+  private getUserPoints(user: RankingUser, pointsField: RankingPointsField): number {
+    if (pointsField === 'managementRankingTotal') {
+      return user.managementRankingTotal ?? user.totalPoints ?? 0;
+    }
+
+    return user[pointsField] ?? 0;
   }
 
   private getCurrentMonthPoints(user: RankingUser): number {
