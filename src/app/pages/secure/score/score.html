@@ -44,10 +44,12 @@
                 </div>
 
                 <div class="user__info">
-                    <p><strong>{{ currentPhase().title }}</strong></p>
-                    <p>
-                        {{ currentPhase().description }}
-                    </p>
+                    @if (config.key !== 'warehouse') {
+                        <p><strong>{{ currentPhase().title }}</strong></p>
+                        <p>
+                            {{ currentPhase().description }}
+                        </p>
+                    }
                 </div>
             </div>
 
@@ -87,14 +89,16 @@
         }
 
         <div class="page__bottom">
-            <div class="bottom">
-                <div class="bottom__cta">
-                    <div class="bottom__cta-inner">
-                        <strong>JETZT EXTRA PUNKTE SICHERN!</strong>
-                        <span>Denk an die Mission 15 und hol Dir noch mehr Punkte!</span>
+            @if (config.key !== 'warehouse') {
+                <div class="bottom">
+                    <div class="bottom__cta">
+                        <div class="bottom__cta-inner">
+                            <strong>JETZT EXTRA PUNKTE SICHERN!</strong>
+                            <span>Denk an die Mission 15 und hol Dir noch mehr Punkte!</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
 
     </div>
