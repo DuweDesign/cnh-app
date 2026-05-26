@@ -53,6 +53,23 @@
                 </div>
             </div>
 
+            @if (config.key === 'warehouse') {
+            <div class="user">
+                <div class="user__label">
+                    <span>Meine<br>Partpunkte</span>
+                </div>
+
+                <div class="user__number">
+                    <div class="number">{{ totalPartPoints() }}</div>
+                </div>
+
+                <div class="user__info">
+                    <p><strong>Warehouse Challenge</strong></p>
+                    <p>Dein aktueller Partpunkte-Stand.</p>
+                </div>
+            </div>
+            }
+
             <div class="user">
                 <div class="user__label">
                     <span>Meine<br>Platzierung</span>

@@ -44,6 +44,9 @@ export class Score {
   });
 
   readonly totalPoints = computed(() => this.profile()?.totalPoints ?? 0);
+  readonly totalPartPoints = computed(() =>
+    this.profile()?.monthlyPoints.reduce((sum, month) => sum + (month.partpoints ?? 0), 0) ?? 0
+  );
   readonly rank = computed(() => this.profile()?.rank ?? null);
   readonly isTop10 = computed(() => this.profile()?.isTop10 ?? false);
   readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);

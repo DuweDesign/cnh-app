@@ -217,7 +217,6 @@
                                 <tr>
                                     <th>Platz</th>
                                     <th>Unternehmen</th>
-                                    <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
                                 </tr>
                             </thead>
@@ -228,12 +227,11 @@
                                         <strong>{{ participant.rank ?? '-' }}</strong>
                                     </td>
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
-                                    <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                 </tr>
                                 } @empty {
                                 <tr>
-                                    <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                                    <td colspan="3" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
                                 </tr>
                                 }
                             </tbody>
@@ -272,7 +270,6 @@
                                 <tr>
                                     <th>Platz</th>
                                     <th>Unternehmen</th>
-                                    <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
                                 </tr>
                             </thead>
@@ -283,12 +280,11 @@
                                         <strong>{{ participant.rank ?? '-' }}</strong>
                                     </td>
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
-                                    <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                 </tr>
                                 } @empty {
                                 <tr>
-                                    <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                                    <td colspan="3" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
                                 </tr>
                                 }
                             </tbody>
@@ -327,7 +323,6 @@
                                     <th>User ID</th>
                                     <th>Name</th>
                                     <th>Unternehmen</th>
-                                    <th>Punkte im {{ currentMonthLabel() }}</th>
                                     <th>Gesamtpunkte</th>
                                 </tr>
                             </thead>
@@ -340,12 +335,11 @@
                                     <td data-label="User ID">{{ participant.dealerNumber }}</td>
                                     <td data-label="Name">{{ participant.name }}</td>
                                     <td data-label="Unternehmen">{{ participant.company }}</td>
-                                    <td [attr.data-label]="'Punkte im ' + currentMonthLabel()">{{ participant.monthPoints }}</td>
                                     <td data-label="Gesamtpunkte" class="points">{{ participant.totalPoints }}</td>
                                 </tr>
                                 } @empty {
                                 <tr>
-                                    <td colspan="6" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
+                                    <td colspan="5" class="ranking-table__empty">Keine Ranking-Einträge vorhanden.</td>
                                 </tr>
                                 }
                             </tbody>
