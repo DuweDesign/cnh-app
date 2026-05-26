@@ -90,7 +90,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         bonus: {
             backgroundImage: '',
-            title: 'Preise jeden Monat'
+            title: 'Precision Farming Wettbewerb'
         },
         score: {
             backgroundImage: '',
