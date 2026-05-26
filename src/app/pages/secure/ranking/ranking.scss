@@ -1,5 +1,12 @@
 @use 'page' as *;
 
+.ranking-state {
+  p {
+    color: #fff;
+    font-weight: 700;
+  }
+}
+
 .ranking-state.ranking-state--error {
   background-color: rgb(255, 205, 205);
   border-radius: 10px;
