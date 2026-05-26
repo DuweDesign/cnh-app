@@ -34,24 +34,24 @@
         </div>
         } @else {
         <div class="page__center">
-            <div class="user">
-                <div class="user__label">
-                    <span>Mein<br>Punktestand</span>
+            @if (config.key !== 'warehouse') {
+                <div class="user">
+                    <div class="user__label">
+                        <span>Mein<br>Punktestand</span>
+                    </div>
+    
+                    <div class="user__number">
+                        <div class="number">{{ totalPoints() }}</div>
+                    </div>
+    
+                    <div class="user__info">
+                            <p><strong>{{ currentPhase().title }}</strong></p>
+                            <p>
+                                {{ currentPhase().description }}
+                            </p>
+                    </div>
                 </div>
-
-                <div class="user__number">
-                    <div class="number">{{ totalPoints() }}</div>
-                </div>
-
-                <div class="user__info">
-                    @if (config.key !== 'warehouse') {
-                        <p><strong>{{ currentPhase().title }}</strong></p>
-                        <p>
-                            {{ currentPhase().description }}
-                        </p>
-                    }
-                </div>
-            </div>
+            }
 
             @if (config.key === 'warehouse') {
             <div class="user">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="user__info">
-                    <p><strong>Warehouse Challenge</strong></p>
+                    <p><strong>Die Lagerchamps</strong></p>
                     <p>Dein aktueller Partpunkte-Stand.</p>
                 </div>
             </div>
