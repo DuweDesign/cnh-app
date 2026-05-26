@@ -23,13 +23,12 @@
             <div class="form-group">
               <!-- <label for="password">Passwort</label> -->
               <input id="password" type="password" formControlName="password" placeholder="Passwort" />
+              <a routerLink="/passwort-vergessen" class="forgot-password">
+                Passwort vergessen
+              </a>
             </div>
 
             <button type="submit" class="login-btn" [disabled]="isSubmitting">{{ isSubmitting ? 'Anmelden...' : 'Anmelden' }}</button>
-
-            <a routerLink="/passwort-vergessen" class="forgot-password">
-              Passwort vergessen
-            </a>
 
             <a routerLink="/registrieren" class="register-link">
               Jetzt registrieren
