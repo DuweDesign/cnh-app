@@ -31,7 +31,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (participant of salesTop10Participants(); track participant.id) {
+                                @for (participant of managementTotalTop10Participants(); track participant.id) {
                                 <tr>
                                     <td data-label="Platz" [ngClass]="salesThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>
@@ -221,7 +221,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (participant of warehouseTop10Participants(); track participant.id) {
+                                @for (participant of managementPartTop10Participants(); track participant.id) {
                                 <tr>
                                     <td data-label="Platz" [ngClass]="warehouseThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>
@@ -358,8 +358,9 @@
                     <img [src]="config.logoUrl" alt="Logo" />
                 </div>
 
-                @if (isManagementUser() && config.key !== 'warehouse') {
+                @if (canShowManagementTopRankings() && config.key !== 'warehouse') {
                 <div class="part-score-card-wrapper">
+                    @if (isManagementUser()) {
                     <div class="part-score-card">
                         <div class="part-score-card__label">
                             Gesamt Lager<br />
@@ -370,6 +371,7 @@
                             {{ currentManagementPartPoints() | number:'1.0-2' }}
                         </div>
                     </div>
+                    }
 
                     @if (isManagementSalesRankingVisible()) {
                     <button
