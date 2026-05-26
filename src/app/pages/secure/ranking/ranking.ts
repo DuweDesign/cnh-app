@@ -67,6 +67,16 @@ export class Ranking {
   readonly salesParticipants = signal<RankingParticipant[]>([]);
 
   /**
+   * Geschäftsführer Ranking nach Gesamtpunkten.
+   */
+  readonly managementTotalParticipants = signal<RankingParticipant[]>([]);
+
+  /**
+   * Geschäftsführer Ranking nach Lagerpunkten.
+   */
+  readonly managementPartParticipants = signal<RankingParticipant[]>([]);
+
+  /**
    * Lager Ranking.
    */
   readonly warehouseParticipants = signal<RankingParticipant[]>([]);
@@ -107,11 +117,11 @@ export class Ranking {
   );
 
   readonly isManagementSalesRankingVisible = computed(
-    () => !this.isManagementUser() || this.managementRankingView() === 'sales'
+    () => !this.canShowManagementTopRankings() || this.managementRankingView() === 'sales'
   );
 
   readonly isManagementWarehouseRankingVisible = computed(
-    () => this.isManagementUser() && this.managementRankingView() === 'warehouse'
+    () => this.canShowManagementTopRankings() && this.managementRankingView() === 'warehouse'
   );
 
   readonly isWarehouseUser = computed(
@@ -161,6 +171,15 @@ export class Ranking {
     () => this.isWarehouseAdminUser() || this.isFullAdminUser()
   );
 
+  readonly canShowManagementTopRankings = computed(() => {
+    const competitionKey = this.competitionConfig()?.key;
+
+    return (
+      (this.isManagementUser() || this.isFullAdminUser()) &&
+      (competitionKey === 'new-holland' || competitionKey === 'case-steyr')
+    );
+  });
+
   readonly salesThemeClass = computed(() => this.competitionConfig()?.key ?? '');
   readonly warehouseThemeClass = computed(() => 'warehouse');
 
@@ -171,6 +190,12 @@ export class Ranking {
 
   readonly salesTop10Participants = computed(() => this.salesParticipants().slice(0, 10));
   readonly warehouseTop10Participants = computed(() => this.warehouseParticipants().slice(0, 10));
+  readonly managementTotalTop10Participants = computed(() =>
+    this.managementTotalParticipants().slice(0, 10)
+  );
+  readonly managementPartTop10Participants = computed(() =>
+    this.managementPartParticipants().slice(0, 10)
+  );
 
   /**
    * Verkäufer Top 100 Pagination.
@@ -291,7 +316,7 @@ export class Ranking {
     this.error.set(null);
     this.resetPagination();
 
-    if (user.role === USER_ROLES.CNH_MANAGEMENT) {
+    if (this.canShowManagementTopRankings()) {
       this.loadManagementRanking(competition);
       return;
     }
@@ -315,16 +340,20 @@ export class Ranking {
       return;
     }
 
+    const teamRequest$ = this.isManagementUser()
+      ? this.rankingService.getMyTeam(competition)
+      : of(null);
+
     forkJoin({
       totalRanking: this.rankingService.getManagementRanking(competition),
       partRanking: this.rankingService.getManagementPartRanking(competition),
-      team: this.rankingService.getMyTeam(competition),
+      team: teamRequest$,
     }).subscribe({
       next: ({ totalRanking, partRanking, team }) => {
         /**
          * Obere Tabelle = Top10 Geschäftsführer nach Management-Gesamtpunkten.
          */
-        this.salesParticipants.set(
+        this.managementTotalParticipants.set(
           totalRanking.ranking.map((entry) =>
             this.mapUserToParticipant(
               entry,
@@ -338,15 +367,15 @@ export class Ranking {
          * Untere Tabelle = Team Ranking.
          */
         this.teamParticipants.set(
-          team.team.map((entry) =>
+          team?.team.map((entry) =>
             this.mapUserToParticipant(entry, entry.overallRank ?? null)
-          )
+          ) ?? []
         );
 
         /**
          * Geschäftsführer Lager Ranking nach Management-Lagerpunkten.
          */
-        this.warehouseParticipants.set(
+        this.managementPartParticipants.set(
           partRanking.ranking.map((entry) =>
             this.mapUserToParticipant(
               entry,
@@ -356,6 +385,33 @@ export class Ranking {
           )
         );
 
+        if (this.isFullAdminUser()) {
+          this.loadAdminSalesRanking(competition);
+          return;
+        }
+
+        this.salesParticipants.set([]);
+        this.warehouseParticipants.set([]);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message || 'Ranking konnte nicht geladen werden.');
+        this.resetRankingState();
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private loadAdminSalesRanking(competition: RankingCompetition): void {
+    this.rankingService.getSalesRanking(competition).subscribe({
+      next: (sales) => {
+        this.salesParticipants.set(
+          sales.ranking.map((entry) =>
+            this.mapUserToParticipant(entry, entry.rank ?? null)
+          )
+        );
+
+        this.warehouseParticipants.set([]);
         this.loading.set(false);
       },
       error: (err) => {
@@ -418,6 +474,8 @@ export class Ranking {
 
   private resetRankingState(): void {
     this.salesParticipants.set([]);
+    this.managementTotalParticipants.set([]);
+    this.managementPartParticipants.set([]);
     this.warehouseParticipants.set([]);
     this.teamParticipants.set([]);
     this.managementRankingView.set('sales');
