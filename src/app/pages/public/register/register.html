@@ -20,6 +20,9 @@
                             <!-- <label for="dealernumber">Dealer Portal User-ID</label> -->
                             <input id="dealernumber" type="text" formControlName="dealernumber" placeholder="Dealer Portal User-ID" autocomplete="username"
                                 [class.is-invalid]="dealernumberInvalid" />
+                            <a routerLink="/user-id-vergessen" class="forgot-user-id">
+                            User ID vergessen?
+                            </a>
         
                             @if (dealernumberInvalid) {
                             <small class="form-error">Bitte die Dealer Portal User-ID eingeben.</small>
