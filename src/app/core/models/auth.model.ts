@@ -50,6 +50,10 @@ export interface ForgotPasswordPayload {
   email: string;
 }
 
+export interface ForgotUserIdPayload {
+  email: string;
+}
+
 export interface RegisterRequestPayload {
   dealernumber: string;
   email: string;

@@ -8,6 +8,7 @@ import {
   LoginPayload,
   LoginResponse,
   ForgotPasswordPayload,
+  ForgotUserIdPayload,
   RegisterRequestPayload,
   SetPasswordPayload,
   UserRole,
@@ -152,6 +153,13 @@ export class AuthService {
   forgotPassword(payload: ForgotPasswordPayload): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
       `${this.apiUrl}/auth/forgot-password`,
+      payload
+    );
+  }
+
+  forgotUserId(payload: ForgotUserIdPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/auth/forgot-user-id`,
       payload
     );
   }

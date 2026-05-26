@@ -35,6 +35,12 @@ export const routes: Routes = [
           import('./pages/public/forgot-password/forgot-password').then(m => m.ForgotPassword)
       },
       {
+        path: 'user-id-vergessen',
+        canActivate: [guestGuard],
+        loadComponent: () =>
+          import('./pages/public/forgot-user-id/forgot-user-id').then(m => m.ForgotUserId)
+      },
+      {
         path: 'passwort-vergeben',
         canActivate: [guestGuard],
         loadComponent: () =>

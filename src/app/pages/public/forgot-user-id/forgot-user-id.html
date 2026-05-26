@@ -1,0 +1,71 @@
+<div class="auth-page">
+    <div class="auth-content">
+
+        <div class="auth-box">
+            <div class="auth-logo mobile-only">
+                <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+            </div>
+
+            <div class="auth-page__panel auth-page__panel--form auth-left">
+                <div class="auth-card">
+                    <div class="auth-card__header">
+                        <h1>User ID vergessen</h1>
+                        <p>
+                            Bitte geben Sie die zu Ihrer User ID hinterlegte E-Mail-Adresse ein.
+                        </p>
+                    </div>
+
+                    <form class="auth-form" [formGroup]="forgotUserIdForm" (ngSubmit)="onSubmit()">
+                        <div class="form-field">
+                            <input id="email" type="email" formControlName="email" placeholder="E-Mail" autocomplete="email"
+                                [class.is-invalid]="emailInvalid" />
+
+                            @if (emailInvalid) {
+                            <small class="form-error">
+                                @if (forgotUserIdForm.controls.email.errors?.['required']) {
+                                Bitte eine E-Mail-Adresse eingeben.
+                                }
+                                @if (forgotUserIdForm.controls.email.errors?.['email']) {
+                                Bitte eine gültige E-Mail-Adresse eingeben.
+                                }
+                            </small>
+                            }
+                        </div>
+
+                        @if (errorMessage) {
+                        <div class="form-message form-message--error">
+                            {{ errorMessage }}
+                        </div>
+                        }
+
+                        @if (successMessage) {
+                        <div class="form-message form-message--success">
+                            {{ successMessage }}
+                        </div>
+                        }
+
+                        <button class="auth-submit" type="submit" [disabled]="isSubmitting">
+                            @if (!isSubmitting) {
+                            <span>User ID anfordern</span>
+                            }
+                            @if (isSubmitting) {
+                            <span>Wird gesendet ...</span>
+                            }
+                        </button>
+                    </form>
+
+                    <div class="auth-card__footer">
+                        <a routerLink="/login">Zurück zum Login</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-page__panel auth-page__panel--visual auth-right desktop-only">
+                <div class="auth-logo">
+                    <img src="/images/ertragsmacher_logo.png" alt="Logo" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
