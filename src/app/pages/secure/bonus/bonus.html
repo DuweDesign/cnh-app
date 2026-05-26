@@ -26,21 +26,38 @@
 
         <div class="page__center page__center--sale">
             <div class="bonus__info">
+                @if (config.key !== 'warehouse') {
                 <p>
-                    Die Top 10 Verkäuferinnen und Verkäufer des aktuellen Monats erhalten
-                    einen Amazon-Gutschein in Höhe von
+                    Neben der Erreichung des Quartalsziels, werden wir in den Quartalen 2, 3 und 4 noch jeweils
+                    zusätzlich einen Wettbewerb anbieten, wodurch Sie Punkte für die exklusive Reise erlangen können.
+                    Diese werden sich um die Themen Precision Farming, Originalteile und Partnerhändler drehen. Die
+                    Details der ersten Challenge zu Precision Farming erfahren Sie jetzt, nähere Informationen zu den
+                    beiden anderen Quartalschallenges folgen.<br>
+                    Ein zusätzlicher Anreiz für die Teilnahme an den Quartalschallenges wird jeweils ein interessanter
+                    Sachpreis sein! In Q2 werden wir, passend zur WM, 10 hochwertige Tischkicker für die erfolgreichsten
+                    Teilnehmer ausschreiben!
                 </p>
-                <span>175,00 €*</span>
-                <p>
-                    Der Versand erfolgt nach der monatlichen Auswertung im Folgemonat.
-                </p>
-                <small>
-                    *Die erforderliche Pauschalversteuerung wird zusätzlich übernommen.
-                </small>
+                } @else {
+                    <p>
+                        Die Top 10 Verkäuferinnen und Verkäufer des aktuellen Monats erhalten
+                        einen Amazon-Gutschein in Höhe von
+                    </p>
+                    <span>175,00 €*</span>
+                    <p>
+                        Der Versand erfolgt nach der monatlichen Auswertung im Folgemonat.
+                    </p>
+                    <small>
+                        *Die erforderliche Pauschalversteuerung wird zusätzlich übernommen.
+                    </small>
+                }
             </div>
 
             <div class="user__image">
-                <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                @if (config.key === 'warehouse') {
+                    <img src="/images/kicker.png" alt="Amazon Gutschein" />
+                } @else {
+                    <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                }
             </div>
 
             <div class="page__user-logo">
