@@ -17,6 +17,7 @@ export interface RankingUser {
   overallRank?: number;
   rankInOwnList?: number;
   teamRank?: number;
+  rankingPoints?: number;
 }
 
 export interface SalesRankingResponse {
@@ -31,8 +32,7 @@ export interface WarehouseRankingResponse {
 
 export interface ManagementRankingResponse {
   success: boolean;
-  ownSales: RankingUser[];
-  top20: RankingUser[];
+  ranking: RankingUser[];
 }
 
 export interface MyTeamResponse {

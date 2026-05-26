@@ -316,23 +316,19 @@ export class Ranking {
     }
 
     forkJoin({
-      ranking: this.rankingService.getManagementRanking(
-        competition,
-        user.dealerGroupId
-      ),
+      totalRanking: this.rankingService.getManagementRanking(competition),
+      partRanking: this.rankingService.getManagementPartRanking(competition),
       team: this.rankingService.getMyTeam(competition),
     }).subscribe({
-      next: ({ ranking, team }) => {
-        const managementEntries = ranking.top20 ?? ranking.ownSales ?? [];
-
+      next: ({ totalRanking, partRanking, team }) => {
         /**
          * Obere Tabelle = Top10 Geschäftsführer nach Management-Gesamtpunkten.
          */
         this.salesParticipants.set(
-          this.sortUsersByPoints(managementEntries, 'managementRankingTotal').map((entry, index) =>
+          totalRanking.ranking.map((entry) =>
             this.mapUserToParticipant(
               entry,
-              index + 1,
+              entry.rank ?? null,
               'managementRankingTotal'
             )
           )
@@ -351,10 +347,10 @@ export class Ranking {
          * Geschäftsführer Lager Ranking nach Management-Lagerpunkten.
          */
         this.warehouseParticipants.set(
-          this.sortUsersByPoints(managementEntries, 'managementRankingPart').map((entry, index) =>
+          partRanking.ranking.map((entry) =>
             this.mapUserToParticipant(
               entry,
-              index + 1,
+              entry.rank ?? null,
               'managementRankingPart'
             )
           )
@@ -455,15 +451,6 @@ export class Ranking {
       monthPoints: this.getCurrentMonthPoints(user),
       totalPoints: this.getUserPoints(user, pointsField),
     };
-  }
-
-  private sortUsersByPoints(
-    users: RankingUser[],
-    pointsField: RankingPointsField
-  ): RankingUser[] {
-    return [...users].sort(
-      (a, b) => this.getUserPoints(b, pointsField) - this.getUserPoints(a, pointsField)
-    );
   }
 
   private getUserPoints(user: RankingUser, pointsField: RankingPointsField): number {

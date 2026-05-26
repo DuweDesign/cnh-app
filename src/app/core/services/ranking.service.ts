@@ -34,14 +34,28 @@ export class RankingService {
 
   getManagementRanking(
     competition: CompetitionType,
-    dealerGroupId: string
+    limit: number = 100
   ): Observable<ManagementRankingResponse> {
     const params = new HttpParams()
       .set('competition', competition)
-      .set('dealerGroupId', dealerGroupId);
+      .set('limit', limit);
 
     return this.http.get<ManagementRankingResponse>(
-      `${this.apiUrl}/user/ranking/management-view`,
+      `${this.apiUrl}/user/ranking/management-total`,
+      { params }
+    );
+  }
+
+  getManagementPartRanking(
+    competition: CompetitionType,
+    limit: number = 100
+  ): Observable<ManagementRankingResponse> {
+    const params = new HttpParams()
+      .set('competition', competition)
+      .set('limit', limit);
+
+    return this.http.get<ManagementRankingResponse>(
+      `${this.apiUrl}/user/ranking/management-part`,
       { params }
     );
   }
