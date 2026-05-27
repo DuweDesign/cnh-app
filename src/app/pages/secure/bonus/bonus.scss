@@ -106,6 +106,10 @@
   }
 }
 
+.user__image--warehouse {
+  margin-left: 28px;
+}
+
 /* LOGO (rechts über beide Reihen) */
 .page__user-logo {
   grid-column: 3;
@@ -321,6 +325,7 @@
 
   .user__image {
     justify-content: center;
+    margin-left: 0;
 
     img {
       max-width: 220px;

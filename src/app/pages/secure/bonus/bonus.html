@@ -47,7 +47,7 @@
                 }
             </div>
 
-            <div class="user__image">
+            <div class="user__image" [class.user__image--warehouse]="config.key === 'warehouse'">
                 @if (config.key === 'warehouse') {
                     <img src="/images/kicker.png" alt="Amazon Gutschein" />
                 } @else {
@@ -62,18 +62,18 @@
             <div class="user__mission">
                 @if (loading()) {
                 <div class="user__label">
-                    <span>Mission 15 Punkte</span>
-                    <p>Mission 15 Punkte wird geladen ...</p>
+                    <span>{{ config.key === 'warehouse' ? 'Farming Punkte' : 'Mission 15 Punkte' }}</span>
+                    <p>{{ config.key === 'warehouse' ? 'Farming Punkte' : 'Mission 15 Punkte' }} wird geladen ...</p>
                 </div>
                 } @else if (error()) {
                 <div class="user__label">
-                    <span>Mission 15 Punkte</span>
+                    <span>{{ config.key === 'warehouse' ? 'Farming Punkte' : 'Mission 15 Punkte' }}</span>
                     <p>{{ error() }}</p>
                 </div>
                 } @else if (bonusStatus(); as status) {
 
                 <div class="user__label">
-                    <span>Meine Mission 15<br>Punkte</span>
+                    <span>Meine {{ config.key === 'warehouse' ? 'Farming' : 'Mission 15' }}<br>Punkte</span>
                 </div>
 
                 <div class="user__number">
