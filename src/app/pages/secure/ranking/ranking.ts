@@ -523,7 +523,7 @@ export class Ranking {
   }
 
   private filterGermanyUsers(users: RankingUser[]): RankingUser[] {
-    return users.filter((user) => this.normalizeCountryIso(user.iso || user.country) === 'DE');
+    return users.filter((user) => this.normalizeCountryIso(user.iso || user.country) !== 'AT');
   }
 
   private withLocalRanks(users: RankingUser[]): RankingUser[] {
