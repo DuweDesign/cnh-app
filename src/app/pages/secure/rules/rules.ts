@@ -450,7 +450,7 @@ export class Rules {
         {
           title: '3. Ersatzteile',
           text:
-            'Parallel zum Verkäufer-Wettbewerb läuft ein Incentive im Bereich Ersatzteile. Die dort erreichten Punkte Ihres Ersatzteilleiters werden ebenfalls für das Geschäftsführer Incentive angerechnet.',
+            'Parallel zum Verkäufer-Wettbewerb läuft ein Incentive im Bereich Ersatzteile. Die dort erreichten Punkte Ihres Ersatzteilleiters werden ebenfalls für das Geschäftsführer Incentive angerechnet. Bitte beachten Sie, dass wir auch für Ihre Lagerleiter ein Incentive anbieten. Die Punktevergabe dafür verläuft nach einem anderen Schema!',
           example:
             'Beispiel: Erreicht Ihr Ersatzteilleiter 90 Punkte, werden diese zu den Punkten aus den anderen beiden Bereichen addiert.',
         },
