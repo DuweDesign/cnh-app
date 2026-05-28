@@ -242,7 +242,7 @@
                     <!-- WAREHOUSE: TOP10 -->
                     @if (canShowWarehouseRanking()) {
                     <div class="ranking-subsection ranking-subsection--warehouse">
-                        <h2>TOP 10 Lager Ranking</h2>
+                        <h2>TOP 10 Lager Ranking {{ warehouseRankingCountryLabel() }}</h2>
     
                         <table class="ranking-table">
                             <thead [ngClass]="warehouseThemeClass()">
@@ -276,9 +276,20 @@
                     <div class="ranking-subsection ranking-subsection--warehouse">
                         <div class="ranking-subsection__header">
                             <h2>
-                                Top 100 Lager
+                                Top 100 Lager {{ warehouseRankingCountryLabel() }}
                                 <small>Nur als Admin sichtbar</small>
                             </h2>
+
+                            <div class="ranking-country-switch" role="group" aria-label="Land für Lager Ranking">
+                                @for (country of warehouseCountryOptions; track country.iso) {
+                                <button
+                                    type="button"
+                                    [class.active]="warehouseRankingCountryIso() === country.iso"
+                                    (click)="setWarehouseRankingCountry(country.iso)">
+                                    {{ country.iso }}
+                                </button>
+                                }
+                            </div>
     
                             <div class="ranking-pagination-size">
                                 <span>Einträge pro Seite:</span>

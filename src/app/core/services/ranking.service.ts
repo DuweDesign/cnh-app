@@ -60,9 +60,16 @@ export class RankingService {
     );
   }
 
-  getWarehouseRanking() {
+  getWarehouseRanking(countryIso?: 'DE' | 'AT', limit: number = 100): Observable<WarehouseRankingResponse> {
+    let params = new HttpParams().set('limit', limit);
+
+    if (countryIso) {
+      params = params.set('iso', countryIso);
+    }
+
     return this.http.get<WarehouseRankingResponse>(
-      `${environment.apiUrl}/v1/cnh/user/ranking/warehouse`
+      `${this.apiUrl}/user/ranking/warehouse`,
+      { params }
     );
   }
 

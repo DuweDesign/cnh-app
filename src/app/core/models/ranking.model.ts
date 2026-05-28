@@ -4,6 +4,8 @@ export interface RankingUser {
   firstname: string;
   surname: string;
   company: string;
+  country?: string;
+  iso?: string;
   totalPoints: number;
   managementRankingTotal?: number;
   managementRankingPart?: number;
@@ -27,6 +29,7 @@ export interface SalesRankingResponse {
 
 export interface WarehouseRankingResponse {
   success: boolean;
+  countryIso: 'DE' | 'AT' | null;
   ranking: RankingUser[];
 }
 

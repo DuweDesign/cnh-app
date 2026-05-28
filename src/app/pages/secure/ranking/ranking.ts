@@ -22,7 +22,6 @@ type RankingParticipant = {
 };
 
 type RankingCompetition = Parameters<RankingService['getSalesRanking']>[0];
-type RankingResponse = ReturnType<RankingService['getSalesRanking']>;
 
 type RankingUserWithFallbacks = RankingUser & {
   ggdNumber?: string;
@@ -33,6 +32,7 @@ type RankingUserWithFallbacks = RankingUser & {
 type RankingPointsField = 'totalPoints' | 'managementRankingTotal' | 'managementRankingPart';
 
 type ManagementRankingView = 'sales' | 'warehouse';
+type CountryIso = 'DE' | 'AT';
 
 @Component({
   selector: 'cnh-ranking',
@@ -53,6 +53,11 @@ export class Ranking {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly profile = signal<MyProfile | null>(null);
+  readonly warehouseRankingCountryIso = signal<CountryIso>('DE');
+  readonly warehouseCountryOptions: { iso: CountryIso; label: string }[] = [
+    { iso: 'DE', label: 'Deutschland' },
+    { iso: 'AT', label: 'Österreich' },
+  ];
 
   /**
    * Ansicht für Management User:
@@ -290,6 +295,17 @@ export class Ranking {
     return Math.min(end, this.teamParticipants().length);
   });
 
+  readonly warehouseRankingCountryLabel = computed(() => {
+    if (this.showWarehouseFullRanking()) {
+      return this.getCountryLabel(this.warehouseRankingCountryIso());
+    }
+
+    const user = this.currentUser();
+    const userCountryIso = this.normalizeCountryIso(user?.iso || user?.country);
+
+    return this.getCountryLabel(userCountryIso || 'DE');
+  });
+
   constructor() {
     effect(() => {
       const competition = this.competition();
@@ -354,7 +370,7 @@ export class Ranking {
          * Obere Tabelle = Top10 Geschäftsführer nach Management-Gesamtpunkten.
          */
         this.managementTotalParticipants.set(
-          totalRanking.ranking.map((entry) =>
+          this.withLocalRanks(this.filterGermanyUsers(totalRanking.ranking)).map((entry) =>
             this.mapUserToParticipant(
               entry,
               entry.rank ?? null,
@@ -376,7 +392,7 @@ export class Ranking {
          * Geschäftsführer Lager Ranking nach Management-Lagerpunkten.
          */
         this.managementPartParticipants.set(
-          partRanking.ranking.map((entry) =>
+          this.withLocalRanks(this.filterGermanyUsers(partRanking.ranking)).map((entry) =>
             this.mapUserToParticipant(
               entry,
               entry.rank ?? null,
@@ -426,19 +442,14 @@ export class Ranking {
     const shouldLoadSales = this.canShowSalesRanking();
     const shouldLoadWarehouse = this.canShowWarehouseRanking();
     const warehouseRequest$ = shouldLoadWarehouse
-      ? this.getWarehouseRankingRequest()
+      ? this.rankingService.getWarehouseRanking(
+          this.showWarehouseFullRanking() ? this.warehouseRankingCountryIso() : undefined
+        )
       : of(null);
-
-    if (shouldLoadWarehouse && !warehouseRequest$) {
-      this.error.set('Warehouse-Ranking konnte nicht geladen werden. Bitte getWarehouseRanking() im RankingService ergänzen.');
-      this.resetRankingState();
-      this.loading.set(false);
-      return;
-    }
 
     forkJoin({
       sales: shouldLoadSales ? this.rankingService.getSalesRanking(competition) : of(null),
-      warehouse: warehouseRequest$ ?? of(null),
+      warehouse: warehouseRequest$,
     }).subscribe({
       next: ({ sales, warehouse }) => {
         this.salesParticipants.set(
@@ -462,14 +473,6 @@ export class Ranking {
         this.loading.set(false);
       },
     });
-  }
-
-  private getWarehouseRankingRequest(): RankingResponse | null {
-    const rankingService = this.rankingService as RankingService & {
-      getWarehouseRanking?: () => RankingResponse;
-    };
-
-    return rankingService.getWarehouseRanking?.call(this.rankingService) ?? null;
   }
 
   private resetRankingState(): void {
@@ -519,6 +522,39 @@ export class Ranking {
     return user[pointsField] ?? 0;
   }
 
+  private filterGermanyUsers(users: RankingUser[]): RankingUser[] {
+    return users.filter((user) => this.normalizeCountryIso(user.iso || user.country) === 'DE');
+  }
+
+  private withLocalRanks(users: RankingUser[]): RankingUser[] {
+    return users.map((user, index) => ({
+      ...user,
+      rank: index + 1,
+    }));
+  }
+
+  private normalizeCountryIso(value?: string): CountryIso | '' {
+    const normalized = String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    if (['de', 'deutschland', 'germany'].includes(normalized)) {
+      return 'DE';
+    }
+
+    if (['at', 'osterreich', 'oesterreich', 'austria'].includes(normalized)) {
+      return 'AT';
+    }
+
+    return '';
+  }
+
+  private getCountryLabel(iso: CountryIso): string {
+    return iso === 'AT' ? 'Österreich' : 'Deutschland';
+  }
+
   private getCurrentMonthPoints(user: RankingUser): number {
     const now = new Date();
     const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -562,6 +598,16 @@ export class Ranking {
   setWarehousePageSize(size: number): void {
     this.warehousePageSize.set(size);
     this.warehouseCurrentPage.set(1);
+  }
+
+  setWarehouseRankingCountry(iso: CountryIso): void {
+    if (this.warehouseRankingCountryIso() === iso) {
+      return;
+    }
+
+    this.warehouseRankingCountryIso.set(iso);
+    this.warehouseCurrentPage.set(1);
+    this.loadRanking();
   }
 
   goToWarehousePage(page: number): void {

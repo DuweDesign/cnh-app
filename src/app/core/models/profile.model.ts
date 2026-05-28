@@ -30,6 +30,8 @@ export interface Profile {
   surname: string;
   greeting_formular: string;
   company: string;
+  country?: string;
+  iso?: string;
 
   role: UserRole;
   competition: CompetitionType;

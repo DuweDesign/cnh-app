@@ -12,6 +12,8 @@ type ScorePhase = {
   description: string;
 };
 
+type CountryIso = 'DE' | 'AT';
+
 @Component({
   selector: 'cnh-score',
   standalone: true,
@@ -55,6 +57,12 @@ export class Score {
   readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);
   readonly nextRank = computed(() => this.profile()?.nextRank ?? null);
   readonly pointsToNextRank = computed(() => this.profile()?.pointsToNextRank ?? 0);
+  readonly warehouseCountryLabel = computed(() => {
+    const profile = this.profile();
+    const iso = this.normalizeCountryIso(profile?.iso || profile?.country);
+
+    return iso === 'AT' ? 'Österreich' : 'Deutschland';
+  });
 
   readonly rankingHeadline = computed(() => {
     const currentRank = this.rank();
@@ -194,5 +202,23 @@ export class Score {
     this.dealerNumberInput.set('');
 
     this.loadProfile(undefined, this.competitionConfig()?.key);
+  }
+
+  private normalizeCountryIso(value?: string): CountryIso | '' {
+    const normalized = String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    if (['de', 'deutschland', 'germany'].includes(normalized)) {
+      return 'DE';
+    }
+
+    if (['at', 'osterreich', 'oesterreich', 'austria'].includes(normalized)) {
+      return 'AT';
+    }
+
+    return '';
   }
 }

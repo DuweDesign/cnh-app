@@ -26,6 +26,8 @@ export interface AuthUser {
   role: UserRole;
   firstname?: string;
   surname?: string;
+  country?: string;
+  iso?: string;
   competition?: CompetitionType | null;
 }
 
