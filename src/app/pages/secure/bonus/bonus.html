@@ -29,8 +29,8 @@
                 @if (config.key === 'warehouse') {
                 <p>
                     Ein zusätzlicher Anreiz für die Teilnahme an den Quartalschallenges wird jeweils ein interessanter
-                    Sachpreis sein! In Q2 werden wir, passend zur WM, 10 hochwertige Tischkicker für die erfolgreichsten
-                    Teilnehmer ausschreiben!
+                    Sachpreis sein! In Q2 werden wir, passend zur WM, hochwertige Tischkicker für die erfolgreichsten
+                    Teilnehmer ausschreiben: {{ kickerPrizeCount() }} in {{ bonusCountryLabel() }}.
                 </p>
                 } @else {
                     <p>
@@ -79,7 +79,7 @@
                 <div class="user__number">
                     @if (status.isTop10) {
                     <div class="number number--success">{{ status.myMonthBonusPoints }}</div>
-                    } @else if (status.top10Count < 10) { <div class="number">-
+                    } @else if (status.top10Count < winnerLimit()) { <div class="number">-
                 </div>
                 } @else {
                 <div class="number">{{ status.pointsToTop10 }}</div>
@@ -92,8 +92,8 @@
                 @if (status.myMonthBonusPoints === 0) {
                 <p>Du hast diesen Monat noch keine Punkte gesammelt.</p>
                 } @else if (status.isTop10) {
-                <p>Du bist aktuell unter den <strong>Top 10</strong> – weiter so!</p>
-                } @else if (status.top10Count < 10) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
+                <p>Du bist aktuell unter den <strong>Top {{ winnerLimit() }}</strong> – weiter so!</p>
+                } @else if (status.top10Count < winnerLimit()) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
                     } @else {
                     <p>
                         Bis zum Monatsbonus {{ status.pointsToTop10 === 1 ? 'fehlt' : 'fehlen' }} dir noch

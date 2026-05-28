@@ -2,6 +2,8 @@
 export interface BonusStatusResponse {
   success: boolean;
   monthKey: string;
+  countryIso?: 'DE' | 'AT' | null;
+  winnerLimit?: number;
   myRank: number | null;
   myMonthBonusPoints: number;
   isTop10: boolean;

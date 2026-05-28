@@ -44,6 +44,13 @@ export class Bonus {
   readonly error = signal<string | null>(null);
   readonly bonusStatus = signal<BonusStatusResponse | null>(null);
 
+  readonly winnerLimit = computed(() => this.bonusStatus()?.winnerLimit ?? 10);
+  readonly bonusCountryIso = computed(() =>
+    this.bonusStatus()?.countryIso ?? this.normalizeCountryIso(this.currentUser()?.iso || this.currentUser()?.country)
+  );
+  readonly kickerPrizeCount = computed(() => this.bonusCountryIso() === 'AT' ? 5 : 10);
+  readonly bonusCountryLabel = computed(() => this.bonusCountryIso() === 'AT' ? 'Österreich' : 'Deutschland');
+
   constructor() {
     if (this.isSaleUser() || this.authService.isAdmin()) {
       this.loadBonusStatus();
@@ -77,10 +84,10 @@ export class Bonus {
     if (!status) return '';
 
     if (status.isTop10) {
-      return 'Du bist aktuell unter den Top 10 – weiter so!';
+      return `Du bist aktuell unter den Top ${this.winnerLimit()} – weiter so!`;
     }
 
-    if (status.top10Count < 10) {
+    if (status.top10Count < this.winnerLimit()) {
       return 'Das Monatsranking baut sich aktuell noch auf.';
     }
 
@@ -121,5 +128,23 @@ export class Bonus {
   onResetToOwnProfile(): void {
     this.dealerNumberInput.set('');
     this.loadProfile();
+  }
+
+  private normalizeCountryIso(value?: string): 'DE' | 'AT' | null {
+    const normalized = String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    if (['de', 'deutschland', 'germany'].includes(normalized)) {
+      return 'DE';
+    }
+
+    if (['at', 'osterreich', 'oesterreich', 'austria'].includes(normalized)) {
+      return 'AT';
+    }
+
+    return null;
   }
 }
