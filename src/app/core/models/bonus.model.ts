@@ -6,6 +6,7 @@ export interface BonusStatusResponse {
   winnerLimit?: number;
   myRank: number | null;
   myMonthBonusPoints: number;
+  kickerFlag?: boolean;
   isTop10: boolean;
   pointsToTop10: number;
   isTop5?: boolean;
