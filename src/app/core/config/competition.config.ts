@@ -90,7 +90,7 @@ export const COMPETITION_CONFIG: Record<CompetitionType, CompetitionConfig> = {
         },
         bonus: {
             backgroundImage: '',
-            title: 'Precision Farming Wettbewerb'
+            title: 'Quartalschallenge'
         },
         score: {
             backgroundImage: '',

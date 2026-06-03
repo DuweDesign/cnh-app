@@ -48,8 +48,6 @@ export class Bonus {
   readonly bonusCountryIso = computed(() =>
     this.bonusStatus()?.countryIso ?? this.normalizeCountryIso(this.currentUser()?.iso || this.currentUser()?.country)
   );
-  readonly kickerPrizeCount = computed(() => this.bonusCountryIso() === 'AT' ? 5 : 10);
-  readonly bonusCountryLabel = computed(() => this.bonusCountryIso() === 'AT' ? 'Österreich' : 'Deutschland');
 
   constructor() {
     if (this.isSaleUser() || this.authService.isAdmin()) {
@@ -84,14 +82,18 @@ export class Bonus {
     if (!status) return '';
 
     if (status.isTop10) {
-      return `Du bist aktuell unter den Top ${this.winnerLimit()} – weiter so!`;
+      return this.competitionConfig()?.key === 'warehouse'
+        ? `Du bist aktuell unter den Top ${this.winnerLimit()} und würdest einen Tischkicker gewinnen. Weiter so!`
+        : `Du bist aktuell unter den Top ${this.winnerLimit()} – weiter so!`;
     }
 
     if (status.top10Count < this.winnerLimit()) {
       return 'Das Monatsranking baut sich aktuell noch auf.';
     }
 
-    return `Bis zum Monatsbonus fehlen dir noch ${status.pointsToTop10} Punkte`;
+    return this.competitionConfig()?.key === 'warehouse'
+      ? `Bis zur Quartalschallenge fehlen dir noch ${status.pointsToTop10} Punkte`
+      : `Bis zum Monatsbonus fehlen dir noch ${status.pointsToTop10} Punkte`;
   });
 
   readonly bonusNumber = computed(() => {

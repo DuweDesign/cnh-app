@@ -194,7 +194,12 @@ export class Ranking {
   });
 
   readonly salesTop10Participants = computed(() => this.salesParticipants().slice(0, 10));
-  readonly warehouseTop10Participants = computed(() => this.warehouseParticipants().slice(0, 10));
+  readonly warehouseTopLimit = computed(() =>
+    this.normalizeCountryIsoFromLabel(this.warehouseRankingCountryLabel()) === 'AT' ? 5 : 15
+  );
+  readonly warehouseTopParticipants = computed(() =>
+    this.warehouseParticipants().slice(0, this.warehouseTopLimit())
+  );
   readonly managementTotalTop10Participants = computed(() =>
     this.managementTotalParticipants().slice(0, 10)
   );
@@ -553,6 +558,10 @@ export class Ranking {
 
   private getCountryLabel(iso: CountryIso): string {
     return iso === 'AT' ? 'Österreich' : 'Deutschland';
+  }
+
+  private normalizeCountryIsoFromLabel(value: string): CountryIso {
+    return this.normalizeCountryIso(value) || 'DE';
   }
 
   private getCurrentMonthPoints(user: RankingUser): number {

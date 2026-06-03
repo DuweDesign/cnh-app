@@ -239,10 +239,10 @@
                 }
 
                 @if (config.key === 'warehouse') {
-                    <!-- WAREHOUSE: TOP10 -->
+                    <!-- WAREHOUSE: TOP DE/AT -->
                     @if (canShowWarehouseRanking()) {
                     <div class="ranking-subsection ranking-subsection--warehouse">
-                        <h2>TOP 10 Lager Ranking {{ warehouseRankingCountryLabel() }}</h2>
+                        <h2>TOP {{ warehouseTopLimit() }} Lager Ranking {{ warehouseRankingCountryLabel() }}</h2>
     
                         <table class="ranking-table">
                             <thead [ngClass]="warehouseThemeClass()">
@@ -253,7 +253,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (participant of warehouseTop10Participants(); track participant.id) {
+                                @for (participant of warehouseTopParticipants(); track participant.id) {
                                 <tr>
                                     <td data-label="Platz" [ngClass]="warehouseThemeClass()">
                                         <strong>{{ participant.rank ?? '-' }}</strong>

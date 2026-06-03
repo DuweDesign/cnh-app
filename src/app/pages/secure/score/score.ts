@@ -57,6 +57,12 @@ export class Score {
   readonly pointsToTop10 = computed(() => this.profile()?.pointsToTop10 ?? 0);
   readonly nextRank = computed(() => this.profile()?.nextRank ?? null);
   readonly pointsToNextRank = computed(() => this.profile()?.pointsToNextRank ?? 0);
+  readonly warehouseWinnerLimit = computed(() => {
+    const profile = this.profile();
+    const iso = this.normalizeCountryIso(profile?.iso || profile?.country);
+
+    return iso === 'AT' ? 5 : 15;
+  });
   readonly warehouseCountryLabel = computed(() => {
     const profile = this.profile();
     const iso = this.normalizeCountryIso(profile?.iso || profile?.country);
@@ -79,7 +85,11 @@ export class Score {
       return 'Top! Du bist derzeit unter den Gewinnern - jetzt heißt es dran zu bleiben!';
     }
 
-    return `Bleib dran – dir fehlen noch ${this.pointsToTop10()} Punkte bis zu Rang 10!`;
+    const winnerRank = this.profile()?.role === 'cnh-warehouse'
+      ? this.warehouseWinnerLimit()
+      : 10;
+
+    return `Bleib dran – dir fehlen noch ${this.pointsToTop10()} Punkte bis zu Rang ${winnerRank}!`;
   });
 
   private readonly phaseMap: Record<number, ScorePhase> = {
