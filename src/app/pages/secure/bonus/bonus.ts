@@ -35,6 +35,10 @@ export class Bonus {
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
   );
 
+  readonly isWarehouseUser = computed(() =>
+    this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
+  );
+
   readonly isAdmin = computed(() => {
     const role = this.currentUser()?.role;
     return ['sysadmin', 'vipp-admin', 'cnh-admin', 'warehouse-admin'].includes(role ?? '');
@@ -50,7 +54,7 @@ export class Bonus {
   );
 
   constructor() {
-    if (this.isSaleUser() || this.authService.isAdmin()) {
+    if (this.isSaleUser() || this.isWarehouseUser() || this.authService.isAdmin()) {
       this.loadBonusStatus();
       this.loadProfile();
     } else {

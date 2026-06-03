@@ -33,6 +33,10 @@ export class ProfileService {
         rank: number | null;
         isTop10: boolean;
         pointsToTop10: number;
+        isTop5?: boolean;
+        pointsToTop5?: number;
+        isTop15?: boolean;
+        pointsToTop15?: number;
         nextRank: number | null;
         pointsToNextRank: number;
       }>(`${this.apiUrl}/user/my-profile`, { params })
@@ -42,6 +46,10 @@ export class ProfileService {
           rank: response.rank,
           isTop10: response.isTop10,
           pointsToTop10: response.pointsToTop10,
+          isTop5: response.isTop5,
+          pointsToTop5: response.pointsToTop5,
+          isTop15: response.isTop15,
+          pointsToTop15: response.pointsToTop15,
           nextRank: response.nextRank,
           pointsToNextRank: response.pointsToNextRank,
         }))

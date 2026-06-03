@@ -8,6 +8,10 @@ export interface BonusStatusResponse {
   myMonthBonusPoints: number;
   isTop10: boolean;
   pointsToTop10: number;
+  isTop5?: boolean;
+  pointsToTop5?: number;
+  isTop15?: boolean;
+  pointsToTop15?: number;
   thresholdPoints: number | null;
   top10Count: number;
   message: string;

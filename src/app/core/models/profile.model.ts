@@ -54,6 +54,10 @@ export interface MyProfile extends Profile {
   rank: number | null;
   isTop10: boolean;
   pointsToTop10: number | null;
+  isTop5?: boolean;
+  pointsToTop5?: number | null;
+  isTop15?: boolean;
+  pointsToTop15?: number | null;
   nextRank: number | null;
   pointsToNextRank: number | null;
 }
