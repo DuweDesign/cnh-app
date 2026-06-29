@@ -88,6 +88,22 @@
   white-space: nowrap;
 }
 
+.main-nav a.nav-news-link,
+.mobile-menu__links a.nav-news-link {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.nav-news-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d71920;
+  box-shadow: 0 0 0 2px rgba(215, 25, 32, 0.14);
+  flex: 0 0 auto;
+}
+
 .main-nav a:hover,
 .main-nav a.active,
 .mobile-menu__links a:hover,
@@ -329,7 +345,7 @@
     padding-top: 12px;
 
     a {
-      display: block;
+      display: flex;
       padding: 10px 0;
       font-size: 1rem;
     }

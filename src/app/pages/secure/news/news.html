@@ -10,7 +10,15 @@
         <div class="page__center">
             <div class="news-content">
                 @if (newsContent(); as content) {
-                    <h2>{{ content.headline }}</h2>
+                    <div class="news-content__header">
+                        <h2>{{ content.headline }}</h2>
+
+                        @if (hasUnreadNews()) {
+                            <button class="news-read-button" type="button" (click)="markNewsAsRead()">
+                                Als gelesen markieren
+                            </button>
+                        }
+                    </div>
 
                     @for (paragraph of content.intro; track $index) {
                         <p [innerHTML]="paragraph"></p>

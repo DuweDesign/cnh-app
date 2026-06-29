@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { CompetitionService } from '../../../core/services/competition.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { USER_ROLES } from '../../../core/models/auth.model';
+import { COMPETITIONS, CompetitionType } from '../../../core/models/auth.model';
+import { NewsStatusService } from '../../../core/services/news-status.service';
 import { environment } from '../../../../environments/environments';
 
 interface NewsImage {
@@ -31,63 +32,32 @@ const WAREHOUSE_ROLES = [
   'warehouse-admin',
 ] as const;
 
-const DEFAULT_NEWS_CONTENT: NewsContent = {
-  headline: 'Eine Herausforderung, ein Ziel = Der höchste Ertrag!',
+const HARVEST_NEWS_CONTENT: NewsContent = {
+  headline: 'Jetzt zählt jeder Kontakt - der Wettbewerb zur heißesten Phase des Jahres',
   intro: [
-    `Wenn Sie zu den echten <strong>Ertragsmachern der CNH Verkaufsoffensive 2026</strong> gehören,
-    werden Sie Anfang 2027 eine Reise erleben, die Sie nicht mehr vergessen. Aufregend,
-    atemberaubend und wunderschön. Freuen Sie sich auf eine Destination, die viele auf der
-    Wunschliste haben. Erleben Sie atemberaubende Landschaften, tolle Menschen und
-    Kulturen und die Gemeinschaft der CNH Gewinner 2026.`,
-
-    `Kämpfen Sie für eine Reise, die Ihnen lange in Erinnerung bleiben wird. Das ist unser
-    Versprechen.`,
+    `Die Ernte steht vor der Tür - für viele Betriebe die intensivste und zugleich entscheidendste
+    Zeit des Jahres. Genau jetzt entstehen die besten Gespräche, die ehrlichsten Eindrücke und die
+    wertvollsten Verkaufschancen. Vorführungen werden zum Schlüsselmoment: Hier wird Leistung
+    erlebbar, Vertrauen aufgebaut und der Grundstein für erfolgreiche Abschlüsse gelegt.`,
   ],
   sections: [
     {
-      title: 'Ertrag',
       paragraphs: [
-        `Ohne Einsatz kein Ertrag. Ohne den Verkauf der richtigen Maschinen keine gute Ernte,
-        keine Punkte und damit kein Gewinn. Nur Ihr Verkaufsgeschick bringt Sie vorwärts und ist
-        bei dieser Challenge ein absolutes Muss.`,
-
-        `Nur wer es im Ranking unter den Besten 10 schafft, zählt zum Kreis der Gewinner.`,
-
-        `Sie haben 8 Monate Zeit - geben Sie jeden Monat richtig Gas, achten Sie auf
-        Sonderaktionen und belohnen Sie sich zwischendurch mit Mission 15 Punkten. Sie sind
-        maßgeblich im Rennen um den Gewinn.`,
+        `Um diesen entscheidenden Zeitraum noch aktiver zu nutzen, starten wir einen zusätzlichen
+        Wettbewerb: Wer es schafft, seine Vorführungen konsequent zu dokumentieren,
+        Kundenbedürfnisse gezielt zu erfassen und diese in konkrete Angebote zu überführen,
+        positioniert sich nicht nur erfolgreich im Markt - sondern sichert sich auch einen klaren
+        Vorteil im Wettbewerb.`,
       ],
     },
     {
-      title: 'Wertungssystem',
       paragraphs: [
-        `Unter der Rubrik Regeln erfahren Sie detailliert, was Sie tun müssen. Unter Punktestand
-        sehen Sie Ihre aktuellen Werte und Ihre Platzierung sowie die Ihres nächstbesseren
-        Mitbewerbers.`,
-
-        `Jetzt aber los - es gilt eine reiche Ernte einzufahren!`,
+        `Jetzt ist die Zeit, sichtbar zu werden, Chancen zu nutzen und aus jedem Kontakt das Maximum
+        herauszuholen.`,
       ],
     },
   ],
 };
-
-const MANAGEMENT_NEWS_SECTIONS: NewsSection[] = [
-  {
-    paragraphs: [
-      `Als Geschäftsführer sehen Sie in der Rubrik „Ranking“ genau, wo Ihr Unternehmen und
-      die Mitbewerber stehen. Und damit wissen Sie genau, was zu tun ist. Sie nehmen als
-      Unternehmen an der Challenge teil, also motivieren Sie Ihr Team und bestimmen Sie so
-      am Ende mit, das gleich zwei Gewinner Ihrer Mannschaft an der Reise teilnehmen dürfen.`,
-
-      `Aber damit nicht genug: Ist Ihr Unternehmen unter den 10 Besten der Branche, dürfen
-      auch Sie mit 2 Personen den Koffer packen in der <strong>„CNH Ertragsmacher Reise 2026“</strong>
-      einchecken.`,
-
-      `Wir drücken die Daumen! Motivieren Sie Ihr Team! Stellen Sie Ihre Top 10 Platzierung zum
-      Ende des Jahres 2026 sicher.`,
-    ],
-  },
-];
 
 const WAREHOUSE_NEWS_CONTENT: NewsContent = {
   headline: 'Ihre Challenge für 2026: Werden Sie LAGERCHAMP!',
@@ -133,18 +103,16 @@ const WAREHOUSE_NEWS_CONTENT: NewsContent = {
 export class News {
   private readonly competitionService = inject(CompetitionService);
   private readonly authService = inject(AuthService);
+  private readonly newsStatusService = inject(NewsStatusService);
   private readonly http = inject(HttpClient);
 
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
   readonly newsImages = signal<NewsImage[]>([]);
+  readonly hasUnreadNews = this.newsStatusService.hasUnreadNews;
 
   readonly currentRole = computed(() => this.authService.getUserRole());
-
-  readonly isManagementUser = computed(() =>
-    this.currentRole() === USER_ROLES.CNH_MANAGEMENT
-  );
 
   readonly activeCompetitionKey = computed(() => {
     const config = this.competitionConfig() as { key?: string } | null;
@@ -172,9 +140,16 @@ export class News {
       return WAREHOUSE_NEWS_CONTENT;
     }
 
+    const competition = this.competition();
+    const brandSections = this.getBrandSections(competition);
+
     return {
-      ...DEFAULT_NEWS_CONTENT,
-      roleSections: this.isManagementUser() ? MANAGEMENT_NEWS_SECTIONS : [],
+      ...HARVEST_NEWS_CONTENT,
+      sections: [
+        HARVEST_NEWS_CONTENT.sections[0],
+        ...brandSections,
+        HARVEST_NEWS_CONTENT.sections[1],
+      ],
     };
   });
 
@@ -207,5 +182,35 @@ export class News {
           this.newsImages.set([]);
         },
       });
+  }
+
+  markNewsAsRead(): void {
+    this.newsStatusService.markCurrentNewsAsRead();
+  }
+
+  private getBrandSections(competition: CompetitionType | null): NewsSection[] {
+    if (competition === COMPETITIONS.NEW_HOLLAND) {
+      return [
+        {
+          paragraphs: [
+            `Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 07/2026 vom 17.06.2026
+            zu entnehmen.`,
+          ],
+        },
+      ];
+    }
+
+    if (competition === COMPETITIONS.CASE_STEYR) {
+      return [
+        {
+          paragraphs: [
+            `Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 06/2026 vom 17.06.2026
+            zu entnehmen.`,
+          ],
+        },
+      ];
+    }
+
+    return [];
   }
 }

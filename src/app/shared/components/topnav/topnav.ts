@@ -3,6 +3,7 @@ import { Component, computed, HostListener, inject, Input, ElementRef, effect } 
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CompetitionService } from '../../../core/services/competition.service';
+import { NewsStatusService } from '../../../core/services/news-status.service';
 import { COMPETITIONS, USER_ROLES } from '../../../core/models/auth.model';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -25,6 +26,7 @@ export class Topnav {
 
   readonly authService = inject(AuthService);
   readonly competitionService = inject(CompetitionService);
+  readonly newsStatusService = inject(NewsStatusService);
   private router = inject(Router);
 
   readonly showCompetitionToggle = computed(() =>
@@ -42,6 +44,8 @@ export class Topnav {
   readonly isWarehouse = computed(() =>
     this.competitionService.activeCompetition() === COMPETITIONS.WAREHOUSE
   );
+
+  readonly hasUnreadNews = this.newsStatusService.hasUnreadNews;
 
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
