@@ -25,7 +25,7 @@ export class Bonus {
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
-  readonly profile = signal<MyProfile | null>(null);    
+  readonly profile = signal<MyProfile | null>(null);
   readonly currentUser = this.authService.user;
   
   readonly isLoading = signal<boolean>(true);
@@ -62,11 +62,17 @@ export class Bonus {
     }
   }
 
-  loadBonusStatus(): void {
+  readonly warehouseBonusPoints = computed(() =>
+    this.profile()?.monthlyPoints.reduce((sum, month) => sum + (month.bonuspoints ?? 0), 0)
+    ?? this.bonusStatus()?.myMonthBonusPoints
+    ?? 0
+  );
+
+  loadBonusStatus(dealernumber?: string): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.profileService.getBonusStatus().subscribe({
+    this.profileService.getBonusStatus(dealernumber).subscribe({
       next: (response) => {
         this.bonusStatus.set(response);
         this.loading.set(false);
@@ -110,17 +116,13 @@ export class Bonus {
 
   loadProfile(dealernumber?: string): void {
     this.isLoading.set(true);
-    this.error.set(null);
 
-    this.profileService.getBonusStatus(dealernumber).subscribe({
+    this.profileService.getMyProfile(dealernumber).subscribe({
       next: (response) => {
-        this.bonusStatus.set(response);
+        this.profile.set(response);
         this.isLoading.set(false);
       },
-      error: (err) => {
-        this.error.set(
-          err?.error?.message || 'Bonusstatus konnte nicht geladen werden.'
-        );
+      error: () => {
         this.isLoading.set(false);
       },
     });
@@ -128,11 +130,13 @@ export class Bonus {
 
   onLoadAdminProfile(): void {
     const dealernumber = this.dealerNumberInput().trim();
+    this.loadBonusStatus(dealernumber || undefined);
     this.loadProfile(dealernumber || undefined);
   }
 
   onResetToOwnProfile(): void {
     this.dealerNumberInput.set('');
+    this.loadBonusStatus();
     this.loadProfile();
   }
 
