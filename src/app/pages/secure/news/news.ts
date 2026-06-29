@@ -47,12 +47,7 @@ const HARVEST_NEWS_CONTENT: NewsContent = {
         Wettbewerb: Wer es schafft, seine Vorführungen konsequent zu dokumentieren,
         Kundenbedürfnisse gezielt zu erfassen und diese in konkrete Angebote zu überführen,
         positioniert sich nicht nur erfolgreich im Markt - sondern sichert sich auch einen klaren
-        Vorteil im Wettbewerb.`,
-      ],
-    },
-    {
-      paragraphs: [
-        `Jetzt ist die Zeit, sichtbar zu werden, Chancen zu nutzen und aus jedem Kontakt das Maximum
+        Vorteil im Wettbewerb.<br><br>Jetzt ist die Zeit, sichtbar zu werden, Chancen zu nutzen und aus jedem Kontakt das Maximum
         herauszuholen.`,
       ],
     },
@@ -148,7 +143,6 @@ export class News {
       sections: [
         HARVEST_NEWS_CONTENT.sections[0],
         ...brandSections,
-        HARVEST_NEWS_CONTENT.sections[1],
       ],
     };
   });
@@ -193,8 +187,8 @@ export class News {
       return [
         {
           paragraphs: [
-            `Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 07/2026 vom 17.06.2026
-            zu entnehmen.`,
+            `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 07/2026 vom 17.06.2026
+            zu entnehmen.</strong>`,
           ],
         },
       ];
@@ -204,8 +198,8 @@ export class News {
       return [
         {
           paragraphs: [
-            `Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 06/2026 vom 17.06.2026
-            zu entnehmen.`,
+            `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 06/2026 vom 17.06.2026
+            zu entnehmen.</strong>`,
           ],
         },
       ];
