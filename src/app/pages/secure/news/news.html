@@ -8,13 +8,50 @@
         </div>
 
         <div class="page__center">
-            <div class="news-content">
+            <div class="news-stack">
+                @if (hasUnreadNews()) {
+                    <div class="news-actions">
+                        <button class="news-read-button" type="button" (click)="markAllNewsAsRead()">
+                            Alle als gelesen markieren
+                        </button>
+                    </div>
+                }
+
+                @if (latestNewsContent(); as latestContent) {
+                    <article class="news-content news-content--latest">
+                        <div class="news-content__header">
+                            <h2>{{ latestContent.headline }}</h2>
+
+                            @if (isLatestNewsUnread()) {
+                                <button class="news-read-button" type="button" (click)="markNewsAsRead()">
+                                    Als gelesen markieren
+                                </button>
+                            }
+                        </div>
+
+                        @for (paragraph of latestContent.intro; track $index) {
+                            <p [innerHTML]="paragraph"></p>
+                        }
+
+                        @for (section of latestContent.sections; track $index) {
+                            @if (section.title) {
+                                <h3>{{ section.title }}</h3>
+                            }
+
+                            @for (paragraph of section.paragraphs; track $index) {
+                                <p [innerHTML]="paragraph"></p>
+                            }
+                        }
+                    </article>
+                }
+
+                <article class="news-content">
                 @if (newsContent(); as content) {
                     <div class="news-content__header">
                         <h2>{{ content.headline }}</h2>
 
-                        @if (hasUnreadNews()) {
-                            <button class="news-read-button" type="button" (click)="markNewsAsRead()">
+                        @if (isDefaultNewsUnread()) {
+                            <button class="news-read-button" type="button" (click)="markDefaultNewsAsRead()">
                                 Als gelesen markieren
                             </button>
                         }
@@ -54,7 +91,21 @@
                         }
                     }
 
+                    @if (content.roleSections?.length) {
+                        <hr />
+
+                        @for (section of content.roleSections; track $index) {
+                            @if (section.title) {
+                                <h3>{{ section.title }}</h3>
+                            }
+
+                            @for (paragraph of section.paragraphs; track $index) {
+                                <p [innerHTML]="paragraph"></p>
+                            }
+                        }
+                    }
                 }
+                </article>
             </div>
 
             <div class="page__logo">

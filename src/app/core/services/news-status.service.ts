@@ -4,7 +4,10 @@ import { COMPETITIONS } from '../models/auth.model';
 import { AuthService } from './auth.service';
 import { CompetitionService } from './competition.service';
 
-const CURRENT_NEWS_ID = 'harvest-contact-competition-2026-06-17';
+const CURRENT_NEWS_IDS = [
+  'harvest-contact-competition-2026-06-17',
+  'yield-offensive-2026',
+];
 
 @Injectable({
   providedIn: 'root',
@@ -27,24 +30,72 @@ export class NewsStatusService {
   readonly hasUnreadNews = computed(() => {
     this.readVersion();
 
-    const key = this.currentStorageKey();
-
-    if (!key || !this.isCurrentNewsRelevant()) {
+    if (!this.currentStorageKey() || !this.isCurrentNewsRelevant()) {
       return false;
     }
 
-    return localStorage.getItem(key) !== CURRENT_NEWS_ID;
+    return CURRENT_NEWS_IDS.some((newsId) => !this.isNewsRead(newsId));
   });
 
-  markCurrentNewsAsRead(): void {
+  hasUnreadNewsById(newsId: string): boolean {
+    this.readVersion();
+
+    return this.isCurrentNewsRelevant() && !this.isNewsRead(newsId);
+  }
+
+  markCurrentNewsAsRead(newsId = CURRENT_NEWS_IDS[0]): void {
     const key = this.currentStorageKey();
 
     if (!key || !this.isCurrentNewsRelevant()) {
       return;
     }
 
-    localStorage.setItem(key, CURRENT_NEWS_ID);
+    const readNewsIds = new Set(this.getReadNewsIds());
+    readNewsIds.add(newsId);
+
+    localStorage.setItem(key, JSON.stringify([...readNewsIds]));
     this.readVersion.update((version) => version + 1);
+  }
+
+  markAllCurrentNewsAsRead(): void {
+    const key = this.currentStorageKey();
+
+    if (!key || !this.isCurrentNewsRelevant()) {
+      return;
+    }
+
+    localStorage.setItem(key, JSON.stringify(CURRENT_NEWS_IDS));
+    this.readVersion.update((version) => version + 1);
+  }
+
+  private isNewsRead(newsId: string): boolean {
+    return this.getReadNewsIds().includes(newsId);
+  }
+
+  private getReadNewsIds(): string[] {
+    const key = this.currentStorageKey();
+
+    if (!key) {
+      return [];
+    }
+
+    const value = localStorage.getItem(key);
+
+    if (!value) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(value);
+
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item): item is string => typeof item === 'string');
+      }
+    } catch {
+      return [value];
+    }
+
+    return [value];
   }
 
   private currentStorageKey(): string | null {

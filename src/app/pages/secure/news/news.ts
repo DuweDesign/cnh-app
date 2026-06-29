@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { CompetitionService } from '../../../core/services/competition.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { COMPETITIONS, CompetitionType } from '../../../core/models/auth.model';
+import { COMPETITIONS, CompetitionType, USER_ROLES } from '../../../core/models/auth.model';
 import { NewsStatusService } from '../../../core/services/news-status.service';
 import { environment } from '../../../../environments/environments';
 
@@ -22,7 +22,11 @@ interface NewsContent {
   headline: string;
   intro: string[];
   sections: NewsSection[];
+  roleSections?: NewsSection[];
 }
+
+const LATEST_NEWS_ID = 'harvest-contact-competition-2026-06-17';
+const DEFAULT_NEWS_ID = 'yield-offensive-2026';
 
 const WAREHOUSE_COMPETITION_KEY = 'warehouse';
 
@@ -51,6 +55,64 @@ const HARVEST_NEWS_CONTENT: NewsContent = {
     },
   ],
 };
+
+const DEFAULT_NEWS_CONTENT: NewsContent = {
+  headline: 'Eine Herausforderung, ein Ziel = Der höchste Ertrag!',
+  intro: [
+    `Wenn Sie zu den echten <strong>Ertragsmachern der CNH Verkaufsoffensive 2026</strong> gehören,
+    werden Sie Anfang 2027 eine Reise erleben, die Sie nicht mehr vergessen. Aufregend,
+    atemberaubend und wunderschön. Freuen Sie sich auf eine Destination, die viele auf der
+    Wunschliste haben. Erleben Sie atemberaubende Landschaften, tolle Menschen und
+    Kulturen und die Gemeinschaft der CNH Gewinner 2026.`,
+
+    `Kämpfen Sie für eine Reise, die Ihnen lange in Erinnerung bleiben wird. Das ist unser
+    Versprechen.`,
+  ],
+  sections: [
+    {
+      title: 'Ertrag',
+      paragraphs: [
+        `Ohne Einsatz kein Ertrag. Ohne den Verkauf der richtigen Maschinen keine gute Ernte,
+        keine Punkte und damit kein Gewinn. Nur Ihr Verkaufsgeschick bringt Sie vorwärts und ist
+        bei dieser Challenge ein absolutes Muss.`,
+
+        `Nur wer es im Ranking unter den Besten 10 schafft, zählt zum Kreis der Gewinner.`,
+
+        `Sie haben 8 Monate Zeit - geben Sie jeden Monat richtig Gas, achten Sie auf
+        Sonderaktionen und belohnen Sie sich zwischendurch mit Mission 15 Punkten. Sie sind
+        maßgeblich im Rennen um den Gewinn.`,
+      ],
+    },
+    {
+      title: 'Wertungssystem',
+      paragraphs: [
+        `Unter der Rubrik Regeln erfahren Sie detailliert, was Sie tun müssen. Unter Punktestand
+        sehen Sie Ihre aktuellen Werte und Ihre Platzierung sowie die Ihres nächstbesseren
+        Mitbewerbers.`,
+
+        `Jetzt aber los - es gilt eine reiche Ernte einzufahren!`,
+      ],
+    },
+  ],
+};
+
+const MANAGEMENT_NEWS_SECTIONS: NewsSection[] = [
+  {
+    paragraphs: [
+      `Als Geschäftsführer sehen Sie in der Rubrik „Ranking“ genau, wo Ihr Unternehmen und
+      die Mitbewerber stehen. Und damit wissen Sie genau, was zu tun ist. Sie nehmen als
+      Unternehmen an der Challenge teil, also motivieren Sie Ihr Team und bestimmen Sie so
+      am Ende mit, das gleich zwei Gewinner Ihrer Mannschaft an der Reise teilnehmen dürfen.`,
+
+      `Aber damit nicht genug: Ist Ihr Unternehmen unter den 10 Besten der Branche, dürfen
+      auch Sie mit 2 Personen den Koffer packen in der <strong>„CNH Ertragsmacher Reise 2026“</strong>
+      einchecken.`,
+
+      `Wir drücken die Daumen! Motivieren Sie Ihr Team! Stellen Sie Ihre Top 10 Platzierung zum
+      Ende des Jahres 2026 sicher.`,
+    ],
+  },
+];
 
 const WAREHOUSE_NEWS_CONTENT: NewsContent = {
   headline: 'Ihre Challenge für 2026: Werden Sie LAGERCHAMP!',
@@ -107,6 +169,10 @@ export class News {
 
   readonly currentRole = computed(() => this.authService.getUserRole());
 
+  readonly isManagementUser = computed(() =>
+    this.currentRole() === USER_ROLES.CNH_MANAGEMENT
+  );
+
   readonly activeCompetitionKey = computed(() => {
     const config = this.competitionConfig() as { key?: string } | null;
     const competition = this.competition();
@@ -133,6 +199,17 @@ export class News {
       return WAREHOUSE_NEWS_CONTENT;
     }
 
+    return {
+      ...DEFAULT_NEWS_CONTENT,
+      roleSections: this.isManagementUser() ? MANAGEMENT_NEWS_SECTIONS : [],
+    };
+  });
+
+  readonly latestNewsContent = computed<NewsContent | null>(() => {
+    if (this.isWarehouseNews()) {
+      return null;
+    }
+
     const competition = this.competition();
     const brandParagraph = this.getBrandParagraph(competition);
 
@@ -152,6 +229,14 @@ export class News {
       ],
     };
   });
+
+  readonly isLatestNewsUnread = computed(() =>
+    this.newsStatusService.hasUnreadNewsById(LATEST_NEWS_ID)
+  );
+
+  readonly isDefaultNewsUnread = computed(() =>
+    this.newsStatusService.hasUnreadNewsById(DEFAULT_NEWS_ID)
+  );
 
   readonly newsImageGroups = computed(() => {
     const images = this.newsImages();
@@ -185,7 +270,15 @@ export class News {
   }
 
   markNewsAsRead(): void {
-    this.newsStatusService.markCurrentNewsAsRead();
+    this.newsStatusService.markCurrentNewsAsRead(LATEST_NEWS_ID);
+  }
+
+  markDefaultNewsAsRead(): void {
+    this.newsStatusService.markCurrentNewsAsRead(DEFAULT_NEWS_ID);
+  }
+
+  markAllNewsAsRead(): void {
+    this.newsStatusService.markAllCurrentNewsAsRead();
   }
 
   private getBrandParagraph(competition: CompetitionType | null): string {
