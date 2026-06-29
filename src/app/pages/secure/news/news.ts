@@ -22,7 +22,6 @@ interface NewsContent {
   headline: string;
   intro: string[];
   sections: NewsSection[];
-  roleSections?: NewsSection[];
 }
 
 const WAREHOUSE_COMPETITION_KEY = 'warehouse';
@@ -136,13 +135,21 @@ export class News {
     }
 
     const competition = this.competition();
-    const brandSections = this.getBrandSections(competition);
+    const brandParagraph = this.getBrandParagraph(competition);
 
     return {
       ...HARVEST_NEWS_CONTENT,
       sections: [
-        HARVEST_NEWS_CONTENT.sections[0],
-        ...brandSections,
+        {
+          paragraphs: [
+            [
+              HARVEST_NEWS_CONTENT.sections[0].paragraphs[0],
+              brandParagraph,
+              `Jetzt ist die Zeit, sichtbar zu werden, Chancen zu nutzen und aus jedem Kontakt das Maximum
+              herauszuholen.`,
+            ].filter(Boolean).join('<br><br>'),
+          ],
+        },
       ],
     };
   });
@@ -182,29 +189,17 @@ export class News {
     this.newsStatusService.markCurrentNewsAsRead();
   }
 
-  private getBrandSections(competition: CompetitionType | null): NewsSection[] {
+  private getBrandParagraph(competition: CompetitionType | null): string {
     if (competition === COMPETITIONS.NEW_HOLLAND) {
-      return [
-        {
-          paragraphs: [
-            `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 07/2026 vom 17.06.2026
-            zu entnehmen.</strong>`,
-          ],
-        },
-      ];
+      return `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 07/2026 vom 17.06.2026
+      zu entnehmen.</strong>`;
     }
 
     if (competition === COMPETITIONS.CASE_STEYR) {
-      return [
-        {
-          paragraphs: [
-            `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 06/2026 vom 17.06.2026
-            zu entnehmen.</strong>`,
-          ],
-        },
-      ];
+      return `<strong>Alle weiteren Bedingungen sind dem Rundschreiben Erntetechnik 06/2026 vom 17.06.2026
+      zu entnehmen.</strong>`;
     }
 
-    return [];
+    return '';
   }
 }

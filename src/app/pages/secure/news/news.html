@@ -54,19 +54,6 @@
                         }
                     }
 
-                    @if (content.roleSections?.length) {
-                        <hr />
-
-                        @for (section of content.roleSections; track $index) {
-                            @if (section.title) {
-                                <h3>{{ section.title }}</h3>
-                            }
-
-                            @for (paragraph of section.paragraphs; track $index) {
-                                <p [innerHTML]="paragraph"></p>
-                            }
-                        }
-                    }
                 }
             </div>
 
