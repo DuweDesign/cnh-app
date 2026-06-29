@@ -46,8 +46,7 @@ const HARVEST_NEWS_CONTENT: NewsContent = {
         Wettbewerb: Wer es schafft, seine Vorführungen konsequent zu dokumentieren,
         Kundenbedürfnisse gezielt zu erfassen und diese in konkrete Angebote zu überführen,
         positioniert sich nicht nur erfolgreich im Markt - sondern sichert sich auch einen klaren
-        Vorteil im Wettbewerb.<br><br>Jetzt ist die Zeit, sichtbar zu werden, Chancen zu nutzen und aus jedem Kontakt das Maximum
-        herauszuholen.`,
+        Vorteil im Wettbewerb.`,
       ],
     },
   ],
