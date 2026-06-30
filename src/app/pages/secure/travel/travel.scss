@@ -73,13 +73,19 @@
 
 .travel-info__dates {
   margin: 0 0 12px;
-  padding-left: 18px;
+}
+
+.travel-info__date {
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .travel-info__headline {
   font-weight: 700;
   font-size: 1.35rem;
   line-height: 1.1;
+  margin-bottom: 6px;
   text-transform: uppercase;
 }
 
