@@ -13,13 +13,13 @@
         <article class="travel-info">
           <div class="travel-info__text">
             <p class="travel-info__headline">
-              Save the Date
+              SAVE THE DATE
             </p>
 
             <ul class="travel-info__dates">
-              <li>Reisezeitraum Management = 12. - 19. März 2027</li>
-              <li>Reisezeitraum Sales (NH &amp; Case) = 06. - 10. März 2027</li>
-              <li>Reisezeitraum Warehouse = 07. - 11. April 2027</li>
+              @for (travelDate of travelDates(); track travelDate.label) {
+              <li>{{ travelDate.label }} = {{ travelDate.range }}</li>
+              }
             </ul>
 
             <p>

@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { environment } from '../../../../environments/environments';
+import { AuthService } from '../../../core/services/auth.service';
+import { USER_ROLES, UserRole } from '../../../core/models/auth.model';
 
 type TravelTileType = 'small' | 'wide' | 'tall' | 'large';
 type TravelLayoutMode = 'desktop' | 'tablet' | 'mobile';
@@ -23,6 +25,11 @@ interface TravelTile extends TravelImage {
   type: TravelTileType;
 }
 
+interface TravelDate {
+  label: string;
+  range: string;
+}
+
 @Component({
   selector: 'cnh-travel',
   standalone: true,
@@ -32,6 +39,7 @@ interface TravelTile extends TravelImage {
 })
 export class Travel {
   private competitionService = inject(CompetitionService);
+  private authService = inject(AuthService);
   private http = inject(HttpClient);
 
   readonly competition = this.competitionService.activeCompetition;
@@ -39,6 +47,44 @@ export class Travel {
 
   readonly images = signal<TravelImage[]>([]);
   readonly viewportWidth = signal(window.innerWidth);
+  readonly travelDates = computed<TravelDate[]>(() => {
+    const role = this.authService.getUserRole();
+
+    if (this.isFullAdminRole(role)) {
+      return [
+        this.managementTravelDate,
+        this.salesTravelDate,
+        this.warehouseTravelDate,
+      ];
+    }
+
+    switch (role) {
+      case USER_ROLES.CNH_MANAGEMENT:
+        return [this.managementTravelDate];
+      case USER_ROLES.CNH_SALES:
+        return [this.salesTravelDate];
+      case USER_ROLES.CNH_WAREHOUSE:
+      case USER_ROLES.WAREHOUSE_ADMIN:
+        return [this.warehouseTravelDate];
+      default:
+        return [];
+    }
+  });
+
+  private readonly managementTravelDate: TravelDate = {
+    label: 'Reisezeitraum Management',
+    range: '12. - 19. März 2027',
+  };
+
+  private readonly salesTravelDate: TravelDate = {
+    label: 'Reisezeitraum Sales (NH & Case)',
+    range: '06. - 10. März 2027',
+  };
+
+  private readonly warehouseTravelDate: TravelDate = {
+    label: 'Reisezeitraum Warehouse',
+    range: '07. - 11. April 2027',
+  };
 
   private readonly desktopPattern: TravelTileType[] = [
     'large',
@@ -137,5 +183,13 @@ export class Travel {
 
   trackByTile(_: number, item: TravelTile): string {
     return item.id;
+  }
+
+  private isFullAdminRole(role: UserRole | null): boolean {
+    return [
+      USER_ROLES.SYSADMIN,
+      USER_ROLES.VIPP_ADMIN,
+      USER_ROLES.CNH_ADMIN,
+    ].includes(role as never);
   }
 }
