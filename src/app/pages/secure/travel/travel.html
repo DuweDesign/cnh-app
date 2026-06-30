@@ -16,11 +16,11 @@
               SAVE THE DATE
             </p>
 
-            <ul class="travel-info__dates">
-              @for (travelDate of travelDates(); track travelDate.label) {
-              <li>{{ travelDate.label }} = {{ travelDate.range }}</li>
+            <div class="travel-info__dates">
+              @for (travelDate of travelDates(); track travelDate) {
+              <p class="travel-info__date">{{ travelDate }}</p>
               }
-            </ul>
+            </div>
 
             <p>
               Reservieren Sie sich diesen Zeitraum vorsorglich. Mit jeder

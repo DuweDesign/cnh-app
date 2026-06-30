@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { CompetitionService } from './competition.service';
 
 const CURRENT_NEWS_IDS = [
+  'travel-date-announcement-2026-06-30',
   'harvest-contact-competition-2026-06-17',
   'yield-offensive-2026',
 ];
@@ -23,7 +24,8 @@ export class NewsStatusService {
 
     return (
       competition === COMPETITIONS.CASE_STEYR ||
-      competition === COMPETITIONS.NEW_HOLLAND
+      competition === COMPETITIONS.NEW_HOLLAND ||
+      competition === COMPETITIONS.WAREHOUSE
     );
   });
 

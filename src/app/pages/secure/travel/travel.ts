@@ -25,11 +25,6 @@ interface TravelTile extends TravelImage {
   type: TravelTileType;
 }
 
-interface TravelDate {
-  label: string;
-  range: string;
-}
-
 @Component({
   selector: 'cnh-travel',
   standalone: true,
@@ -47,7 +42,7 @@ export class Travel {
 
   readonly images = signal<TravelImage[]>([]);
   readonly viewportWidth = signal(window.innerWidth);
-  readonly travelDates = computed<TravelDate[]>(() => {
+  readonly travelDates = computed<string[]>(() => {
     const role = this.authService.getUserRole();
 
     if (this.isFullAdminRole(role)) {
@@ -71,20 +66,9 @@ export class Travel {
     }
   });
 
-  private readonly managementTravelDate: TravelDate = {
-    label: 'Reisezeitraum Management',
-    range: '12. - 19. März 2027',
-  };
-
-  private readonly salesTravelDate: TravelDate = {
-    label: 'Reisezeitraum Sales (NH & Case)',
-    range: '06. - 10. März 2027',
-  };
-
-  private readonly warehouseTravelDate: TravelDate = {
-    label: 'Reisezeitraum Warehouse',
-    range: '07. - 11. April 2027',
-  };
+  private readonly managementTravelDate = '12. - 19. März 2027';
+  private readonly salesTravelDate = '06. - 10. März 2027';
+  private readonly warehouseTravelDate = '07. - 11. April 2027';
 
   private readonly desktopPattern: TravelTileType[] = [
     'large',

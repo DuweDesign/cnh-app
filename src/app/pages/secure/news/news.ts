@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 
 import { CompetitionService } from '../../../core/services/competition.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -23,8 +24,13 @@ interface NewsContent {
   intro: string[];
   sections: NewsSection[];
   roleSections?: NewsSection[];
+  cta?: {
+    label: string;
+    route: string;
+  };
 }
 
+const TRAVEL_DATE_NEWS_ID = 'travel-date-announcement-2026-06-30';
 const LATEST_NEWS_ID = 'harvest-contact-competition-2026-06-17';
 const DEFAULT_NEWS_ID = 'yield-offensive-2026';
 
@@ -34,6 +40,20 @@ const WAREHOUSE_ROLES = [
   'cnh-warehouse',
   'warehouse-admin',
 ] as const;
+
+const TRAVEL_DATE_NEWS_CONTENT: NewsContent = {
+  headline: 'Sichern Sie sich jetzt den Termin!',
+  intro: [
+    `Noch eine wichtige Information: Sichern Sie sich jetzt den Termin! Das Reisedatum steht
+    fest und ist ab sofort auf unserer Seite „Reise“ verfügbar. Also Datum vormerken, Ärmel
+    hochkrempeln und dem finalen Gewinn einen Schritt näherkommen.`,
+  ],
+  sections: [],
+  cta: {
+    label: 'Zur Reise',
+    route: '/reise',
+  },
+};
 
 const HARVEST_NEWS_CONTENT: NewsContent = {
   headline: 'Jetzt zählt jeder Kontakt - der Wettbewerb zur heißesten Phase des Jahres',
@@ -151,7 +171,7 @@ const WAREHOUSE_NEWS_CONTENT: NewsContent = {
 @Component({
   selector: 'cnh-news',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './news.html',
   styleUrl: './news.scss',
 })
@@ -230,6 +250,12 @@ export class News {
     };
   });
 
+  readonly travelDateNewsContent = computed<NewsContent>(() => TRAVEL_DATE_NEWS_CONTENT);
+
+  readonly isTravelDateNewsUnread = computed(() =>
+    this.newsStatusService.hasUnreadNewsById(TRAVEL_DATE_NEWS_ID)
+  );
+
   readonly isLatestNewsUnread = computed(() =>
     this.newsStatusService.hasUnreadNewsById(LATEST_NEWS_ID)
   );
@@ -271,6 +297,10 @@ export class News {
 
   markNewsAsRead(): void {
     this.newsStatusService.markCurrentNewsAsRead(LATEST_NEWS_ID);
+  }
+
+  markTravelDateNewsAsRead(): void {
+    this.newsStatusService.markCurrentNewsAsRead(TRAVEL_DATE_NEWS_ID);
   }
 
   markDefaultNewsAsRead(): void {

@@ -120,6 +120,24 @@
     strong {
       font-weight: 700;
     }
+
+    .news-content__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(24, 24, 24, 0.34);
+      border-radius: 999px;
+      color: #242424;
+      font-weight: 700;
+      line-height: 1;
+      padding: 12px 18px;
+      text-decoration: none;
+
+      &:hover {
+        background: #fff;
+        border-color: rgba(24, 24, 24, 0.54);
+      }
+    }
   }
 }
 

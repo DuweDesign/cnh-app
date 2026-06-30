@@ -17,6 +17,28 @@
                     </div>
                 }
 
+                @if (travelDateNewsContent(); as travelDateContent) {
+                    <article class="news-content news-content--latest">
+                        <div class="news-content__header">
+                            <h2>{{ travelDateContent.headline }}</h2>
+
+                            @if (isTravelDateNewsUnread()) {
+                                <button class="news-read-button" type="button" (click)="markTravelDateNewsAsRead()">
+                                    Als gelesen markieren
+                                </button>
+                            }
+                        </div>
+
+                        @for (paragraph of travelDateContent.intro; track $index) {
+                            <p [innerHTML]="paragraph"></p>
+                        }
+
+                        @if (travelDateContent.cta; as cta) {
+                            <a class="news-content__cta" [routerLink]="cta.route">{{ cta.label }}</a>
+                        }
+                    </article>
+                }
+
                 @if (latestNewsContent(); as latestContent) {
                     <article class="news-content news-content--latest">
                         <div class="news-content__header">
