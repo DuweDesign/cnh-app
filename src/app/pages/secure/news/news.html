@@ -17,106 +17,39 @@
                     </div>
                 }
 
-                @if (travelDateNewsContent(); as travelDateContent) {
-                    <article class="news-content news-content--latest">
-                        <div class="news-content__header">
-                            <h2>{{ travelDateContent.headline }}</h2>
+                @if (newsError()) {
+                    <article class="news-content">
+                        <p>{{ newsError() }}</p>
+                    </article>
+                }
 
-                            @if (isTravelDateNewsUnread()) {
-                                <button class="news-read-button" type="button" (click)="markTravelDateNewsAsRead()">
+                @for (news of newsItems(); track news._id; let newsIndex = $index) {
+                    <article class="news-content" [class.news-content--latest]="newsIndex === 0">
+                        <div class="news-content__header">
+                            <h2>{{ news.title }}</h2>
+
+                            @if (!news.isRead) {
+                                <button class="news-read-button" type="button" (click)="markNewsAsRead(news)">
                                     Als gelesen markieren
                                 </button>
                             }
                         </div>
 
-                        @for (paragraph of travelDateContent.intro; track $index) {
+                        @for (paragraph of news.intro; track $index) {
                             <p [innerHTML]="paragraph"></p>
                         }
 
-                        @if (travelDateContent.cta; as cta) {
-                            <a class="news-content__cta" [routerLink]="cta.route">{{ cta.label }}</a>
-                        }
-                    </article>
-                }
-
-                @if (latestNewsContent(); as latestContent) {
-                    <article class="news-content news-content--latest">
-                        <div class="news-content__header">
-                            <h2>{{ latestContent.headline }}</h2>
-
-                            @if (isLatestNewsUnread()) {
-                                <button class="news-read-button" type="button" (click)="markNewsAsRead()">
-                                    Als gelesen markieren
-                                </button>
-                            }
-                        </div>
-
-                        @for (paragraph of latestContent.intro; track $index) {
-                            <p [innerHTML]="paragraph"></p>
-                        }
-
-                        @for (section of latestContent.sections; track $index) {
-                            @if (section.title) {
-                                <h3>{{ section.title }}</h3>
-                            }
-
-                            @for (paragraph of section.paragraphs; track $index) {
-                                <p [innerHTML]="paragraph"></p>
-                            }
-                        }
-                    </article>
-                }
-
-                <article class="news-content">
-                @if (newsContent(); as content) {
-                    <div class="news-content__header">
-                        <h2>{{ content.headline }}</h2>
-
-                        @if (isDefaultNewsUnread()) {
-                            <button class="news-read-button" type="button" (click)="markDefaultNewsAsRead()">
-                                Als gelesen markieren
-                            </button>
-                        }
-                    </div>
-
-                    @for (paragraph of content.intro; track $index) {
-                        <p [innerHTML]="paragraph"></p>
-                    }
-
-                    @if (newsImageGroups().length > 0) {
-                        <div class="news-image-grid">
-                            @for (image of newsImageGroups()[0]; track image.url; let i = $index) {
-                                <div class="news-image-grid__item" [class.big]="i === 0 || i === 5">
-                                    <img [src]="image.url" [alt]="image.name || 'News Bild'" />
-                                </div>
-                            }
-                        </div>
-                    }
-
-                    @for (section of content.sections; track $index; let sectionIndex = $index) {
-                        @if (section.title) {
-                            <h3>{{ section.title }}</h3>
-                        }
-
-                        @for (paragraph of section.paragraphs; track $index) {
-                            <p [innerHTML]="paragraph"></p>
-                        }
-
-                        @if (sectionIndex === 0 && newsImageGroups().length > 1) {
+                        @if (newsIndex === 2 && newsImageGroups().length > 0) {
                             <div class="news-image-grid">
-                                @for (image of newsImageGroups()[1]; track image.url; let i = $index) {
+                                @for (image of newsImageGroups()[0]; track image.url; let i = $index) {
                                     <div class="news-image-grid__item" [class.big]="i === 0 || i === 5">
                                         <img [src]="image.url" [alt]="image.name || 'News Bild'" />
                                     </div>
                                 }
                             </div>
                         }
-                    }
 
-                    @if (content.roleSections?.length) {
-                        <hr />
-
-                        @for (section of content.roleSections; track $index) {
+                        @for (section of news.sections; track $index; let sectionIndex = $index) {
                             @if (section.title) {
                                 <h3>{{ section.title }}</h3>
                             }
@@ -124,10 +57,37 @@
                             @for (paragraph of section.paragraphs; track $index) {
                                 <p [innerHTML]="paragraph"></p>
                             }
+
+                            @if (newsIndex === 2 && sectionIndex === 0 && newsImageGroups().length > 1) {
+                                <div class="news-image-grid">
+                                    @for (image of newsImageGroups()[1]; track image.url; let i = $index) {
+                                        <div class="news-image-grid__item" [class.big]="i === 0 || i === 5">
+                                            <img [src]="image.url" [alt]="image.name || 'News Bild'" />
+                                        </div>
+                                    }
+                                </div>
+                            }
                         }
+
+                        @if (news.cta; as cta) {
+                            <a class="news-content__cta" [routerLink]="cta.route">{{ cta.label }}</a>
+                        }
+                    </article>
+                } @empty {
+                    @if (!isLoadingNews() && !newsError()) {
+                        <article class="news-content">
+                            <p>Aktuell liegen keine News vor.</p>
+                        </article>
                     }
                 }
-                </article>
+
+                @if (hasNextPage()) {
+                    <div class="news-pagination">
+                        <button class="news-read-button" type="button" [disabled]="isLoadingNews()" (click)="loadNews(false)">
+                            Mehr laden
+                        </button>
+                    </div>
+                }
             </div>
 
             <div class="page__logo">
