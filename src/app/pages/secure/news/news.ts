@@ -20,6 +20,7 @@ interface AdminNewsItem {
   intro: string[];
   sections: { title?: string; paragraphs: string[] }[];
   cta?: { label: string; route: string } | null;
+  images?: NewsImage[];
   competitions: string[];
   roles: string[];
   isPublished: boolean;
@@ -35,6 +36,7 @@ interface AdminNewsForm {
   bodyText: string;
   ctaLabel: string;
   ctaRoute: string;
+  images: NewsImage[];
   competitions: string[];
   roles: string[];
   isPublished: boolean;
@@ -51,6 +53,7 @@ const EMPTY_ADMIN_FORM: AdminNewsForm = {
   bodyText: '',
   ctaLabel: '',
   ctaRoute: '',
+  images: [],
   competitions: ['case-steyr', 'new-holland'],
   roles: [],
   isPublished: true,
@@ -76,7 +79,6 @@ export class News {
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
-  readonly newsImages = signal<NewsImage[]>([]);
   readonly newsItems = this.newsStatusService.items;
   readonly isLoadingNews = this.newsStatusService.isLoading;
   readonly newsError = this.newsStatusService.error;
@@ -89,6 +91,7 @@ export class News {
   readonly adminForm = signal<AdminNewsForm>({ ...EMPTY_ADMIN_FORM });
   readonly adminLoading = signal(false);
   readonly adminSaving = signal(false);
+  readonly adminUploading = signal(false);
   readonly adminError = signal<string | null>(null);
   readonly adminSuccess = signal<string | null>(null);
   readonly competitionOptions = [
@@ -104,17 +107,6 @@ export class News {
     { value: 'warehouse-admin', label: 'Warehouse Admin' },
   ];
 
-  readonly newsImageGroups = computed(() => {
-    const images = this.newsImages();
-    const groups: NewsImage[][] = [];
-
-    for (let i = 0; i < images.length; i += 6) {
-      groups.push(images.slice(i, i + 6));
-    }
-
-    return groups;
-  });
-
   constructor() {
     effect(() => {
       if (this.competition()) {
@@ -124,29 +116,12 @@ export class News {
   }
 
   ngOnInit(): void {
-    this.loadNewsImages();
   }
 
   loadNews(reset = true): void {
     this.newsStatusService.loadNews(reset, NEWS_PAGE_SIZE).subscribe({
       error: () => {},
     });
-  }
-
-  loadNewsImages(): void {
-    this.http
-      .get<{ success: boolean; images: NewsImage[] }>(
-        `${environment.apiUrl}/v1/cnh/news/images`
-      )
-      .subscribe({
-        next: (response) => {
-          this.newsImages.set(response.images ?? []);
-        },
-        error: (error) => {
-          console.error('Fehler beim Laden der News-Bilder:', error);
-          this.newsImages.set([]);
-        },
-      });
   }
 
   markNewsAsRead(news: NewsContentItem): void {
@@ -213,6 +188,7 @@ export class News {
       ...EMPTY_ADMIN_FORM,
       competitions: [...EMPTY_ADMIN_FORM.competitions],
       roles: [...EMPTY_ADMIN_FORM.roles],
+      images: [],
       publishedAt: this.toDateTimeLocal(new Date().toISOString()),
     });
     this.adminError.set(null);
@@ -227,6 +203,7 @@ export class News {
       bodyText: (news.sections?.[0]?.paragraphs ?? []).join('\n\n'),
       ctaLabel: news.cta?.label ?? '',
       ctaRoute: news.cta?.route ?? '',
+      images: [...(news.images ?? [])],
       competitions: [...news.competitions],
       roles: [...news.roles],
       isPublished: news.isPublished,
@@ -250,6 +227,7 @@ export class News {
         label: form.ctaLabel,
         route: form.ctaRoute,
       },
+      images: form.images,
       competitions: form.competitions,
       roles: form.roles,
       isPublished: form.isPublished,
@@ -298,6 +276,56 @@ export class News {
         this.adminError.set(error?.error?.message || 'News konnte nicht entfernt werden.');
       },
     });
+  }
+
+  uploadAdminImages(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files ? Array.from(input.files) : [];
+
+    if (files.length === 0) {
+      return;
+    }
+
+    const data = new FormData();
+    files.forEach((file) => data.append('images', file));
+
+    this.adminUploading.set(true);
+    this.adminError.set(null);
+    this.adminSuccess.set(null);
+
+    this.http.post<{ success: boolean; images: NewsImage[] }>(`${this.apiUrl}/news/admin/images`, data).subscribe({
+      next: (response) => {
+        this.adminUploading.set(false);
+        this.adminForm.update((form) => ({
+          ...form,
+          images: [...form.images, ...(response.images ?? [])],
+        }));
+        input.value = '';
+      },
+      error: (error) => {
+        this.adminUploading.set(false);
+        this.adminError.set(error?.error?.message || 'Bilder konnten nicht hochgeladen werden.');
+        input.value = '';
+      },
+    });
+  }
+
+  removeAdminImage(image: NewsImage): void {
+    this.adminForm.update((form) => ({
+      ...form,
+      images: form.images.filter((item) => item.url !== image.url),
+    }));
+  }
+
+  getNewsImageGroups(news: NewsContentItem): NewsImage[][] {
+    const images = news.images ?? [];
+    const groups: NewsImage[][] = [];
+
+    for (let i = 0; i < images.length; i += 6) {
+      groups.push(images.slice(i, i + 6));
+    }
+
+    return groups;
   }
 
   isChecked(values: string[], value: string): boolean {

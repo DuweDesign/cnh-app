@@ -80,6 +80,28 @@
                             </div>
 
                             <div class="news-admin__fieldset">
+                                <span>Bilder</span>
+                                <input type="file" accept="image/*" multiple (change)="uploadAdminImages($event)" />
+
+                                @if (adminUploading()) {
+                                    <p class="news-admin__message">Bilder werden hochgeladen ...</p>
+                                }
+
+                                @if (adminForm().images.length > 0) {
+                                    <div class="news-admin__image-list">
+                                        @for (image of adminForm().images; track image.url) {
+                                            <div class="news-admin__image">
+                                                <img [src]="image.url" [alt]="image.name" />
+                                                <button class="news-read-button" type="button" (click)="removeAdminImage(image)">
+                                                    Entfernen
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="news-admin__fieldset">
                                 <span>Wettbewerbe</span>
                                 <div class="news-admin__checks">
                                     @for (option of competitionOptions; track option.value) {
@@ -179,9 +201,9 @@
                             <p [innerHTML]="paragraph"></p>
                         }
 
-                        @if (newsIndex === 2 && newsImageGroups().length > 0) {
+                        @if (getNewsImageGroups(news).length > 0) {
                             <div class="news-image-grid">
-                                @for (image of newsImageGroups()[0]; track image.url; let i = $index) {
+                                @for (image of getNewsImageGroups(news)[0]; track image.url; let i = $index) {
                                     <div class="news-image-grid__item" [class.big]="i === 0 || i === 5">
                                         <img [src]="image.url" [alt]="image.name || 'News Bild'" />
                                     </div>
@@ -198,9 +220,9 @@
                                 <p [innerHTML]="paragraph"></p>
                             }
 
-                            @if (newsIndex === 2 && sectionIndex === 0 && newsImageGroups().length > 1) {
+                            @if (sectionIndex === 0 && getNewsImageGroups(news).length > 1) {
                                 <div class="news-image-grid">
-                                    @for (image of newsImageGroups()[1]; track image.url; let i = $index) {
+                                    @for (image of getNewsImageGroups(news)[1]; track image.url; let i = $index) {
                                         <div class="news-image-grid__item" [class.big]="i === 0 || i === 5">
                                             <img [src]="image.url" [alt]="image.name || 'News Bild'" />
                                         </div>

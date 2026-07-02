@@ -22,6 +22,10 @@ export interface NewsContentItem {
     label: string;
     route: string;
   } | null;
+  images?: {
+    name: string;
+    url: string;
+  }[];
   publishedAt: string;
   expiresAt?: string | null;
   isRead: boolean;
