@@ -88,10 +88,10 @@ export class News {
 
   readonly isAdminPanelOpen = signal(false);
   readonly adminNews = signal<AdminNewsItem[]>([]);
+  readonly availableNewsImages = signal<NewsImage[]>([]);
   readonly adminForm = signal<AdminNewsForm>({ ...EMPTY_ADMIN_FORM });
   readonly adminLoading = signal(false);
   readonly adminSaving = signal(false);
-  readonly adminUploading = signal(false);
   readonly adminError = signal<string | null>(null);
   readonly adminSuccess = signal<string | null>(null);
   readonly competitionOptions = [
@@ -146,6 +146,7 @@ export class News {
     if (this.isAdminPanelOpen() && this.adminNews().length === 0) {
       this.resetAdminForm();
       this.loadAdminNews();
+      this.loadAvailableNewsImages();
     }
   }
 
@@ -278,43 +279,32 @@ export class News {
     });
   }
 
-  uploadAdminImages(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const files = input.files ? Array.from(input.files) : [];
+  loadAvailableNewsImages(): void {
+    this.http
+      .get<{ success: boolean; images: NewsImage[] }>(`${this.apiUrl}/news/images`)
+      .subscribe({
+        next: (response) => this.availableNewsImages.set(response.images ?? []),
+        error: () => this.availableNewsImages.set([]),
+      });
+  }
 
-    if (files.length === 0) {
-      return;
-    }
+  toggleAdminImage(image: NewsImage, checked: boolean): void {
+    this.adminForm.update((form) => {
+      const existingImages = form.images.filter((item) => item.url !== image.url);
 
-    const data = new FormData();
-    files.forEach((file) => data.append('images', file));
-
-    this.adminUploading.set(true);
-    this.adminError.set(null);
-    this.adminSuccess.set(null);
-
-    this.http.post<{ success: boolean; images: NewsImage[] }>(`${this.apiUrl}/news/admin/images`, data).subscribe({
-      next: (response) => {
-        this.adminUploading.set(false);
-        this.adminForm.update((form) => ({
-          ...form,
-          images: [...form.images, ...(response.images ?? [])],
-        }));
-        input.value = '';
-      },
-      error: (error) => {
-        this.adminUploading.set(false);
-        this.adminError.set(error?.error?.message || 'Bilder konnten nicht hochgeladen werden.');
-        input.value = '';
-      },
+      return {
+        ...form,
+        images: checked ? [...existingImages, image] : existingImages,
+      };
     });
   }
 
+  isImageSelected(image: NewsImage): boolean {
+    return this.adminForm().images.some((item) => item.url === image.url);
+  }
+
   removeAdminImage(image: NewsImage): void {
-    this.adminForm.update((form) => ({
-      ...form,
-      images: form.images.filter((item) => item.url !== image.url),
-    }));
+    this.toggleAdminImage(image, false);
   }
 
   getNewsImageGroups(news: NewsContentItem): NewsImage[][] {

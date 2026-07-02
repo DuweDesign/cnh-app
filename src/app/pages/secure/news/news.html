@@ -81,17 +81,30 @@
 
                             <div class="news-admin__fieldset">
                                 <span>Bilder</span>
-                                <input type="file" accept="image/*" multiple (change)="uploadAdminImages($event)" />
 
-                                @if (adminUploading()) {
-                                    <p class="news-admin__message">Bilder werden hochgeladen ...</p>
+                                @if (availableNewsImages().length === 0) {
+                                    <p class="news-admin__message">Keine Bilder im News-Ordner gefunden.</p>
+                                } @else {
+                                    <div class="news-admin__image-list">
+                                        @for (image of availableNewsImages(); track image.url) {
+                                            <label class="news-admin__image" [class.news-admin__image--selected]="isImageSelected(image)">
+                                                <img [src]="image.url" [alt]="image.name" />
+                                                <span>
+                                                    <input type="checkbox" [checked]="isImageSelected(image)"
+                                                        (change)="toggleAdminImage(image, $any($event.target).checked)" />
+                                                    {{ image.name }}
+                                                </span>
+                                            </label>
+                                        }
+                                    </div>
                                 }
 
                                 @if (adminForm().images.length > 0) {
-                                    <div class="news-admin__image-list">
+                                    <div class="news-admin__selected-images">
+                                        <span>Ausgewählt</span>
                                         @for (image of adminForm().images; track image.url) {
-                                            <div class="news-admin__image">
-                                                <img [src]="image.url" [alt]="image.name" />
+                                            <div class="news-admin__selected-image">
+                                                <span>{{ image.name }}</span>
                                                 <button class="news-read-button" type="button" (click)="removeAdminImage(image)">
                                                     Entfernen
                                                 </button>
