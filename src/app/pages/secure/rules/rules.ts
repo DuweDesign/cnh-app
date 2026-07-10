@@ -128,17 +128,6 @@ type WarehouseRulesConfig = {
   precisionFarming: {
     title: string;
     paragraphs: string[];
-    facts: {
-      label: string;
-      value: string;
-    }[];
-    rows: {
-      dealer: string;
-      referenceRevenue: string;
-      targetOne: string;
-      targetTwo: string;
-    }[];
-    note: string;
   };
 };
 
@@ -158,6 +147,10 @@ export class Rules {
   readonly activeTab = signal<RulesTab>('sales');
 
   private authService = inject(AuthService);
+
+  readonly warehouseCountryIso = computed(() =>
+    this.normalizeCountryIso(this.authService.user()?.iso || this.authService.user()?.country)
+  );
 
   readonly isSaleUser = computed(() =>
     this.authService.getUserRole() === USER_ROLES.CNH_SALES
@@ -186,6 +179,16 @@ export class Rules {
       this.competitionConfig()?.key === 'warehouse' ||
       this.authService.getUserRole() === USER_ROLES.CNH_WAREHOUSE
     );
+  }
+
+  private normalizeCountryIso(value?: string): 'DE' | 'AT' {
+    const normalized = String(value || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    return ['at', 'osterreich', 'austria'].includes(normalized) ? 'AT' : 'DE';
   }
 
   readonly rulesConfig = computed<RulesConfig | null>(() => {
@@ -507,33 +510,14 @@ export class Rules {
         ],
       },
       precisionFarming: {
-        title: 'Wie funktioniert der Precision Farming Wettbewerb?',
+        title: 'Wettbewerb auf Teile in Rabattgruppe C',
         paragraphs: [
-          'Basierend auf 12 rollierenden Monaten (RM12) wird ein Ziel für Quartal 2/2026 definiert.',
-          'Der Referenzzeitraum sind die Quartale 2 bis 4 aus 2025 sowie Quartal 1/2026. Das Ziel erhalten Sie von Ihrem zuständigen Precision Farming Spezialisten.',
-          'Um Punkte für die Reise zu erhalten, gibt es zwei Stufen der Übererreichung: Bei 105 % Übererreichung im Vergleich zum Referenzzeitraum erhalten Sie 10 Punkte, bei 110 % erhalten Sie 20 Punkte.',
+          'Dabei bekommen Sie ein Umsatzziel für das dritte Quartal 2026, welches ausschließlich Teilenummern berücksichtigt, die sich in Rabattgruppe C befinden. Dieses Ziel bekommen Sie durch Ihren zuständigen PSM oder finden es auf der „CNH-Ertragsmacher“ Webseite.',
+          'Abhängig von Ihrem bisherigen Umsatz werden Sie zwei Zielstufen bekommen, in denen Sie 10 bzw. 20 Punkte bekommen können (Mindestumsatz: 10.000 €).',
+          `Ein zusätzlicher Anreiz für die Teilnahme an den Quartalschallenges wird jeweils ein hochwertiger Sachpreis sein! In Q3 werden wir ${this.warehouseCountryIso() === 'AT' ? 5 : 10} WEBER SPIRIT Gasgrills für die erfolgreichsten Teilnehmer ausschreiben!`,
+          'Wer bekommt einen Gasgrill?',
+          `Ganz einfach: Unter allen Teilnehmern, die Zielstufe 2 erreichen, werden die ${this.warehouseCountryIso() === 'AT' ? 5 : 10} Händler mit der prozentual höchsten Übererreichung ihres Ziels einen der hochwertigen Grills gewinnen.`,
         ],
-        facts: [
-          { label: 'Umfang', value: 'Umsatz aus MPL 660' },
-          { label: 'Umsatz Referenzzeitraum', value: 'Quartale 2 bis 4/2025 und Quartal 1/2026' },
-          { label: 'Aktionszeitraum', value: 'Bewertet wird der Umsatz aus Q3 bis Q4/2025 und Q1 bis Q2/2026' },
-        ],
-        rows: [
-          {
-            dealer: 'Händler A',
-            referenceRevenue: '100.000 €',
-            targetOne: '105.000 €',
-            targetTwo: '110.000 €',
-          },
-          {
-            dealer: 'Händler B',
-            referenceRevenue: '7.000 €',
-            targetOne: '10.500 €',
-            targetTwo: '11.000 €',
-          },
-        ],
-        note:
-          'Als Mindestumsatz im Referenzzeitraum werden sowohl für Punkte zur Reise als auch für die Tischkicker 10.000 € angesetzt. Liegt der Umsatz im Referenzzeitraum unter 10.000 €, wird die Prozentsteigerung erst ab 10.000 € berechnet.',
       },
     };
   });

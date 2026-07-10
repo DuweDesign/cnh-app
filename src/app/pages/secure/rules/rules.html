@@ -353,39 +353,6 @@
                             @for (item of warehouseRules.precisionFarming.paragraphs; track item) {
                             <p>{{ item }}</p>
                             }
-
-                            <div class="rules-card">
-                                <h3>Beispiel-Basis</h3>
-                                @for (fact of warehouseRules.precisionFarming.facts; track fact.label) {
-                                <p><strong>{{ fact.label }}:</strong> {{ fact.value }}</p>
-                                }
-                                <p class="rules-highlight">Sie haben also noch vollen Einfluss auf Ihr Ergebnis mit dem Umsatz im zweiten Quartal 2026.</p>
-                            </div>
-    
-                            <div class="rules-table-wrap">
-                                <table class="rules-table rules-table--wide">
-                                    <thead>
-                                        <tr>
-                                            <th>Händler</th>
-                                            <th>Umsatz Referenzzeitraum</th>
-                                            <th>Ziel I / 105 %</th>
-                                            <th>Ziel II / 110 %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @for (row of warehouseRules.precisionFarming.rows; track row.dealer) {
-                                        <tr>
-                                            <td>{{ row.dealer }}</td>
-                                            <td>{{ row.referenceRevenue }}</td>
-                                            <td>{{ row.targetOne }}</td>
-                                            <td>{{ row.targetTwo }}</td>
-                                        </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <p class="rules-note">{{ warehouseRules.precisionFarming.note }}</p>
                         </section>
     
                     </div>

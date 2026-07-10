@@ -93,7 +93,7 @@ export class Bonus {
 
     if (status.isTop10) {
       return this.competitionConfig()?.key === 'warehouse'
-        ? `Du bist aktuell unter den Top ${this.winnerLimit()} und würdest einen Tischkicker gewinnen. Weiter so!`
+        ? `Du bist aktuell unter den Top ${this.winnerLimit()} und würdest einen WEBER SPIRIT Gasgrill gewinnen. Weiter so!`
         : `Du bist aktuell unter den Top ${this.winnerLimit()} – weiter so!`;
     }
 
