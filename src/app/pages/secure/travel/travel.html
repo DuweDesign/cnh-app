@@ -1,48 +1,83 @@
-@if (competitionConfig(); as config) {
+@if (competitionConfig()) {
 <div class="page travel">
   <div class="page__content">
     <div class="page__center">
-      <section class="travel-board">
+      @if (canSwitchAudience()) {
+      <div class="travel-audience" role="group" aria-label="Reise-Ansicht auswählen">
+          @for (option of audienceOptions; track option.value) {
+          <button type="button" [class.is-active]="audience() === option.value"
+            [attr.aria-pressed]="audience() === option.value" (click)="setAudience(option.value)">
+            {{ option.label }}
+          </button>
+          }
+      </div>
+      }
 
-        @for (tile of firstTiles(); track trackByTile($index, tile)) {
-        <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
-          <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
-        </article>
-        }
-
-        <article class="travel-info">
-          <div class="travel-info__text">
-            <p class="travel-info__headline">
-              SAVE THE DATE
-            </p>
-
-            <div class="travel-info__dates">
-              @for (travelDate of travelDates(); track travelDate) {
-              <p class="travel-info__date">{{ travelDate }}</p>
-              }
-            </div>
-
-            <p>
-              Reservieren Sie sich diesen Zeitraum vorsorglich. Mit jeder
-              Verkaufsleistung kommen Sie Ihrem Ziel ein Stück näher. Bleiben
-              Sie gerade in den wichtigen Sommermonaten engagiert und sichern
-              Sie sich Ihren Platz auf dieser besonderen Reise. Wir drücken die
-              Daumen!
-            </p>
+      <section class="travel-board" [class.travel-board--no-story]="!content().paragraphs.length"
+        [attr.aria-label]="'Reise nach ' + content().destination">
+        <article class="travel-tile travel-hero">
+          <img [src]="images()[0].url" [alt]="images()[0].name" fetchpriority="high" />
+          <div class="travel-brand"><img [src]="logoUrl()" alt="Wettbewerbslogo" /></div>
+          <div class="travel-overlay travel-hero__text">
+            <p class="travel-eyebrow">Ihre Reise 2027</p>
+            <h1>{{ content().destination }}</h1>
+            <p class="travel-info__date">{{ content().date }}</p>
+            @if (content().description[0]; as description) {
+            <p class="travel-hero__description">{{ description }}</p>
+            }
           </div>
         </article>
 
-        @for (tile of remainingTiles(); track trackByTile($index, tile)) {
-        <article class="travel-tile" [ngClass]="'travel-tile--' + tile.type">
-          <img [src]="tile.url" [alt]="tile.name || 'Reisebild'" loading="lazy" />
+        <article class="travel-tile travel-atmosphere">
+          <img [src]="images()[1].url" [alt]="images()[1].name" loading="lazy" />
+          @if (content().description[1]; as description) {
+          <div class="travel-overlay"><p>{{ description }}</p></div>
+          }
+        </article>
+
+        @if (openingParagraphs().length) {
+        <article class="travel-copy travel-copy--opening">
+          <p class="travel-eyebrow">Das erwartet Sie</p>
+          @for (paragraph of openingParagraphs(); track paragraph) {
+          <p>{{ paragraph }}</p>
+          }
         </article>
         }
 
-      </section>
+        <article class="travel-tile travel-landscape">
+          <img [src]="images()[2].url" [alt]="images()[2].name" loading="lazy" />
+        </article>
 
-      <div class="page__logo">
-        <img [src]="config.logoUrl" alt="Logo" />
-      </div>
+        <article class="travel-tile travel-detail">
+          <img [src]="images()[3].url" [alt]="images()[3].name" loading="lazy" />
+        </article>
+        <article class="travel-tile travel-detail">
+          <img [src]="images()[4].url" [alt]="images()[4].name" loading="lazy" />
+        </article>
+
+        @if (closingParagraphs().length) {
+        <article class="travel-copy travel-copy--closing">
+          <p class="travel-eyebrow">Die Vorfreude beginnt</p>
+          @for (paragraph of closingParagraphs(); track paragraph) {
+          <p>{{ paragraph }}</p>
+          }
+        </article>
+        }
+
+        @for (image of additionalImages(); track image.url) {
+        <article class="travel-tile travel-gallery">
+          <img [src]="image.url" [alt]="image.name" loading="lazy" />
+        </article>
+        }
+
+        <article class="travel-tile travel-finale">
+          <img [src]="images()[5].url" [alt]="images()[5].name" loading="lazy" />
+          @if (content().description[2]; as description) {
+          <div class="travel-overlay"><p>{{ description }}</p></div>
+          }
+        </article>
+
+      </section>
     </div>
   </div>
 </div>
