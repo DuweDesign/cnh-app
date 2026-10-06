@@ -1,3 +1,4 @@
+@if (showUpdatedTravel()) {
 @if (competitionConfig()) {
 <div class="page travel">
   <div class="page__content">
@@ -81,4 +82,7 @@
     </div>
   </div>
 </div>
+}
+} @else {
+  <cnh-travel-legacy />
 }

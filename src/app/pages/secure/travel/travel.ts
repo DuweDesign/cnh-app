@@ -10,11 +10,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { USER_ROLES } from '../../../core/models/auth.model';
 import { TRAVEL_CONTENT, TravelAudience } from './travel-content';
 import { selectTravelImages } from './travel-images';
+import { TravelLegacy } from './travel-legacy';
 
 @Component({
   selector: 'cnh-travel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TravelLegacy],
   templateUrl: './travel.html',
   styleUrl: './travel.scss',
 })
@@ -25,6 +26,8 @@ export class Travel {
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
 
+  // Keep the new destinations in admin preview until the release is approved.
+  readonly showUpdatedTravel = computed(() => this.authService.isAdmin());
   readonly canSwitchAudience = computed(() => this.authService.isAdmin());
   readonly selectedAudience = signal<TravelAudience | null>(null);
   readonly audienceOptions: { value: TravelAudience; label: string }[] = [
