@@ -10,7 +10,7 @@ interface TravelContent {
 
 // Sales and Management copy: 261005_CNH_Texte_Reiseziele.pages,
 // sections “Kurzbeschreibung Bilder Portal” and “Newsseite Portal”.
-// Warehouse copy will be supplied separately; retain the existing travel date.
+// Warehouse copy: lagerchamps_reisetext.rtf, portal text and image descriptions.
 export const TRAVEL_CONTENT: Record<TravelAudience, TravelContent> = {
   sales: {
     destination: 'Lofoten',
@@ -47,9 +47,21 @@ export const TRAVEL_CONTENT: Record<TravelAudience, TravelContent> = {
     ],
   },
   warehouse: {
-    destination: 'Irland',
+    destination: 'Dublin',
     date: '07. - 11. April 2027',
-    description: [],
-    paragraphs: [],
+    description: [
+      'Zwischen lebendigen Pubs, rauer Küste und beeindruckender Natur zeigt Irland seinen ganz eigenen Charakter.',
+      'Mal voller Adrenalin, mal ganz entspannt – Dublin und seine Umgebung verbinden Abenteuer, Tradition und echte Gastfreundschaft.',
+      'Nicht nur Dublin entdecken. Irland erleben.',
+    ],
+    paragraphs: [
+      'Jetzt dürfen wir es endlich verraten:',
+      'Die Lagerchamps 2027 reisen vom 07. - 11. April 2027 nach Dublin.',
+      'Freuen Sie sich auf eine Stadt voller Charakter, Geschichte und irischer Gastfreundschaft. Zwischen historischen Gassen, lebendigen Pubs und beeindruckenden Landschaften rund um die Hauptstadt erwartet Sie eine Reise, bei der Gemeinschaft, Abenteuer und jede Menge unvergessliche Momente im Mittelpunkt stehen.',
+      'Heute möchten wir noch nicht zu viel verraten. Nur so viel: Freuen Sie sich auf Erlebnisse, die Sie mitten hinein in das echte Irland führen – aktiv, authentisch und mit einer guten Portion Teamgeist.',
+      'Hier im Portal halten wir Sie während der gesamten Aktion auf dem Laufenden. Freuen Sie sich auf aktuelle Rankings, wichtige Informationen, spannende Neuigkeiten und regelmäßige Updates rund um die Lagerchamps 2027.',
+      'Bis dahin heißt es: Punkte sammeln, gemeinsam Gas geben und sich einen Platz bei den Lagerchamps 2027 sichern.',
+      'Nicht nur Dublin entdecken. Irland erleben.',
+    ],
   },
 };

@@ -42,7 +42,7 @@ describe('Travel role views', () => {
   it.each([
     ['cnh-sales', 'sales', 'Lofoten', '06. - 10. März 2027'],
     ['cnh-management', 'management', 'Mauritius', '12. - 19. März 2027'],
-    ['cnh-warehouse', 'warehouse', 'Irland', '07. - 11. April 2027'],
+    ['cnh-warehouse', 'warehouse', 'Dublin', '07. - 11. April 2027'],
   ] as const)('keeps the previous page visible for %s', (userRole, audience, destination, date) => {
     role.set(userRole);
     const fixture = TestBed.createComponent(Travel);
@@ -79,10 +79,16 @@ describe('Travel role views', () => {
       TestBed.inject(HttpTestingController).expectNone(`${environment.apiUrl}/v1/cnh/travel/images`);
       const buttons = Array.from(element.querySelectorAll<HTMLButtonElement>('.travel-audience button'));
       expect(buttons).toHaveLength(3);
-      for (const [index, destination] of ['Lofoten', 'Mauritius', 'Irland'].entries()) {
+      for (const [index, destination] of ['Lofoten', 'Mauritius', 'Dublin'].entries()) {
         buttons[index].click();
         fixture.detectChanges();
         expect(element.querySelector('h1')?.textContent).toBe(destination);
+        for (const text of [
+          ...fixture.componentInstance.content().description,
+          ...fixture.componentInstance.content().paragraphs,
+        ]) {
+          expect(element.textContent).toContain(text);
+        }
         expect(buttons[index].getAttribute('aria-pressed')).toBe('true');
         expect(fixture.componentInstance.images().every(image =>
           image.url.includes(`/images/${fixture.componentInstance.audience()}/`))).toBe(true);
