@@ -43,27 +43,29 @@ describe('Travel role views', () => {
     ['cnh-sales', 'sales', 'Lofoten', '06. - 10. März 2027'],
     ['cnh-management', 'management', 'Mauritius', '12. - 19. März 2027'],
     ['cnh-warehouse', 'warehouse', 'Dublin', '07. - 11. April 2027'],
-  ] as const)('keeps the previous page visible for %s', (userRole, audience, destination, date) => {
+  ] as const)('shows the released destination for %s', (userRole, audience, destination, date) => {
     role.set(userRole);
     const fixture = TestBed.createComponent(Travel);
     fixture.detectChanges();
     const element: HTMLElement = fixture.nativeElement;
-    expect(element.querySelector('h1')).toBeNull();
-    expect(element.textContent).toContain('SAVE THE DATE');
+    expect(element.querySelector('h1')?.textContent).toBe(destination);
+    expect(element.querySelector('cnh-travel-legacy')).toBeNull();
     expect(element.querySelector('.travel-info__date')?.textContent).toBe(date);
     expect(element.querySelector('.travel-audience')).toBeNull();
-    expect(element.querySelector('.travel-hero')).toBeNull();
-    expect(element.textContent).not.toContain(destination);
-    expect(element.textContent).toContain('Reservieren Sie sich diesen Zeitraum vorsorglich.');
+    expect(element.querySelector('.travel-hero')).not.toBeNull();
+    for (const text of [
+      ...fixture.componentInstance.content().description,
+      ...fixture.componentInstance.content().paragraphs,
+    ]) {
+      expect(element.textContent).toContain(text);
+    }
     const http = TestBed.inject(HttpTestingController);
-    http.expectOne(`${environment.apiUrl}/v1/cnh/travel/images`).flush({
-      success: true,
-      images: [{ name: 'Bisheriges Reisebild', url: `${environment.apiUrl}/media/cnh/reise/images/old.jpg` }],
-    });
-    fixture.detectChanges();
+    http.expectNone(`${environment.apiUrl}/v1/cnh/travel/images`);
     const images = Array.from(element.querySelectorAll('.travel-tile > img'));
-    expect(images).toHaveLength(1);
-    expect(images[0].getAttribute('src')).toBe(`${environment.apiUrl}/media/cnh/reise/images/old.jpg`);
+    expect(images).toHaveLength(12);
+    const urls = images.map(image => image.getAttribute('src'));
+    expect(new Set(urls).size).toBe(12);
+    expect(urls.every(url => url?.includes(`/images/${audience}/`))).toBe(true);
     http.verify();
     fixture.componentInstance.setAudience(audience === 'sales' ? 'management' : 'sales');
     expect(fixture.componentInstance.audience()).toBe(audience);
@@ -111,10 +113,9 @@ describe('Travel role views', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.audience()).toBe('sales');
     expect(fixture.nativeElement.querySelector('.travel-audience')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.travel-hero')).toBeNull();
-    expect(fixture.nativeElement.textContent).toContain('SAVE THE DATE');
-    TestBed.inject(HttpTestingController).expectOne(`${environment.apiUrl}/v1/cnh/travel/images`)
-      .flush({ success: true, images: [] });
+    expect(fixture.nativeElement.querySelector('h1')?.textContent).toBe('Lofoten');
+    expect(fixture.nativeElement.querySelector('cnh-travel-legacy')).toBeNull();
+    TestBed.inject(HttpTestingController).expectNone(`${environment.apiUrl}/v1/cnh/travel/images`);
   });
 
   it('selects new pictures when the page is reopened, but keeps them stable during a visit', () => {
