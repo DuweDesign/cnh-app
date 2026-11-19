@@ -77,6 +77,7 @@ export class Bonus {
         this.loading.set(false);
       },
       error: (err) => {
+        this.bonusStatus.set(null);
         this.error.set(
           err?.error?.message || 'Bonusstatus konnte nicht geladen werden.'
         );
@@ -94,6 +95,7 @@ export class Bonus {
         this.isLoading.set(false);
       },
       error: () => {
+        this.profile.set(null);
         this.isLoading.set(false);
       },
     });

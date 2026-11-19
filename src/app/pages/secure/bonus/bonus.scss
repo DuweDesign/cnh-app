@@ -45,6 +45,115 @@
   }
 }
 
+.warehouse-challenge {
+  width: min(100%, 1100px);
+  margin-inline: auto;
+  color: #24211d;
+
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+.warehouse-challenge__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+  padding: clamp(20px, 4vw, 44px);
+  border-radius: 20px;
+  background: #fbf8f2;
+  box-shadow: 0 16px 48px rgba(30, 23, 16, 0.22);
+}
+
+.warehouse-challenge__copy {
+  p {
+    line-height: 1.55;
+  }
+
+  h2 {
+    margin: 10px 0 12px;
+    font-size: clamp(1.65rem, 3vw, 2.5rem);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .warehouse-challenge__period {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f0e4d0;
+    color: #634526;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+}
+
+.warehouse-challenge__details {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #e2d7c6;
+
+  h3 {
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+  }
+}
+
+.warehouse-challenge__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #e8e0d4;
+  border-radius: 14px;
+  justify-self: center;
+}
+
+.warehouse-challenge__score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  padding: 16px clamp(20px, 4vw, 44px);
+  border: 1px solid #e8e0d4;
+  border-radius: 14px;
+  background: #fbf8f2;
+
+  h2 {
+    margin-bottom: 3px;
+    font-size: 1.125rem;
+  }
+
+  p {
+    color: #645b50;
+    line-height: 1.4;
+  }
+
+  strong {
+    min-width: 2.2ch;
+    color: #634526;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    line-height: 1;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (max-width: 700px) {
+  .warehouse-challenge__card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .warehouse-challenge__image {
+    max-width: 360px;
+  }
+}
+
 /* =========================
    SALE GRID (3 SPALTEN)
 ========================= */
@@ -73,11 +182,6 @@
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-
-  h2 {
-    margin: 0 0 12px;
-    font-size: 1.3rem;
-  }
 
   span {
     display: block;
@@ -117,11 +221,6 @@
     object-fit: contain;
   }
 
-  .warehouse-prize-image {
-    height: auto;
-    align-self: flex-start;
-    border-radius: 14px;
-  }
 }
 
 /* LOGO (rechts über beide Reihen) */

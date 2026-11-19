@@ -5,6 +5,8 @@ on:
     branches:
       - main  # Falls du einen anderen Branch nutzt, passe das hier an.
 
+concurrency: cnh-production-deploy
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,8 +22,21 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           debug: true
           script: |
+            set -eu
             cd /var/www/cnh/prod/cnh-app
-            git pull origin main
-            npm install
-            ng build --configuration=production
-            sudo systemctl restart nginx
+            git fetch origin main
+            web="$PWD/dist/cnh-app/browser"
+            mkdir -p "$web"
+            stage=$(mktemp -d "$PWD/dist/.deploy.XXXXXXXX")
+            trap 'rm -rf -- "$stage"' EXIT
+            mkdir "$stage/source"
+            git archive '${{ github.sha }}' > "$stage/source.tar"
+            tar -xf "$stage/source.tar" -C "$stage/source"
+            cd "$stage/source"
+            npm ci
+            npm run build -- --configuration production --output-path "$stage/build"
+            test -s "$stage/build/browser/index.html"
+
+            # Open tabs can still request lazy chunks from a previous release.
+            rsync -a --exclude=/index.html "$stage/build/browser/" "$web/"
+            mv -f "$stage/build/browser/index.html" "$web/index.html"
