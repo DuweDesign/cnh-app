@@ -52,11 +52,14 @@
                 }
             </div>
 
-            @if (config.key !== 'warehouse') {
             <div class="user__image">
-                <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                @if (config.key === 'warehouse') {
+                    <img class="warehouse-prize-image" src="/images/lagerchamps-q4-darts.jpg"
+                        width="900" height="640" alt="Dartscheibe und drei Dartpfeile im CNH-Design" />
+                } @else {
+                    <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                }
             </div>
-            }
 
             <div class="page__user-logo">
                 <img [src]="config.logoUrl" alt="Logo" />
