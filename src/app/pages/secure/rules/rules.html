@@ -350,11 +350,8 @@
     
                         <section class="rules-section">
                             <h2>{{ warehouseRules.q4Challenge.title }}</h2>
-                            <p><strong>{{ warehouseRules.q4Challenge.period }}</strong></p>
-                            <p>{{ warehouseRules.q4Challenge.intro }}</p>
-                            @for (section of warehouseRules.q4Challenge.sections; track section.title) {
-                            <h3>{{ section.title }}</h3>
-                            <p>{{ section.text }}</p>
+                            @for (item of warehouseRules.q4Challenge.paragraphs; track item) {
+                            <p>{{ item }}</p>
                             }
                         </section>
 

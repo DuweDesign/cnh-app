@@ -24,66 +24,41 @@
         </div>
         }
 
-        @if (config.key === 'warehouse') {
-        <div class="warehouse-challenge">
-            <section class="warehouse-challenge__card" aria-labelledby="warehouse-challenge-title">
-                <div class="warehouse-challenge__copy">
-                    <p class="warehouse-challenge__period">{{ warehouseQ4Challenge.period }}</p>
-                    <h2 id="warehouse-challenge-title">{{ warehouseQ4Challenge.title }}</h2>
-                    <p>{{ warehouseQ4Challenge.intro }}</p>
-                    <div class="warehouse-challenge__details">
-                        @for (section of warehouseQ4Challenge.sections; track section.title) {
-                        <div>
-                            <h3>{{ section.title }}</h3>
-                            <p>{{ section.text }}</p>
-                        </div>
-                        }
-                    </div>
-                </div>
-                <img class="warehouse-challenge__image" src="/images/lagerchamps-q4-darts.jpg"
-                    width="900" height="640" alt="Dartscheibe und drei Dartpfeile im CNH-Design" />
-            </section>
-
-            <section class="warehouse-challenge__score" aria-labelledby="warehouse-score-title" aria-live="polite">
-                <div>
-                    <h2 id="warehouse-score-title">Meine Punkte</h2>
-                    @if (isLoading() || loading()) {
-                        <p>Punktestand wird geladen …</p>
-                    } @else if (profile() || bonusStatus()) {
-                        <p>Bisher erfasste Punkte aus den Quartalschallenges</p>
-                    } @else {
-                        <p>Punktestand konnte nicht geladen werden.</p>
-                    }
-                </div>
-                @if (!isLoading() && !loading() && (profile() || bonusStatus())) {
-                    <strong>{{ warehouseBonusPoints() }}</strong>
-                }
-            </section>
-        </div>
-        } @else {
-        <div class="page__center page__center--sale">
+        <div class="page__center page__center--sale" [class.page__center--warehouse]="config.key === 'warehouse'">
             <div class="bonus__info">
-                <p>
-                    Für den laufenden Wettbewerb legen wir noch einmal nach:
-                </p>
-                <p>
-                    Die Top 3 Verkäuferinnen und Verkäufer des aktuellen Monats erhalten einen Gutschein im Wert von
-                    <strong>500 €</strong>.
-                </p>
-                <p>
-                    Die Plätze 4 bis 10 dürfen sich über einen Gutschein im Wert von
-                    <strong>175 €</strong> freuen.
-                </p>
-                <p>
-                    Wie immer zählt jeder Abschluss - nutzen Sie die Chance und sichern Sie sich diesen Sondergewinn.
-                </p>
-                <small>
-                    *Die erforderliche Pauschalversteuerung wird zusätzlich übernommen.
-                </small>
+                @if (config.key === 'warehouse') {
+                <h2>{{ warehouseQ4Challenge.title }}</h2>
+                @for (paragraph of warehouseQ4Challenge.paragraphs; track paragraph) {
+                    <p>{{ paragraph }}</p>
+                }
+                } @else {
+                    <p>
+                        Für den laufenden Wettbewerb legen wir noch einmal nach:
+                    </p>
+                    <p>
+                        Die Top 3 Verkäuferinnen und Verkäufer des aktuellen Monats erhalten einen Gutschein im Wert von
+                        <strong>500 €</strong>.
+                    </p>
+                    <p>
+                        Die Plätze 4 bis 10 dürfen sich über einen Gutschein im Wert von
+                        <strong>175 €</strong> freuen.
+                    </p>
+                    <p>
+                        Wie immer zählt jeder Abschluss - nutzen Sie die Chance und sichern Sie sich diesen Sondergewinn.
+                    </p>
+                    <small>
+                        *Die erforderliche Pauschalversteuerung wird zusätzlich übernommen.
+                    </small>
+                }
             </div>
 
             <div class="user__image">
-                <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                @if (config.key === 'warehouse') {
+                    <img class="warehouse-prize-image" src="/images/lagerchamps-q4-darts.jpg"
+                        width="900" height="640" alt="Dartscheibe und drei Dartpfeile im CNH-Design" />
+                } @else {
+                    <img src="/images/amazon.png" alt="Amazon Gutschein" />
+                }
             </div>
 
             <div class="page__user-logo">
@@ -93,35 +68,49 @@
             <div class="user__mission">
                 @if (loading()) {
                 <div class="user__label">
-                    <span>Mission 15 Punkte</span>
-                    <p>Mission 15 Punkte wird geladen ...</p>
+                    <span>{{ config.key === 'warehouse' ? 'Punkte' : 'Mission 15 Punkte' }}</span>
+                    <p>{{ config.key === 'warehouse' ? 'Punkte' : 'Mission 15 Punkte' }} wird geladen ...</p>
                 </div>
                 } @else if (error()) {
                 <div class="user__label">
-                    <span>Mission 15 Punkte</span>
+                    <span>{{ config.key === 'warehouse' ? 'Punkte' : 'Mission 15 Punkte' }}</span>
                     <p>{{ error() }}</p>
                 </div>
                 } @else if (bonusStatus(); as status) {
+
                 <div class="user__label">
-                    <span>Meine Mission 15<br>Punkte</span>
+                    <span>{{ config.key === 'warehouse' ? 'Meine' : 'Meine Mission 15' }}<br>Punkte</span>
                 </div>
+
                 <div class="user__number">
+                    @if (config.key === 'warehouse') {
+                    <div class="number">{{ warehouseBonusPoints() }}</div>
+                    } @else {
                     @if (status.isTop10) {
                     <div class="number number--success">{{ status.myMonthBonusPoints }}</div>
-                    } @else if (status.top10Count < winnerLimit()) {
-                    <div class="number">-</div>
-                    } @else {
-                    <div class="number">{{ status.pointsToTop10 }}</div>
-                    }
+                    } @else if (status.top10Count < winnerLimit()) { <div class="number">-
                 </div>
-                <div class="user__info">
-                    <span>Bonus</span>
-                    @if (status.myMonthBonusPoints === 0) {
-                    <p>Du hast diesen Monat noch keine Punkte gesammelt.</p>
-                    } @else if (status.isTop10) {
-                    <p>Du bist aktuell unter den <strong>Top {{ winnerLimit() }}</strong> – weiter so!</p>
-                    } @else if (status.top10Count < winnerLimit()) {
-                    <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
+                } @else {
+                <div class="number">{{ status.pointsToTop10 }}</div>
+                }
+                }
+            </div>
+
+            <div class="user__info">
+                @if (config.key === 'warehouse') {
+                <span>Quartalschallenge</span>
+                <p>Deine bisher erfassten Punkte aus den Quartalschallenges.</p>
+                } @else {
+                <span>Bonus</span>
+                @if (status.myMonthBonusPoints === 0) {
+                <p>
+                    Du hast diesen Monat noch keine Punkte gesammelt.
+                </p>
+                } @else if (status.isTop10) {
+                <p>
+                    Du bist aktuell unter den <strong>Top {{ winnerLimit() }}</strong> – weiter so!
+                </p>
+                } @else if (status.top10Count < winnerLimit()) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
                     } @else {
                     <p>
                         Bis zum Monatsbonus
@@ -130,13 +119,13 @@
                         {{ status.pointsToTop10 === 1 ? 'Punkt' : 'Punkte' }}.
                     </p>
                     }
-                </div>
                 }
             </div>
+            }
         </div>
-        }
-
-        <div class="page__bottom"></div>
     </div>
+
+    <div class="page__bottom"></div>
+</div>
 </div>
 }
