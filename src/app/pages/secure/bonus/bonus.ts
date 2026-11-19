@@ -9,6 +9,7 @@ import { BonusStatusResponse } from '../../../core/models/bonus.model';
 import { ProfileService } from '../../../core/services/profile.service';
 import { MyProfile } from '../../../core/models/profile.model';
 import { FormsModule } from '@angular/forms';
+import { WAREHOUSE_Q4_CHALLENGE } from '../../../core/config/warehouse-q4.config';
 
 @Component({
   selector: 'cnh-bonus',
@@ -24,6 +25,7 @@ export class Bonus {
 
   readonly competition = this.competitionService.activeCompetition;
   readonly competitionConfig = this.competitionService.competitionConfig;
+  readonly warehouseQ4Challenge = WAREHOUSE_Q4_CHALLENGE;
 
   readonly profile = signal<MyProfile | null>(null);
   readonly currentUser = this.authService.user;
@@ -49,9 +51,6 @@ export class Bonus {
   readonly bonusStatus = signal<BonusStatusResponse | null>(null);
 
   readonly winnerLimit = computed(() => this.bonusStatus()?.winnerLimit ?? 10);
-  readonly bonusCountryIso = computed(() =>
-    this.bonusStatus()?.countryIso ?? this.normalizeCountryIso(this.currentUser()?.iso || this.currentUser()?.country)
-  );
 
   constructor() {
     if (this.isSaleUser() || this.isWarehouseUser() || this.authService.isAdmin()) {
@@ -86,34 +85,6 @@ export class Bonus {
     });
   }
 
-  readonly bonusHeadline = computed(() => {
-    const status = this.bonusStatus();
-
-    if (!status) return '';
-
-    if (status.isTop10) {
-      return this.competitionConfig()?.key === 'warehouse'
-        ? `Du bist aktuell unter den Top ${this.winnerLimit()} und würdest einen WEBER SPIRIT Gasgrill gewinnen. Weiter so!`
-        : `Du bist aktuell unter den Top ${this.winnerLimit()} – weiter so!`;
-    }
-
-    if (status.top10Count < this.winnerLimit()) {
-      return 'Das Monatsranking baut sich aktuell noch auf.';
-    }
-
-    return this.competitionConfig()?.key === 'warehouse'
-      ? `Bis zur Quartalschallenge fehlen dir noch ${status.pointsToTop10} Punkte`
-      : `Bis zum Monatsbonus fehlen dir noch ${status.pointsToTop10} Punkte`;
-  });
-
-  readonly bonusNumber = computed(() => {
-    const status = this.bonusStatus();
-
-    if (!status) return null;
-
-    return status.isTop10 ? null : status.pointsToTop10;
-  });
-
   loadProfile(dealernumber?: string): void {
     this.isLoading.set(true);
 
@@ -138,23 +109,5 @@ export class Bonus {
     this.dealerNumberInput.set('');
     this.loadBonusStatus();
     this.loadProfile();
-  }
-
-  private normalizeCountryIso(value?: string): 'DE' | 'AT' | null {
-    const normalized = String(value || '')
-      .trim()
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-
-    if (['de', 'deutschland', 'germany'].includes(normalized)) {
-      return 'DE';
-    }
-
-    if (['at', 'osterreich', 'oesterreich', 'austria'].includes(normalized)) {
-      return 'AT';
-    }
-
-    return null;
   }
 }

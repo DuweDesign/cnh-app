@@ -27,18 +27,9 @@
         <div class="page__center page__center--sale">
             <div class="bonus__info">
                 @if (config.key === 'warehouse') {
-                @if (bonusCountryIso() === 'AT') {
-                <p>
-                    Ein zusätzlicher Anreiz für die Teilnahme an den Quartalschallenges wird jeweils ein interessanter
-                    Sachpreis sein! In Q3 werden wir 5 WEBER SPIRIT Gasgrills für die erfolgreichsten
-                    Teilnehmer ausschreiben!
-                </p>
-                } @else {
-                <p>
-                    Ein zusätzlicher Anreiz für die Teilnahme an den Quartalschallenges wird jeweils ein interessanter
-                    Sachpreis sein! In Q3 werden wir 10 WEBER SPIRIT Gasgrills für die erfolgreichsten
-                    Teilnehmer ausschreiben!
-                </p>
+                <h2>{{ warehouseQ4Challenge.title }}</h2>
+                @for (paragraph of warehouseQ4Challenge.paragraphs; track paragraph) {
+                    <p>{{ paragraph }}</p>
                 }
                 } @else {
                     <p>
@@ -61,13 +52,11 @@
                 }
             </div>
 
-            <div class="user__image" [class.user__image--warehouse]="config.key === 'warehouse'">
-                @if (config.key === 'warehouse') {
-                    <img src="/images/webergrill.png" alt="Amazon Gutschein" />
-                } @else {
-                    <img src="/images/amazon.png" alt="Amazon Gutschein" />
-                }
+            @if (config.key !== 'warehouse') {
+            <div class="user__image">
+                <img src="/images/amazon.png" alt="Amazon Gutschein" />
             </div>
+            }
 
             <div class="page__user-logo">
                 <img [src]="config.logoUrl" alt="Logo" />
@@ -105,32 +94,29 @@
             </div>
 
             <div class="user__info">
-                <span>{{ config.key === 'warehouse' ? 'Quartalschallenge' : 'Bonus' }}</span>
-
-                @if ((config.key === 'warehouse' ? warehouseBonusPoints() : status.myMonthBonusPoints) === 0) {
+                @if (config.key === 'warehouse') {
+                <span>Quartalschallenge</span>
+                <p>Deine bisher erfassten Punkte aus den Quartalschallenges.</p>
+                } @else {
+                <span>Bonus</span>
+                @if (status.myMonthBonusPoints === 0) {
                 <p>
-                    Du hast {{ config.key === 'warehouse' ? 'in der Quartalschallenge' : 'diesen Monat' }} noch keine Punkte gesammelt.
+                    Du hast diesen Monat noch keine Punkte gesammelt.
                 </p>
                 } @else if (status.isTop10) {
-                @if (config.key === 'warehouse') {
-                <p>
-                    Du bist aktuell unter den <strong>Top {{ winnerLimit() }}</strong> und würdest einen WEBER SPIRIT Gasgrill
-                    gewinnen. Weiter so!
-                </p>
-                } @else {
                 <p>
                     Du bist aktuell unter den <strong>Top {{ winnerLimit() }}</strong> – weiter so!
                 </p>
-                }
                 } @else if (status.top10Count < winnerLimit()) { <p>Das Monatsranking füllt sich aktuell noch. Bleib dran!</p>
                     } @else {
                     <p>
-                        Bis {{ config.key === 'warehouse' ? 'zur Quartalschallenge' : 'zum Monatsbonus' }}
+                        Bis zum Monatsbonus
                         {{ status.pointsToTop10 === 1 ? 'fehlt' : 'fehlen' }} dir noch
                         <strong>{{ status.pointsToTop10 }}</strong>
                         {{ status.pointsToTop10 === 1 ? 'Punkt' : 'Punkte' }}.
                     </p>
                     }
+                }
             </div>
             }
         </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CompetitionService } from '../../../core/services/competition.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { USER_ROLES } from '../../../core/models/auth.model';
+import { WAREHOUSE_Q4_CHALLENGE } from '../../../core/config/warehouse-q4.config';
 
 type RuleRow = {
   label: string;
@@ -129,6 +130,7 @@ type WarehouseRulesConfig = {
     title: string;
     paragraphs: string[];
   };
+  q4Challenge: typeof WAREHOUSE_Q4_CHALLENGE;
 };
 
 @Component({
@@ -506,11 +508,10 @@ export class Rules {
         paragraphs: [
           'Neben der Erreichung des Quartalsziels werden in den Quartalen 2, 3 und 4 jeweils zusätzliche Wettbewerbe angeboten, durch die Punkte für die exklusive Reise gesammelt werden können.',
           'Die Challenges drehen sich um die Themen Precision Farming, Originalteile und Partnerhändler.',
-          'Die Details der ersten Challenge zu Precision Farming stehen bereits fest. Nähere Informationen zu den beiden weiteren Quartalschallenges folgen.',
         ],
       },
       precisionFarming: {
-        title: 'Wettbewerb auf Teile in Rabattgruppe C',
+        title: 'Q3 2026 – Wettbewerb auf Teile in Rabattgruppe C',
         paragraphs: [
           'Dabei bekommen Sie ein Umsatzziel für das dritte Quartal 2026, welches ausschließlich Teilenummern berücksichtigt, die sich in Rabattgruppe C befinden. Dieses Ziel bekommen Sie durch Ihren zuständigen PSM oder finden es auf der „CNH-Ertragsmacher“ Webseite.',
           'Abhängig von Ihrem bisherigen Umsatz werden Sie zwei Zielstufen bekommen, in denen Sie 10 bzw. 20 Punkte bekommen können (Mindestumsatz: 10.000 €).',
@@ -519,6 +520,7 @@ export class Rules {
           `Ganz einfach: Unter allen Teilnehmern, die Zielstufe 2 erreichen, werden die ${this.warehouseCountryIso() === 'AT' ? 5 : 10} Händler mit der prozentual höchsten Übererreichung ihres Ziels einen der hochwertigen Grills gewinnen.`,
         ],
       },
+      q4Challenge: WAREHOUSE_Q4_CHALLENGE,
     };
   });
 }

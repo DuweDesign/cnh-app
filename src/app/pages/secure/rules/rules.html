@@ -349,6 +349,13 @@
                         </section>
     
                         <section class="rules-section">
+                            <h2>{{ warehouseRules.q4Challenge.title }}</h2>
+                            @for (item of warehouseRules.q4Challenge.paragraphs; track item) {
+                            <p>{{ item }}</p>
+                            }
+                        </section>
+
+                        <section class="rules-section">
                             <h2>{{ warehouseRules.precisionFarming.title }}</h2>
                             @for (item of warehouseRules.precisionFarming.paragraphs; track item) {
                             <p>{{ item }}</p>
